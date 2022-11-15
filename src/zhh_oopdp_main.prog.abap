@@ -95,16 +95,21 @@ SELECTION-SCREEN END OF BLOCK block_a.
 
 AT SELECTION-SCREEN.
   CHECK sy-ucomm EQ execute.
-  PERFORM set_characteristics.
-  PERFORM set_heading USING pheading.
-  PERFORM accelerate USING: pspeed01,
-                            pspeed02,
-                            pspeed03.
 
-  PERFORM change_heading USING: pturn01,
-                                pturn02,
-                                pturn03.
-
+  perform register_car_entry using pplate
+                                   pbrand
+                                   pmodel
+                                   pyear
+                                   pcolor
+                                   plocatn
+                                   pspeedu
+                                   pheading
+                                   pspeed01
+                                   pspeed02
+                                   pspeed03
+                                   pturn01
+                                   pturn02
+                                   pturn03.
 
 START-OF-SELECTION.
 
@@ -140,14 +145,20 @@ FORM change_heading USING turn TYPE turn_type.
   heading = compass+compass_offset(01).
 ENDFORM.
 
-FORM set_characteristics.
-  license_plate  = pplate.
-  brand = pbrand.
-  model = pmodel.
-  year = pyear.
-  color = pcolor.
-  location = plocatn.
-  speed_unit = pspeedu.
+FORM set_characteristics using ulicense_plate
+                               ubrand
+                               umodel
+                               uyear
+                               ucolor
+                               ulocation
+                               uspeed_unit.
+  license_plate  = ulicense_plate.
+  brand = ubrand.
+  model = umodel.
+  year = uyear.
+  color = ucolor.
+  location = ulocation.
+  speed_unit = uspeed_unit.
 ENDFORM.
 
 FORM set_heading USING start_heading TYPE heading_type.
@@ -245,3 +256,34 @@ FORM show_report.
            present_report.
 
 ENDFORM.
+
+form register_car_entry using license_plate
+                              brand
+                              model
+                              year
+                              color
+                              location
+                              speed_unit
+                              heading
+                              speed01
+                              speed02
+                              speed03
+                              turn01
+                              turn02
+                              turn03.
+  perform set_characteristics using license_plate
+                                    brand
+                                    model
+                                    year
+                                    color
+                                    location
+                                    speed_unit.
+
+  perform set_heading using heading.
+  perform accelerate using: speed01,
+                            speed02,
+                            speed03.
+  perform change_heading using: turn01,
+                                turn02,
+                                turn03.
+endform.
