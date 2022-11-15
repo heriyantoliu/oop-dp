@@ -5,27 +5,18 @@
 *&---------------------------------------------------------------------*
 REPORT zhh_oopdp_main.
 
-TYPES: brand_type         TYPE f4txt,
-       color_type         TYPE f4txt,
-       location_type      TYPE f4txt,
-       model_type         TYPE f4txt,
-       license_plate_type TYPE f4txt,
-       speed_type         TYPE int4,
-       speed_unit_type    TYPE char3,
-       year_type          TYPE num4,
-       turn_type          TYPE char1,
-       heading_type       TYPE char1.
+
 
 TYPES: BEGIN OF output_row,
-         license_plate TYPE license_plate_type,
-         brand         TYPE brand_type,
-         model         TYPE model_type,
-         year          TYPE year_type,
-         color         TYPE color_type,
-         location      TYPE location_type,
-         heading       TYPE heading_type,
-         speed         TYPE speed_type,
-         speed_unit    TYPE speed_unit_type,
+         license_plate TYPE zcl_hh_dp_car=>license_plate_type,
+         brand         TYPE zcl_hh_dp_car=>brand_type,
+         model         TYPE zcl_hh_dp_car=>model_type,
+         year          TYPE zcl_hh_dp_car=>year_type,
+         color         TYPE zcl_hh_dp_car=>color_type,
+         location      TYPE zcl_hh_dp_car=>location_type,
+         heading       TYPE zcl_hh_dp_car=>heading_type,
+         speed         TYPE zcl_hh_dp_car=>speed_type,
+         speed_unit    TYPE zcl_hh_dp_car=>speed_unit_type,
        END   OF output_row,
        output_list TYPE STANDARD TABLE OF output_row.
 
@@ -48,12 +39,6 @@ CONSTANTS: column_name_license_plate  TYPE lvc_fname VALUE 'LICENSE_PLATE',
            column_name_speed_unit     TYPE lvc_fname VALUE 'SPEED_UNIT',
            column_title_speed_unit    TYPE string    VALUE `Unit`,
            minimum_column_width       TYPE int4      VALUE 08,
-           left_turn                  TYPE char1     VALUE 'L',
-           right_turn                 TYPE char1     VALUE 'R',
-           u_turn                     TYPE char1     VALUE 'U',
-           compass                    TYPE char4     VALUE 'NESW',
-           compass_offset_limit_lo    TYPE int4      VALUE 00,
-           compass_offset_limit_hi    TYPE int4      VALUE 03,
            execute                    TYPE syucomm   VALUE 'ONLI'.
 
 DATA: grid_columns            TYPE REF TO cl_salv_columns_table,
@@ -63,34 +48,23 @@ DATA: grid_columns            TYPE REF TO cl_salv_columns_table,
       grid_column_width       TYPE lvc_outlen,
       output_stack            TYPE output_list,
       output_entry            LIKE LINE OF output_stack,
-      alv_grid                TYPE REF TO cl_salv_table,
-      license_plate           TYPE license_plate_type,
-      brand                   TYPE brand_type,
-      model                   TYPE model_type,
-      year                    TYPE year_type,
-      color                   TYPE color_type,
-      location                TYPE location_type,
-      heading                 TYPE heading_type,
-      speed                   TYPE speed_type,
-      speed_unit              TYPE speed_unit_type,
-      compass_offset          TYPE int4.
-.
+      alv_grid                TYPE REF TO cl_salv_table.
 
 SELECTION-SCREEN BEGIN OF BLOCK block_a WITH FRAME.
-  PARAMETERS: pplate   TYPE license_plate_type,
-              pbrand   TYPE brand_type,
-              pmodel   TYPE model_type,
-              pyear    TYPE year_type,
-              pcolor   TYPE color_type,
-              plocatn  TYPE location_type,
-              pheading TYPE heading_type,
-              pturn01  TYPE turn_type,
-              pturn02  TYPE turn_type,
-              pturn03  TYPE turn_type,
-              pspeedu  TYPE speed_unit_type,
-              pspeed01 TYPE speed_type,
-              pspeed02 TYPE speed_type,
-              pspeed03 TYPE speed_type.
+  PARAMETERS: pplate   TYPE zcl_hh_dp_car=>license_plate_type,
+              pbrand   TYPE zcl_hh_dp_car=>brand_type,
+              pmodel   TYPE zcl_hh_dp_car=>model_type,
+              pyear    TYPE zcl_hh_dp_car=>year_type,
+              pcolor   TYPE zcl_hh_dp_car=>color_type,
+              plocatn  TYPE zcl_hh_dp_car=>location_type,
+              pheading TYPE zcl_hh_dp_car=>heading_type,
+              pturn01  TYPE zcl_hh_dp_car=>turn_type,
+              pturn02  TYPE zcl_hh_dp_car=>turn_type,
+              pturn03  TYPE zcl_hh_dp_car=>turn_type,
+              pspeedu  TYPE zcl_hh_dp_car=>speed_unit_type,
+              pspeed01 TYPE zcl_hh_dp_car=>speed_type,
+              pspeed02 TYPE zcl_hh_dp_car=>speed_type,
+              pspeed03 TYPE zcl_hh_dp_car=>speed_type.
 SELECTION-SCREEN END OF BLOCK block_a.
 
 AT SELECTION-SCREEN.
@@ -116,70 +90,21 @@ START-OF-SELECTION.
 END-OF-SELECTION.
   PERFORM show_report.
 
-FORM accelerate USING acceleration TYPE speed_type.
-  ADD acceleration TO speed.
-ENDFORM.
-
-FORM change_heading USING turn TYPE turn_type.
-  CHECK turn EQ left_turn
-     OR turn EQ right_turn
-     OR turn EQ u_turn.
-
-  FIND heading IN compass MATCH OFFSET compass_offset.
-  CASE turn.
-    WHEN left_turn.
-      SUBTRACT 01 FROM compass_offset.
-    WHEN right_turn.
-      ADD      01 TO   compass_offset.
-    WHEN u_turn.
-      ADD      02 TO   compass_offset.
-  ENDCASE.
-
-  IF compass_offset LT compass_offset_limit_lo.
-    ADD      04 TO   compass_offset.
-  ENDIF.
-  IF compass_offset GT compass_offset_limit_hi.
-    SUBTRACT 04 FROM compass_offset.
-  ENDIF.
-
-  heading = compass+compass_offset(01).
-ENDFORM.
-
-FORM set_characteristics using ulicense_plate
-                               ubrand
-                               umodel
-                               uyear
-                               ucolor
-                               ulocation
-                               uspeed_unit.
-  license_plate  = ulicense_plate.
-  brand = ubrand.
-  model = umodel.
-  year = uyear.
-  color = ucolor.
-  location = ulocation.
-  speed_unit = uspeed_unit.
-ENDFORM.
-
-FORM set_heading USING start_heading TYPE heading_type.
-  IF compass CA start_heading.
-    heading = start_heading.
-  ELSE.
-    heading = compass+00(01).
-  ENDIF.
-ENDFORM.
-
 FORM build_report.
+  zcl_hh_dp_car=>get_characteristics(
+    IMPORTING
+      license_plate = output_entry-license_plate
+      brand         = output_entry-brand
+      model         = output_entry-model
+      year          = output_entry-year
+      color         = output_entry-color
+      location      = output_entry-location
+      speed_unit    = output_entry-speed_unit
+  ).
 
-  output_entry-license_plate = license_plate.
-  output_entry-brand = brand.
-  output_entry-model = model.
-  output_entry-year = year.
-  output_entry-color = color.
-  output_entry-location = location.
-  output_entry-heading = heading.
-  output_entry-speed = speed.
-  output_entry-speed_unit = speed_unit.
+  output_entry-heading = zcl_hh_dp_car=>get_heading( ).
+  output_entry-speed = zcl_hh_dp_car=>get_speed( ).
+
   APPEND output_entry TO output_stack.
 ENDFORM.
 
@@ -271,19 +196,24 @@ form register_car_entry using license_plate
                               turn01
                               turn02
                               turn03.
-  perform set_characteristics using license_plate
-                                    brand
-                                    model
-                                    year
-                                    color
-                                    location
-                                    speed_unit.
+  zcl_hh_dp_car=>set_characteristics(
+    EXPORTING
+      license_plate = license_plate
+      brand         = brand
+      model         = model
+      year          = year
+      color         = color
+      location      = location
+      speed_unit    = speed_unit
+  ).
 
-  perform set_heading using heading.
-  perform accelerate using: speed01,
-                            speed02,
-                            speed03.
-  perform change_heading using: turn01,
-                                turn02,
-                                turn03.
+  zcl_hh_dp_car=>set_heading( heading ).
+
+  zcl_hh_dp_car=>accelerate( speed01 ).
+  zcl_hh_dp_car=>accelerate( speed02 ).
+  zcl_hh_dp_car=>accelerate( speed03 ).
+
+  zcl_hh_dp_car=>change_heading( turn01 ).
+  zcl_hh_dp_car=>change_heading( turn02 ).
+  zcl_hh_dp_car=>change_heading( turn03 ).
 endform.
