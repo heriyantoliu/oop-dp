@@ -1,7 +1,6 @@
 CLASS zcl_hh_dp_navigator DEFINITION
   PUBLIC
-  FINAL
-  CREATE PRIVATE .
+  FINAL.
 
   PUBLIC SECTION.
     TYPES:
@@ -13,7 +12,7 @@ CLASS zcl_hh_dp_navigator DEFINITION
       right_turn TYPE zcl_hh_dp_navigator=>turn_type VALUE 'R',
       u_turn     TYPE zcl_hh_dp_navigator=>turn_type VALUE 'U'.
 
-    CLASS-METHODS:
+    METHODS:
       change_heading
         IMPORTING
           turn TYPE zcl_hh_dp_navigator=>turn_type,
@@ -30,7 +29,7 @@ CLASS zcl_hh_dp_navigator DEFINITION
       compass_offset_limit_lo TYPE int4 VALUE 0,
       compass_offset_limit_hi TYPE int4 VALUE 3.
 
-    CLASS-DATA:
+    DATA:
       heading TYPE zcl_hh_dp_navigator=>heading_type.
 ENDCLASS.
 
@@ -65,14 +64,14 @@ CLASS zcl_hh_dp_navigator IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_heading.
-    heading = zcl_hh_dp_navigator=>heading.
+    heading = me->heading.
   ENDMETHOD.
 
   METHOD set_heading.
-    IF zcl_hh_dp_navigator=>heading CA heading.
-      zcl_hh_dp_navigator=>heading = heading.
+    IF me->heading CA heading.
+      me->heading = heading.
     ELSE.
-      zcl_hh_dp_navigator=>heading = compass(1).
+      me->heading = compass(1).
     ENDIF.
   ENDMETHOD.
 

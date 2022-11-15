@@ -1,11 +1,13 @@
 CLASS zcl_hh_dp_report DEFINITION
   PUBLIC
   FINAL
-  CREATE PRIVATE .
+  CREATE PRIVATE.
 
   PUBLIC SECTION.
     CONSTANTS:
-      execute TYPE sy-ucomm VALUE 'ONLI'.
+      execute                      TYPE sy-ucomm VALUE 'ONLI',
+      add_new_car                  TYPE sy-ucomm VALUE 'NEWCAR',
+      selection_screen_status_name TYPE sy-pfkey VALUE 'SELECTION_SCREEN'.
     CLASS-METHODS:
       register_car_entry
         IMPORTING
@@ -40,7 +42,8 @@ CLASS zcl_hh_dp_report DEFINITION
            output_list TYPE STANDARD TABLE OF output_row.
 
     CLASS-DATA:
-      output_stack TYPE output_list.
+      output_stack TYPE output_list,
+      car_stack    TYPE TABLE OF REF TO zcl_hh_dp_car.
 
     CLASS-METHODS:
       build_report,
@@ -57,21 +60,24 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
   METHOD build_report.
     DATA: output_entry LIKE LINE OF output_stack.
 
-    zcl_hh_dp_car=>get_characteristics(
-      IMPORTING
-        license_plate = output_entry-license_plate
-        brand         = output_entry-brand
-        model         = output_entry-model
-        year          = output_entry-year
-        color         = output_entry-color
-        location      = output_entry-location
-        speed_unit    = output_entry-speed_unit
-    ).
+    LOOP AT zcl_hh_dp_report=>car_stack
+      INTO DATA(car_entry).
+      car_entry->get_characteristics(
+        IMPORTING
+          license_plate = output_entry-license_plate
+          brand         = output_entry-brand
+          model         = output_entry-model
+          year          = output_entry-year
+          color         = output_entry-color
+          location      = output_entry-location
+          speed_unit    = output_entry-speed_unit
+      ).
 
-    output_entry-heading = zcl_hh_dp_car=>get_heading( ).
-    output_entry-speed = zcl_hh_dp_car=>get_speed( ).
+      output_entry-heading = car_entry->get_heading( ).
+      output_entry-speed = car_entry->get_speed( ).
 
-    APPEND output_entry TO output_stack.
+      APPEND output_entry TO zcl_hh_dp_report=>output_stack.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD present_report.
@@ -100,7 +106,11 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD register_car_entry.
-    zcl_hh_dp_car=>set_characteristics(
+    DATA(car_entry) = NEW zcl_hh_dp_car( ).
+
+    APPEND car_entry TO zcl_hh_dp_report=>car_stack.
+
+    car_entry->set_characteristics(
       EXPORTING
         license_plate = license_plate
         brand         = brand
@@ -111,15 +121,19 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         speed_unit    = speed_unit
     ).
 
-    zcl_hh_dp_car=>set_heading( heading ).
+    car_entry->set_heading( heading ).
 
-    zcl_hh_dp_car=>accelerate( speed01 ).
-    zcl_hh_dp_car=>accelerate( speed02 ).
-    zcl_hh_dp_car=>accelerate( speed03 ).
+    car_entry->accelerate( speed01 ).
+    car_entry->accelerate( speed02 ).
+    car_entry->accelerate( speed03 ).
 
-    zcl_hh_dp_car=>change_heading( turn01 ).
-    zcl_hh_dp_car=>change_heading( turn02 ).
-    zcl_hh_dp_car=>change_heading( turn03 ).
+    car_entry->change_heading( turn01 ).
+    car_entry->change_heading( turn02 ).
+    car_entry->change_heading( turn03 ).
+
+    MESSAGE s398(00) WITH 'Entry registered for'
+                          license_plate
+                          space space.
   ENDMETHOD.
 
   METHOD set_column_titles.

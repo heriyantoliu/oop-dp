@@ -1,7 +1,6 @@
 CLASS zcl_hh_dp_car DEFINITION
   PUBLIC
-  FINAL
-  CREATE PRIVATE .
+  FINAL.
 
   PUBLIC SECTION.
     TYPES:
@@ -14,7 +13,7 @@ CLASS zcl_hh_dp_car DEFINITION
       speed_unit_type    TYPE char3,
       year_type          TYPE num4.
 
-    CLASS-METHODS:
+    METHODS:
       accelerate
         IMPORTING
           acceleration TYPE zcl_hh_dp_car=>speed_type,
@@ -51,9 +50,7 @@ CLASS zcl_hh_dp_car DEFINITION
 
   PROTECTED SECTION.
   PRIVATE SECTION.
-
-
-    CLASS-DATA:
+    DATA:
       license_plate TYPE zcl_hh_dp_car=>license_plate_type,
       brand         TYPE zcl_hh_dp_car=>brand_type,
       model         TYPE zcl_hh_dp_car=>model_type,
@@ -61,7 +58,8 @@ CLASS zcl_hh_dp_car DEFINITION
       color         TYPE zcl_hh_dp_car=>color_type,
       location      TYPE zcl_hh_dp_car=>location_type,
       speed         TYPE zcl_hh_dp_car=>speed_type,
-      speed_unit    TYPE zcl_hh_dp_car=>speed_unit_type.
+      speed_unit    TYPE zcl_hh_dp_car=>speed_unit_type,
+      navigation_unit type ref to zcl_hh_dp_navigator.
 
 ENDCLASS.
 
@@ -69,43 +67,45 @@ ENDCLASS.
 
 CLASS zcl_hh_dp_car IMPLEMENTATION.
   METHOD accelerate.
-    ADD acceleration TO zcl_hh_dp_car=>speed.
+    ADD acceleration TO speed.
   ENDMETHOD.
 
   METHOD change_heading.
-    zcl_hh_dp_navigator=>change_heading( turn ).
+    me->navigation_unit->change_heading( turn ).
   ENDMETHOD.
 
   METHOD get_characteristics.
-    license_plate = zcl_hh_dp_car=>license_plate.
-    brand = zcl_hh_dp_car=>brand.
-    model = zcl_hh_dp_car=>model.
-    year = zcl_hh_dp_car=>year.
-    color = zcl_hh_dp_car=>color.
-    location = zcl_hh_dp_car=>location.
-    speed_unit = zcl_hh_dp_car=>speed_unit.
+    license_plate = me->license_plate.
+    brand = me->brand.
+    model = me->model.
+    year = me->year.
+    color = me->color.
+    location = me->location.
+    speed_unit = me->speed_unit.
   ENDMETHOD.
 
   METHOD get_heading.
-    heading = zcl_hh_dp_navigator=>get_heading( ).
+    heading = me->navigation_unit->get_heading( ).
   ENDMETHOD.
 
   METHOD get_speed.
-    speed = zcl_hh_dp_car=>speed.
+    speed = me->speed.
   ENDMETHOD.
 
   METHOD set_characteristics.
-    zcl_hh_dp_car=>license_plate = license_plate.
-    zcl_hh_dp_car=>brand = brand.
-    zcl_hh_dp_car=>model = model.
-    zcl_hh_dp_car=>year = year.
-    zcl_hh_dp_car=>color = color.
-    zcl_hh_dp_car=>location = location.
-    zcl_hh_dp_car=>speed_unit = speed_unit.
+    me->license_plate = license_plate.
+    me->brand = brand.
+    me->model = model.
+    me->year = year.
+    me->color = color.
+    me->location = location.
+    me->speed_unit = speed_unit.
+
+    me->navigation_unit = new #( ).
   ENDMETHOD.
 
   METHOD set_heading.
-    zcl_hh_dp_navigator=>set_heading( heading ).
+    me->navigation_unit->set_heading( heading ).
   ENDMETHOD.
 
 ENDCLASS.

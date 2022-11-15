@@ -22,26 +22,35 @@ SELECTION-SCREEN BEGIN OF BLOCK block_a WITH FRAME.
               pspeed03 TYPE zcl_hh_dp_car=>speed_type.
 SELECTION-SCREEN END OF BLOCK block_a.
 
-AT SELECTION-SCREEN.
-  CHECK sy-ucomm EQ zcl_hh_dp_report=>execute.
+INITIALIZATION.
+  SET PF-STATUS zcl_hh_dp_report=>selection_screen_status_name.
 
-  zcl_hh_dp_report=>register_car_entry(
-    EXPORTING
-      license_plate = pplate
-      brand         = pbrand
-      year          = pyear
-      model         = pmodel
-      color         = pcolor
-      location      = plocatn
-      heading       = pheading
-      turn01        = pturn01
-      turn02        = pturn02
-      turn03        = pturn03
-      speed01       = pspeed01
-      speed02       = pspeed02
-      speed03       = pspeed03
-      speed_unit    = pspeedu
-  ).
+AT SELECTION-SCREEN.
+  CHECK sy-ucomm EQ zcl_hh_dp_report=>execute OR
+        sy-ucomm EQ zcl_hh_dp_report=>add_new_car.
+
+  CASE sy-ucomm.
+    WHEN zcl_hh_dp_report=>add_new_car.
+
+      zcl_hh_dp_report=>register_car_entry(
+        EXPORTING
+          license_plate = pplate
+          brand         = pbrand
+          year          = pyear
+          model         = pmodel
+          color         = pcolor
+          location      = plocatn
+          heading       = pheading
+          turn01        = pturn01
+          turn02        = pturn02
+          turn03        = pturn03
+          speed01       = pspeed01
+          speed02       = pspeed02
+          speed03       = pspeed03
+          speed_unit    = pspeedu
+      ).
+    when others.
+  ENDCASE.
 
 START-OF-SELECTION.
 
