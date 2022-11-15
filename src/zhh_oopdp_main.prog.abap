@@ -175,11 +175,11 @@ ENDFORM.
 FORM present_report.
 
   TRY.
-      CALL METHOD cl_salv_table=>factory
+      cl_salv_table=>factory(
         IMPORTING
           r_salv_table = alv_grid
         CHANGING
-          t_table      = output_stack.
+          t_table      = output_stack ).
     CATCH cx_salv_msg.
       MESSAGE e398(00) WITH 'Failure to create alv grid object' "#EC *
                             space
@@ -194,20 +194,17 @@ FORM present_report.
 
   lo_display->set_striped_pattern( 'X' ).
 
-  CALL METHOD alv_grid->display.
+  alv_grid->display( ).
 ENDFORM.
 
 FORM set_column_titles.
 
-  CALL METHOD alv_grid->get_columns
-    RECEIVING
-      value = grid_columns.
+  grid_columns = alv_grid->get_columns( ).
 
   grid_columns->set_optimize( 'X' ).
 
-  CALL METHOD grid_columns->get
-    RECEIVING
-      value = grid_column_stack.
+  grid_column_stack = grid_columns->get( ).
+
   LOOP AT grid_column_stack
      INTO grid_column_entry.
     CLEAR grid_column_width.
@@ -236,13 +233,9 @@ FORM set_column_titles.
       WHEN OTHERS.
         CLEAR grid_column_title_short.
     ENDCASE.
-    CALL METHOD grid_column_entry-r_column->set_short_text
-      EXPORTING
-        value = grid_column_title_short.
+    grid_column_entry-r_column->set_short_text( grid_column_title_short ).
     IF grid_column_width GT 00.
-      CALL METHOD grid_column_entry-r_column->set_output_length
-        EXPORTING
-          value = grid_column_width.
+      grid_column_entry-r_column->set_output_length( grid_column_width ).
     ENDIF.
   ENDLOOP.
 ENDFORM.
