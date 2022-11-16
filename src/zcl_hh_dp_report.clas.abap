@@ -27,7 +27,8 @@ CLASS zcl_hh_dp_report DEFINITION
           speed03       TYPE zcl_hh_dp_vehicle=>speed_type
           speed_unit    TYPE zcl_hh_dp_vehicle=>speed_unit_type
           tare_weight   TYPE zcl_hh_dp_vehicle=>weight_type
-          weight_unit   TYPE zcl_hh_dp_vehicle=>weight_unit_type,
+          weight_unit   TYPE zcl_hh_dp_vehicle=>weight_unit_type
+          passengers    TYPE zcl_hh_dp_car=>passengers_type,
       register_truck_entry
         IMPORTING
           license_plate TYPE zcl_hh_dp_vehicle=>license_plate_type
@@ -45,7 +46,8 @@ CLASS zcl_hh_dp_report DEFINITION
           speed03       TYPE zcl_hh_dp_vehicle=>speed_type
           speed_unit    TYPE zcl_hh_dp_vehicle=>speed_unit_type
           tare_weight   TYPE zcl_hh_dp_vehicle=>weight_type
-          weight_unit   TYPE zcl_hh_dp_vehicle=>weight_unit_type,
+          weight_unit   TYPE zcl_hh_dp_vehicle=>weight_unit_type
+          cargo_weight  TYPE zcl_hh_dp_vehicle=>weight_type,
       show_report.
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -168,6 +170,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       heading       = heading
       tare_weight   = tare_weight
       weight_unit   = weight_unit
+      passengers    = passengers
     ).
 
     APPEND car_entry TO car_stack.
@@ -198,6 +201,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       heading       = heading
       tare_weight   = tare_weight
       weight_unit   = weight_unit
+      cargo_weight  = cargo_weight
     ).
 
     APPEND truck_entry TO truck_stack.

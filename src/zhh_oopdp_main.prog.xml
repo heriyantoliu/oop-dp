@@ -886,6 +886,12 @@
     </item>
     <item>
      <ID>S</ID>
+     <KEY>PCARGOW</KEY>
+     <ENTRY>Cargo weight (truck only)</ENTRY>
+     <LENGTH>33</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
      <KEY>PCOLOR</KEY>
      <ENTRY>Color</ENTRY>
      <LENGTH>13</LENGTH>
@@ -919,6 +925,12 @@
      <KEY>PPLATE</KEY>
      <ENTRY>License plate</ENTRY>
      <LENGTH>21</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>PPSNGRS</KEY>
+     <ENTRY>Passengers (car only)</ENTRY>
+     <LENGTH>29</LENGTH>
     </item>
     <item>
      <ID>S</ID>
