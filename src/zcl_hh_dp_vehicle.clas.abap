@@ -1,5 +1,6 @@
 CLASS zcl_hh_dp_vehicle DEFINITION
-  PUBLIC.
+  PUBLIC
+  ABSTRACT.
 
   PUBLIC SECTION.
     TYPES:
@@ -11,7 +12,9 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       speed_type         TYPE int4,
       speed_unit_type    TYPE char3,
       year_type          TYPE num4,
-      serial_type        TYPE num4.
+      serial_type        TYPE num4,
+      weight_type        TYPE int4,
+      weight_unit_type   TYPE char3.
 
     CLASS-METHODS:
       class_constructor.
@@ -32,7 +35,11 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           year          TYPE year_type
           color         TYPE color_type
           location      TYPE location_type
-          speed_unit    TYPE speed_unit_type,
+          speed_unit    TYPE speed_unit_type
+          weight_unit   TYPE weight_unit_type,
+      get_gross_weight ABSTRACT
+        RETURNING
+          VALUE(gross_weight) TYPE weight_type,
       get_heading
         RETURNING
           VALUE(heading) TYPE zcl_hh_dp_navigator=>heading_type,
@@ -48,8 +55,13 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           color         TYPE color_type
           location      TYPE location_type
           speed_unit    TYPE speed_unit_type
-          heading       TYPE zcl_hh_dp_navigator=>heading_type.
+          heading       TYPE zcl_hh_dp_navigator=>heading_type
+          tare_weight   TYPE weight_type
+          weight_unit   TYPE weight_unit_type.
   PROTECTED SECTION.
+    DATA:
+      tare_weight TYPE weight_type.
+
   PRIVATE SECTION.
     CLASS-DATA:
       last_serial_value TYPE serial_type.
@@ -63,6 +75,7 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       location        TYPE location_type,
       speed           TYPE speed_type,
       speed_unit      TYPE speed_unit_type,
+      weight_unit     TYPE weight_unit_type,
       serial_number   TYPE serial_type,
       navigation_unit TYPE REF TO zcl_hh_dp_navigator.
 
@@ -71,8 +84,6 @@ CLASS zcl_hh_dp_vehicle DEFINITION
         RETURNING
           VALUE(serial_number) TYPE serial_type.
 ENDCLASS.
-
-
 
 CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
   METHOD accelerate.
@@ -92,6 +103,7 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     color = me->color.
     location = me->location.
     speed_unit = me->speed_unit.
+    weight_unit = me->weight_unit.
   ENDMETHOD.
 
   METHOD get_heading.
@@ -113,6 +125,8 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     me->color = color.
     me->location = location.
     me->speed_unit = speed_unit.
+    me->tare_weight = tare_weight.
+    me->weight_unit = weight_unit.
 
     me->navigation_unit = NEW #( heading ).
   ENDMETHOD.
@@ -122,7 +136,7 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_serial_number.
-    add 1 to last_serial_value.
+    ADD 1 TO last_serial_value.
     serial_number = last_serial_value.
   ENDMETHOD.
 

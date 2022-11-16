@@ -19,7 +19,9 @@ SELECTION-SCREEN BEGIN OF BLOCK block_a WITH FRAME.
               pspeedu  TYPE zcl_hh_dp_vehicle=>speed_unit_type,
               pspeed01 TYPE zcl_hh_dp_vehicle=>speed_type,
               pspeed02 TYPE zcl_hh_dp_vehicle=>speed_type,
-              pspeed03 TYPE zcl_hh_dp_vehicle=>speed_type.
+              pspeed03 TYPE zcl_hh_dp_vehicle=>speed_type,
+              pwghtu   TYPE zcl_hh_dp_vehicle=>weight_unit_type,
+              pevw     TYPE zcl_hh_dp_vehicle=>weight_type.
 SELECTION-SCREEN END OF BLOCK block_a.
 
 INITIALIZATION.
@@ -27,8 +29,8 @@ INITIALIZATION.
 
 AT SELECTION-SCREEN.
   CHECK sy-ucomm EQ zcl_hh_dp_report=>execute OR
-        sy-ucomm EQ zcl_hh_dp_report=>add_new_car or
-        sy-ucomm eq zcl_hh_dp_report=>add_new_truck.
+        sy-ucomm EQ zcl_hh_dp_report=>add_new_car OR
+        sy-ucomm EQ zcl_hh_dp_report=>add_new_truck.
 
   CASE sy-ucomm.
     WHEN zcl_hh_dp_report=>add_new_car.
@@ -49,6 +51,8 @@ AT SELECTION-SCREEN.
           speed02       = pspeed02
           speed03       = pspeed03
           speed_unit    = pspeedu
+          tare_weight   = pevw
+          weight_unit   = pwghtu
       ).
 
     WHEN zcl_hh_dp_report=>add_new_truck.
@@ -69,9 +73,11 @@ AT SELECTION-SCREEN.
           speed02       = pspeed02
           speed03       = pspeed03
           speed_unit    = pspeedu
+          tare_weight   = pevw
+          weight_unit   = pwghtu
       ).
 
-    when others.
+    WHEN OTHERS.
   ENDCASE.
 
 START-OF-SELECTION.

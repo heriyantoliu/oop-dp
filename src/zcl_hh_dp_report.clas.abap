@@ -25,7 +25,9 @@ CLASS zcl_hh_dp_report DEFINITION
           speed01       TYPE zcl_hh_dp_vehicle=>speed_type
           speed02       TYPE zcl_hh_dp_vehicle=>speed_type
           speed03       TYPE zcl_hh_dp_vehicle=>speed_type
-          speed_unit    TYPE zcl_hh_dp_vehicle=>speed_unit_type,
+          speed_unit    TYPE zcl_hh_dp_vehicle=>speed_unit_type
+          tare_weight   TYPE zcl_hh_dp_vehicle=>weight_type
+          weight_unit   TYPE zcl_hh_dp_vehicle=>weight_unit_type,
       register_truck_entry
         IMPORTING
           license_plate TYPE zcl_hh_dp_vehicle=>license_plate_type
@@ -41,7 +43,9 @@ CLASS zcl_hh_dp_report DEFINITION
           speed01       TYPE zcl_hh_dp_vehicle=>speed_type
           speed02       TYPE zcl_hh_dp_vehicle=>speed_type
           speed03       TYPE zcl_hh_dp_vehicle=>speed_type
-          speed_unit    TYPE zcl_hh_dp_vehicle=>speed_unit_type,
+          speed_unit    TYPE zcl_hh_dp_vehicle=>speed_unit_type
+          tare_weight   TYPE zcl_hh_dp_vehicle=>weight_type
+          weight_unit   TYPE zcl_hh_dp_vehicle=>weight_unit_type,
       show_report.
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -57,6 +61,8 @@ CLASS zcl_hh_dp_report DEFINITION
         heading       TYPE zcl_hh_dp_navigator=>heading_type,
         speed         TYPE zcl_hh_dp_vehicle=>speed_type,
         speed_unit    TYPE zcl_hh_dp_vehicle=>speed_unit_type,
+        weight        TYPE zcl_hh_dp_vehicle=>weight_type,
+        weight_unit   TYPE zcl_hh_dp_vehicle=>weight_unit_type,
       END   OF output_row,
       output_list TYPE STANDARD TABLE OF output_row.
 
@@ -92,10 +98,12 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
           color         = output_entry-color
           location      = output_entry-location
           speed_unit    = output_entry-speed_unit
+          weight_unit   = output_entry-weight_unit
       ).
 
       output_entry-heading = car_entry->get_heading( ).
       output_entry-speed = car_entry->get_speed( ).
+      output_entry-weight = car_entry->get_gross_weight( ).
 
       APPEND output_entry TO zcl_hh_dp_report=>output_stack.
     ENDLOOP.
@@ -112,10 +120,12 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
           color         = output_entry-color
           location      = output_entry-location
           speed_unit    = output_entry-speed_unit
+          weight_unit   = output_entry-weight_unit
       ).
 
       output_entry-heading = truck_entry->get_heading( ).
       output_entry-speed = truck_entry->get_speed( ).
+      output_entry-weight = truck_entry->get_gross_weight( ).
 
       APPEND output_entry TO zcl_hh_dp_report=>output_stack.
     ENDLOOP.
@@ -156,6 +166,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       location      = location
       speed_unit    = speed_unit
       heading       = heading
+      tare_weight   = tare_weight
+      weight_unit   = weight_unit
     ).
 
     APPEND car_entry TO car_stack.
@@ -184,6 +196,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       location      = location
       speed_unit    = speed_unit
       heading       = heading
+      tare_weight   = tare_weight
+      weight_unit   = weight_unit
     ).
 
     APPEND truck_entry TO truck_stack.
@@ -224,7 +238,11 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       column_name_speed          TYPE lvc_fname VALUE 'SPEED',
       column_title_speed         TYPE string    VALUE `Speed`,
       column_name_speed_unit     TYPE lvc_fname VALUE 'SPEED_UNIT',
-      column_title_speed_unit    TYPE string    VALUE `Unit`,
+      column_title_speed_unit    TYPE string    VALUE `SUoM`,
+      column_name_weight         TYPE lvc_fname VALUE 'WEIGHT',
+      column_title_weight        TYPE string VALUE 'Weight',
+      column_name_weight_unit    TYPE lvc_fname VALUE 'WEIGHT_UNIT',
+      column_title_weight_unit   TYPE string VALUE 'WUoM',
       minimum_column_width       TYPE int4      VALUE 08.
 
     DATA: grid_column_width       TYPE lvc_outlen,
@@ -245,26 +263,31 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         WHEN column_name_serial_number.
           grid_column_title_short = column_title_serial_number.
         WHEN column_name_license_plate.
-          grid_column_title_short   = column_title_license_plate.
+          grid_column_title_short = column_title_license_plate.
         WHEN column_name_brand.
-          grid_column_title_short   = column_title_brand.
+          grid_column_title_short = column_title_brand.
         WHEN column_name_model.
-          grid_column_title_short   = column_title_model.
+          grid_column_title_short = column_title_model.
         WHEN column_name_year.
-          grid_column_title_short   = column_title_year.
+          grid_column_title_short = column_title_year.
         WHEN column_name_color.
-          grid_column_title_short   = column_title_color.
+          grid_column_title_short = column_title_color.
         WHEN column_name_location.
-          grid_column_title_short   = column_title_location.
+          grid_column_title_short = column_title_location.
         WHEN column_name_heading.
-          grid_column_title_short   = column_title_heading.
-          grid_column_width         = minimum_column_width.
+          grid_column_title_short = column_title_heading.
+          grid_column_width = minimum_column_width.
         WHEN column_name_speed.
-          grid_column_title_short   = column_title_speed.
-          grid_column_width         = minimum_column_width.
+          grid_column_title_short = column_title_speed.
+          grid_column_width = minimum_column_width.
         WHEN column_name_speed_unit.
-          grid_column_title_short   = column_title_speed_unit.
-          grid_column_width         = minimum_column_width.
+          grid_column_title_short = column_title_speed_unit.
+          grid_column_width = minimum_column_width.
+        WHEN column_name_weight.
+          grid_column_title_short = column_title_weight.
+        WHEN column_name_weight_unit.
+          grid_column_title_short   = column_title_weight_unit.
+          grid_column_width = minimum_column_width.
         WHEN OTHERS.
           CLEAR grid_column_title_short.
       ENDCASE.

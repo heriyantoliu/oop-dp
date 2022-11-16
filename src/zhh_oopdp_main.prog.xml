@@ -892,6 +892,12 @@
     </item>
     <item>
      <ID>S</ID>
+     <KEY>PEVW</KEY>
+     <ENTRY>Empty vehicle weight</ENTRY>
+     <LENGTH>28</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
      <KEY>PHEADING</KEY>
      <ENTRY>Starting compass heading</ENTRY>
      <LENGTH>32</LENGTH>
@@ -955,6 +961,12 @@
      <KEY>PTURN03</KEY>
      <ENTRY>(none)</ENTRY>
      <LENGTH>14</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>PWGHTU</KEY>
+     <ENTRY>Weight unit</ENTRY>
+     <LENGTH>19</LENGTH>
     </item>
     <item>
      <ID>S</ID>
