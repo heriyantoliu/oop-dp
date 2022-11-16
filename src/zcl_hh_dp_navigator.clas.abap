@@ -15,13 +15,13 @@ CLASS zcl_hh_dp_navigator DEFINITION
     METHODS:
       change_heading
         IMPORTING
-          turn TYPE zcl_hh_dp_navigator=>turn_type,
+          turn TYPE turn_type,
       get_heading
         RETURNING
-          VALUE(heading) TYPE zcl_hh_dp_navigator=>heading_type,
-      set_heading
+          VALUE(heading) TYPE heading_type,
+      constructor
         IMPORTING
-          heading TYPE zcl_hh_dp_navigator=>heading_type.
+          heading TYPE heading_type.
   PROTECTED SECTION.
   PRIVATE SECTION.
     CONSTANTS:
@@ -30,7 +30,7 @@ CLASS zcl_hh_dp_navigator DEFINITION
       compass_offset_limit_hi TYPE int4 VALUE 3.
 
     DATA:
-      heading TYPE zcl_hh_dp_navigator=>heading_type.
+      heading TYPE heading_type.
 ENDCLASS.
 
 
@@ -67,7 +67,7 @@ CLASS zcl_hh_dp_navigator IMPLEMENTATION.
     heading = me->heading.
   ENDMETHOD.
 
-  METHOD set_heading.
+  METHOD constructor.
     IF me->heading CA heading.
       me->heading = heading.
     ELSE.

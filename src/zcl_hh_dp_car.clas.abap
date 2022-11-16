@@ -16,50 +16,48 @@ CLASS zcl_hh_dp_car DEFINITION
     METHODS:
       accelerate
         IMPORTING
-          acceleration TYPE zcl_hh_dp_car=>speed_type,
+          acceleration TYPE speed_type,
       change_heading
-        importing
-          turn type zcl_hh_dp_navigator=>turn_type,
+        IMPORTING
+          turn TYPE zcl_hh_dp_navigator=>turn_type,
       get_characteristics
         EXPORTING
-          license_plate TYPE zcl_hh_dp_car=>license_plate_type
-          brand         TYPE zcl_hh_dp_car=>brand_type
-          model         TYPE zcl_hh_dp_car=>model_type
-          year          TYPE zcl_hh_dp_car=>year_type
-          color         TYPE zcl_hh_dp_car=>color_type
-          location      TYPE zcl_hh_dp_car=>location_type
-          speed_unit    TYPE zcl_hh_dp_car=>speed_unit_type,
+          license_plate TYPE license_plate_type
+          brand         TYPE brand_type
+          model         TYPE model_type
+          year          TYPE year_type
+          color         TYPE color_type
+          location      TYPE location_type
+          speed_unit    TYPE speed_unit_type,
       get_heading
-        returning
-          value(heading) type zcl_hh_dp_navigator=>heading_type,
+        RETURNING
+          VALUE(heading) TYPE zcl_hh_dp_navigator=>heading_type,
       get_speed
         RETURNING
-          VALUE(speed) TYPE zcl_hh_dp_car=>speed_type,
-      set_characteristics
+          VALUE(speed) TYPE speed_type,
+      constructor
         IMPORTING
-          license_plate TYPE zcl_hh_dp_car=>license_plate_type
-          brand         TYPE zcl_hh_dp_car=>brand_type
-          model         TYPE zcl_hh_dp_car=>model_type
-          year          TYPE zcl_hh_dp_car=>year_type
-          color         TYPE zcl_hh_dp_car=>color_type
-          location      TYPE zcl_hh_dp_car=>location_type
-          speed_unit    TYPE zcl_hh_dp_car=>speed_unit_type,
-      set_heading
-        importing
-          heading type zcl_hh_dp_navigator=>heading_type.
+          license_plate TYPE license_plate_type
+          brand         TYPE brand_type
+          model         TYPE model_type
+          year          TYPE year_type
+          color         TYPE color_type
+          location      TYPE location_type
+          speed_unit    TYPE speed_unit_type
+          heading       TYPE zcl_hh_dp_navigator=>heading_type.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
     DATA:
-      license_plate TYPE zcl_hh_dp_car=>license_plate_type,
-      brand         TYPE zcl_hh_dp_car=>brand_type,
-      model         TYPE zcl_hh_dp_car=>model_type,
-      year          TYPE zcl_hh_dp_car=>year_type,
-      color         TYPE zcl_hh_dp_car=>color_type,
-      location      TYPE zcl_hh_dp_car=>location_type,
-      speed         TYPE zcl_hh_dp_car=>speed_type,
-      speed_unit    TYPE zcl_hh_dp_car=>speed_unit_type,
-      navigation_unit type ref to zcl_hh_dp_navigator.
+      license_plate   TYPE license_plate_type,
+      brand           TYPE brand_type,
+      model           TYPE model_type,
+      year            TYPE year_type,
+      color           TYPE color_type,
+      location        TYPE location_type,
+      speed           TYPE speed_type,
+      speed_unit      TYPE speed_unit_type,
+      navigation_unit TYPE REF TO zcl_hh_dp_navigator.
 
 ENDCLASS.
 
@@ -92,7 +90,7 @@ CLASS zcl_hh_dp_car IMPLEMENTATION.
     speed = me->speed.
   ENDMETHOD.
 
-  METHOD set_characteristics.
+  METHOD constructor.
     me->license_plate = license_plate.
     me->brand = brand.
     me->model = model.
@@ -101,11 +99,7 @@ CLASS zcl_hh_dp_car IMPLEMENTATION.
     me->location = location.
     me->speed_unit = speed_unit.
 
-    me->navigation_unit = new #( ).
-  ENDMETHOD.
-
-  METHOD set_heading.
-    me->navigation_unit->set_heading( heading ).
+    me->navigation_unit = NEW #( heading ).
   ENDMETHOD.
 
 ENDCLASS.

@@ -106,22 +106,18 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD register_car_entry.
-    DATA(car_entry) = NEW zcl_hh_dp_car( ).
-
-    APPEND car_entry TO zcl_hh_dp_report=>car_stack.
-
-    car_entry->set_characteristics(
-      EXPORTING
-        license_plate = license_plate
-        brand         = brand
-        model         = model
-        year          = year
-        color         = color
-        location      = location
-        speed_unit    = speed_unit
+    DATA(car_entry) = NEW zcl_hh_dp_car(
+      license_plate = license_plate
+      brand         = brand
+      model         = model
+      year          = year
+      color         = color
+      location      = location
+      speed_unit    = speed_unit
+      heading       = heading
     ).
 
-    car_entry->set_heading( heading ).
+    APPEND car_entry TO car_stack.
 
     car_entry->accelerate( speed01 ).
     car_entry->accelerate( speed02 ).
