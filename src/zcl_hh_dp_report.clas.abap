@@ -65,6 +65,7 @@ CLASS zcl_hh_dp_report DEFINITION
         speed_unit    TYPE zcl_hh_dp_vehicle=>speed_unit_type,
         weight        TYPE zcl_hh_dp_vehicle=>weight_type,
         weight_unit   TYPE zcl_hh_dp_vehicle=>weight_unit_type,
+        description   type zcl_hh_dp_vehicle=>description_type,
       END   OF output_row,
       output_list TYPE STANDARD TABLE OF output_row.
 
@@ -81,8 +82,6 @@ CLASS zcl_hh_dp_report DEFINITION
           alv_grid TYPE REF TO cl_salv_table.
 
 ENDCLASS.
-
-
 
 CLASS zcl_hh_dp_report IMPLEMENTATION.
   METHOD build_report.
@@ -106,6 +105,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       output_entry-heading = car_entry->get_heading( ).
       output_entry-speed = car_entry->get_speed( ).
       output_entry-weight = car_entry->get_gross_weight( ).
+      output_entry-description = car_entry->get_description( ).
 
       APPEND output_entry TO zcl_hh_dp_report=>output_stack.
     ENDLOOP.
@@ -128,6 +128,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       output_entry-heading = truck_entry->get_heading( ).
       output_entry-speed = truck_entry->get_speed( ).
       output_entry-weight = truck_entry->get_gross_weight( ).
+      output_entry-description = truck_entry->get_description( ).
 
       APPEND output_entry TO zcl_hh_dp_report=>output_stack.
     ENDLOOP.
@@ -247,6 +248,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       column_title_weight        TYPE string VALUE 'Weight',
       column_name_weight_unit    TYPE lvc_fname VALUE 'WEIGHT_UNIT',
       column_title_weight_unit   TYPE string VALUE 'WUoM',
+      column_name_description    type lvc_fname value 'DESCRIPTION',
+      column_title_description   type string value 'Descriptor',
       minimum_column_width       TYPE int4      VALUE 08.
 
     DATA: grid_column_width       TYPE lvc_outlen,
@@ -292,6 +295,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         WHEN column_name_weight_unit.
           grid_column_title_short   = column_title_weight_unit.
           grid_column_width = minimum_column_width.
+        when column_name_description.
+          grid_column_title_short = column_title_description.
         WHEN OTHERS.
           CLEAR grid_column_title_short.
       ENDCASE.

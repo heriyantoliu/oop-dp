@@ -20,9 +20,13 @@ CLASS zcl_hh_dp_car DEFINITION
           tare_weight   TYPE zcl_hh_dp_vehicle=>weight_type
           weight_unit   TYPE zcl_hh_dp_vehicle=>weight_unit_type
           passengers    TYPE passengers_type,
+      get_description REDEFINITION,
       get_gross_weight REDEFINITION.
   PROTECTED SECTION.
   PRIVATE SECTION.
+    CONSTANTS:
+      descriptor TYPE string VALUE 'Car'.
+
     DATA:
       passengers TYPE passengers_type.
 ENDCLASS.
@@ -49,38 +53,38 @@ CLASS zcl_hh_dp_car IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_gross_weight.
-    constants:
-      average_adult_weight_in_lbs type zcl_hh_dp_vehicle=>weight_type value 180,
-      average_adult_weight_unit type msehi value 'LB'.
+    CONSTANTS:
+      average_adult_weight_in_lbs TYPE zcl_hh_dp_vehicle=>weight_type VALUE 180,
+      average_adult_weight_unit   TYPE msehi VALUE 'LB'.
 
-    data:
-      average_passenger_weight type zcl_hh_dp_vehicle=>weight_type,
-      registered_weight_unit type msehi.
+    DATA:
+      average_passenger_weight TYPE zcl_hh_dp_vehicle=>weight_type,
+      registered_weight_unit   TYPE msehi.
 
     average_passenger_weight = average_adult_weight_in_lbs.
 
     me->get_characteristics(
-      importing
+      IMPORTING
         weight_unit = registered_weight_unit
     ).
 
-    if registered_weight_unit ne average_adult_weight_unit.
-      call function 'UNIT_CONVERSION_SIMPLE'
+    IF registered_weight_unit NE average_adult_weight_unit.
+      CALL FUNCTION 'UNIT_CONVERSION_SIMPLE'
         EXPORTING
-          input                = average_passenger_weight
-
-          unit_in              = average_adult_weight_unit
-          unit_out             = registered_weight_unit
+          input    = average_passenger_weight
+          unit_in  = average_adult_weight_unit
+          unit_out = registered_weight_unit
         IMPORTING
-          output               = average_passenger_weight
+          output   = average_passenger_weight
         EXCEPTIONS
-          others               = 0
-        .
-    endif.
+          OTHERS   = 0.
+    ENDIF.
 
     gross_weight = me->tare_weight + me->passengers * average_passenger_weight.
   ENDMETHOD.
 
-
+  METHOD get_description.
+    description = me->descriptor.
+  ENDMETHOD.
 
 ENDCLASS.

@@ -14,7 +14,8 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       year_type          TYPE num4,
       serial_type        TYPE num4,
       weight_type        TYPE int4,
-      weight_unit_type   TYPE char3.
+      weight_unit_type   TYPE char3,
+      description_type   TYPE char15.
 
     CLASS-METHODS:
       class_constructor.
@@ -37,6 +38,9 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           location      TYPE location_type
           speed_unit    TYPE speed_unit_type
           weight_unit   TYPE weight_unit_type,
+      get_description abstract
+        returning
+          value(description) type description_type,
       get_gross_weight ABSTRACT
         RETURNING
           VALUE(gross_weight) TYPE weight_type,

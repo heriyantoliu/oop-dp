@@ -3,9 +3,9 @@ CLASS zcl_hh_dp_truck DEFINITION
   INHERITING FROM zcl_hh_dp_vehicle.
 
   PUBLIC SECTION.
-    methods:
+    METHODS:
       constructor
-        importing
+        IMPORTING
           license_plate TYPE zcl_hh_dp_vehicle=>license_plate_type
           brand         TYPE zcl_hh_dp_vehicle=>brand_type
           model         TYPE zcl_hh_dp_vehicle=>model_type
@@ -16,12 +16,16 @@ CLASS zcl_hh_dp_truck DEFINITION
           heading       TYPE zcl_hh_dp_navigator=>heading_type
           tare_weight   TYPE zcl_hh_dp_vehicle=>weight_type
           weight_unit   TYPE zcl_hh_dp_vehicle=>weight_unit_type
-          cargo_weight type zcl_hh_dp_vehicle=>weight_type,
+          cargo_weight  TYPE zcl_hh_dp_vehicle=>weight_type,
+      get_description REDEFINITION,
       get_gross_weight REDEFINITION.
   PROTECTED SECTION.
   PRIVATE SECTION.
-    data:
-      cargo_weight type zcl_hh_dp_vehicle=>weight_type.
+    CONSTANTS:
+      descriptor TYPE string VALUE 'Truck'.
+
+    DATA:
+      cargo_weight TYPE zcl_hh_dp_vehicle=>weight_type.
 ENDCLASS.
 
 
@@ -45,6 +49,10 @@ CLASS zcl_hh_dp_truck IMPLEMENTATION.
 
     me->cargo_weight = cargo_weight.
 
+  ENDMETHOD.
+
+  METHOD get_description.
+    description = me->descriptor.
   ENDMETHOD.
 
   METHOD get_gross_weight.
