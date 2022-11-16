@@ -9,11 +9,12 @@ CLASS zcl_hh_dp_report DEFINITION
       add_new_car                  TYPE sy-ucomm VALUE 'NEWCAR',
       add_new_truck                TYPE sy-ucomm VALUE 'NEWTRUCK',
       selection_screen_status_name TYPE sy-pfkey VALUE 'SELECTION_SCREEN'.
+
+    class-data:
+      singleton type ref to zcl_hh_dp_report read-only.
+
     CLASS-METHODS:
-      class_constructor,
-      get_singleton_instance
-        returning
-          value(instance) type ref to zcl_hh_dp_report.
+      class_constructor.
 
     methods:
       register_car_entry
@@ -82,9 +83,6 @@ CLASS zcl_hh_dp_report DEFINITION
       END   OF output_row,
       output_list TYPE STANDARD TABLE OF output_row.
 
-    class-data:
-      singleton type ref to zcl_hh_dp_report.
-
     DATA:
       output_stack  TYPE output_list,
       vehicle_stack TYPE TABLE OF REF TO zcl_hh_dp_vehicle.
@@ -131,10 +129,6 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
 
   METHOD class_constructor.
     zcl_hh_dp_report=>singleton = new #( ).
-  ENDMETHOD.
-
-  METHOD get_singleton_instance.
-    instance = zcl_hh_dp_report=>singleton.
   ENDMETHOD.
 
   METHOD present_report.
