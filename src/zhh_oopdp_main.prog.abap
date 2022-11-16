@@ -25,7 +25,8 @@ SELECTION-SCREEN BEGIN OF BLOCK block_a WITH FRAME.
               pcargow  TYPE zcl_hh_dp_vehicle=>weight_type,
               ppsngrs  TYPE zcl_hh_dp_car=>passengers_type,
               xbnav    RADIOBUTTON GROUP nav,
-              xgps     RADIOBUTTON GROUP nav.
+              xgps     RADIOBUTTON GROUP nav,
+              xnonav   RADIOBUTTON GROUP nav.
 SELECTION-SCREEN END OF BLOCK block_a.
 
 INITIALIZATION.
@@ -60,6 +61,7 @@ AT SELECTION-SCREEN.
           passengers    = ppsngrs
           basic_navigation = xbnav
           gps_navigation = xgps
+          no_navigation = xnonav
       ).
 
     WHEN zcl_hh_dp_report=>add_new_truck.
@@ -85,6 +87,7 @@ AT SELECTION-SCREEN.
           cargo_weight  = pcargow
           basic_navigation = xbnav
           gps_navigation = xgps
+          no_navigation = xnonav
       ).
 
     WHEN OTHERS.

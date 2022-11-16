@@ -65,7 +65,8 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           tare_weight      TYPE weight_type
           weight_unit      TYPE weight_unit_type
           basic_navigation TYPE checkbox
-          gps_navigation   TYPE checkbox.
+          gps_navigation   TYPE checkbox
+          no_navigation    TYPE checkbox.
   PROTECTED SECTION.
     DATA:
       tare_weight TYPE weight_type.
@@ -85,7 +86,7 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       speed_unit      TYPE speed_unit_type,
       weight_unit     TYPE weight_unit_type,
       serial_number   TYPE serial_type,
-      navigation_type type navigator_type,
+      navigation_type TYPE navigator_type,
       navigation_unit TYPE REF TO zif_hh_dp_simple_navigation.
 
     CLASS-METHODS:
@@ -126,10 +127,10 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
 
   METHOD constructor.
 
-    constants:
-      selected type checkbox value 'X',
-      default_navigation type zcl_hh_dp_vehicle=>navigator_type
-        value zcl_hh_dp_navigator=>class_id.
+    CONSTANTS:
+      selected           TYPE checkbox VALUE 'X',
+      default_navigation TYPE zcl_hh_dp_vehicle=>navigator_type
+        VALUE zcl_hh_dp_dead_reckoning=>class_id.
 
     me->serial_number = me->get_serial_number( ).
 
@@ -143,16 +144,18 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     me->tare_weight = tare_weight.
     me->weight_unit = weight_unit.
 
-    case selected.
-      when gps_navigation.
+    CASE selected.
+      WHEN gps_navigation.
         me->navigation_type = zcl_hh_dp_gps=>class_id.
-      when others.
+      when basic_navigation.
+        me->navigation_type = zcl_hh_dp_navigator=>class_id.
+      WHEN OTHERS.
         me->navigation_type = default_navigation.
-    endcase.
+    ENDCASE.
 
-    create object me->navigation_unit
-      type (me->navigation_type)
-      exporting
+    CREATE OBJECT me->navigation_unit
+      TYPE (me->navigation_type)
+      EXPORTING
         heading = heading.
   ENDMETHOD.
 

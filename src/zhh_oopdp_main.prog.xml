@@ -998,6 +998,12 @@
      <ENTRY>Equipped with GPS navigation</ENTRY>
      <LENGTH>36</LENGTH>
     </item>
+    <item>
+     <ID>S</ID>
+     <KEY>XNONAV</KEY>
+     <ENTRY>Equipped with no navigation</ENTRY>
+     <LENGTH>35</LENGTH>
+    </item>
    </TPOOL>
   </asx:values>
  </asx:abap>

@@ -18,7 +18,8 @@ CLASS zcl_hh_dp_truck DEFINITION
           weight_unit      TYPE zcl_hh_dp_vehicle=>weight_unit_type
           cargo_weight     TYPE zcl_hh_dp_vehicle=>weight_type
           basic_navigation TYPE checkbox
-          gps_navigation   TYPE checkbox,
+          gps_navigation   TYPE checkbox
+          no_navigation    TYPE checkbox,
       get_description REDEFINITION,
       get_gross_weight REDEFINITION.
   PROTECTED SECTION.
@@ -49,6 +50,7 @@ CLASS zcl_hh_dp_truck IMPLEMENTATION.
       weight_unit = weight_unit
       basic_navigation = basic_navigation
       gps_navigation = gps_navigation
+      no_navigation = no_navigation
     ).
 
     me->cargo_weight = cargo_weight.

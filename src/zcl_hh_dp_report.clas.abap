@@ -30,7 +30,8 @@ CLASS zcl_hh_dp_report DEFINITION
           weight_unit      TYPE zcl_hh_dp_vehicle=>weight_unit_type
           passengers       TYPE zcl_hh_dp_car=>passengers_type
           basic_navigation TYPE checkbox
-          gps_navigation   TYPE checkbox,
+          gps_navigation   TYPE checkbox
+          no_navigation    TYPE checkbox,
       register_truck_entry
         IMPORTING
           license_plate    TYPE zcl_hh_dp_vehicle=>license_plate_type
@@ -51,7 +52,8 @@ CLASS zcl_hh_dp_report DEFINITION
           weight_unit      TYPE zcl_hh_dp_vehicle=>weight_unit_type
           cargo_weight     TYPE zcl_hh_dp_vehicle=>weight_type
           basic_navigation TYPE checkbox
-          gps_navigation   TYPE checkbox,
+          gps_navigation   TYPE checkbox
+          no_navigation    TYPE checkbox,
       show_report.
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -162,7 +164,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         weight_unit      = weight_unit
         passengers       = passengers
         basic_navigation = basic_navigation
-        gps_navigation   = gps_navigation.
+        gps_navigation   = gps_navigation
+        no_navigation    = no_navigation.
 
 
     APPEND vehicle_entry TO vehicle_stack.
@@ -199,7 +202,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         weight_unit      = weight_unit
         cargo_weight     = cargo_weight
         basic_navigation = basic_navigation
-        gps_navigation   = gps_navigation.
+        gps_navigation   = gps_navigation
+        no_navigation    = no_navigation.
 
 
     APPEND vehicle_entry TO vehicle_stack.
@@ -296,7 +300,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
           grid_column_width = minimum_column_width.
         WHEN column_name_description.
           grid_column_title_short = column_title_description.
-        when column_name_navigation_type.
+        WHEN column_name_navigation_type.
           grid_column_title_short = column_title_navigation_type.
         WHEN OTHERS.
           CLEAR grid_column_title_short.
