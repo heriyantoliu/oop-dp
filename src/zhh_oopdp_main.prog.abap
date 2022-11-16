@@ -29,8 +29,11 @@ SELECTION-SCREEN BEGIN OF BLOCK block_a WITH FRAME.
               xnonav   RADIOBUTTON GROUP nav.
 SELECTION-SCREEN END OF BLOCK block_a.
 
+data: report type ref to zcl_hh_dp_report.
+
 INITIALIZATION.
   SET PF-STATUS zcl_hh_dp_report=>selection_screen_status_name.
+  report = zcl_hh_dp_report=>get_singleton_instance( ).
 
 AT SELECTION-SCREEN.
   CHECK sy-ucomm EQ zcl_hh_dp_report=>execute OR
@@ -40,7 +43,7 @@ AT SELECTION-SCREEN.
   CASE sy-ucomm.
     WHEN zcl_hh_dp_report=>add_new_car.
 
-      zcl_hh_dp_report=>register_car_entry(
+      report->register_car_entry(
         EXPORTING
           license_plate = pplate
           brand         = pbrand
@@ -66,7 +69,7 @@ AT SELECTION-SCREEN.
 
     WHEN zcl_hh_dp_report=>add_new_truck.
 
-      zcl_hh_dp_report=>register_truck_entry(
+      report->register_truck_entry(
         EXPORTING
           license_plate = pplate
           brand         = pbrand
@@ -96,4 +99,4 @@ AT SELECTION-SCREEN.
 START-OF-SELECTION.
 
 END-OF-SELECTION.
-  zcl_hh_dp_report=>show_report( ).
+  report->show_report( ).

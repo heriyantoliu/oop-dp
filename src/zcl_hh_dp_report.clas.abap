@@ -10,6 +10,12 @@ CLASS zcl_hh_dp_report DEFINITION
       add_new_truck                TYPE sy-ucomm VALUE 'NEWTRUCK',
       selection_screen_status_name TYPE sy-pfkey VALUE 'SELECTION_SCREEN'.
     CLASS-METHODS:
+      class_constructor,
+      get_singleton_instance
+        returning
+          value(instance) type ref to zcl_hh_dp_report.
+
+    methods:
       register_car_entry
         IMPORTING
           license_plate    TYPE zcl_hh_dp_vehicle=>license_plate_type
@@ -76,11 +82,14 @@ CLASS zcl_hh_dp_report DEFINITION
       END   OF output_row,
       output_list TYPE STANDARD TABLE OF output_row.
 
-    CLASS-DATA:
+    class-data:
+      singleton type ref to zcl_hh_dp_report.
+
+    DATA:
       output_stack  TYPE output_list,
       vehicle_stack TYPE TABLE OF REF TO zcl_hh_dp_vehicle.
 
-    CLASS-METHODS:
+    METHODS:
       build_report,
       present_report,
       set_column_titles
@@ -94,7 +103,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     DATA: output_entry  LIKE LINE OF output_stack,
           vehicle_entry TYPE REF TO zcl_hh_dp_vehicle.
 
-    LOOP AT zcl_hh_dp_report=>vehicle_stack
+    LOOP AT me->vehicle_stack
       INTO vehicle_entry.
       vehicle_entry->get_characteristics(
         IMPORTING
@@ -115,9 +124,17 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       output_entry-weight = vehicle_entry->get_gross_weight( ).
       output_entry-description = vehicle_entry->get_description( ).
 
-      APPEND output_entry TO zcl_hh_dp_report=>output_stack.
+      APPEND output_entry TO me->output_stack.
     ENDLOOP.
 
+  ENDMETHOD.
+
+  METHOD class_constructor.
+    zcl_hh_dp_report=>singleton = new #( ).
+  ENDMETHOD.
+
+  METHOD get_singleton_instance.
+    instance = zcl_hh_dp_report=>singleton.
   ENDMETHOD.
 
   METHOD present_report.
@@ -127,7 +144,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
           IMPORTING
             r_salv_table = alv_grid
           CHANGING
-            t_table      = output_stack ).
+            t_table      = me->output_stack ).
       CATCH cx_salv_msg.
         MESSAGE e398(00) WITH 'Failure to create alv grid object' "#EC *
                               space
@@ -136,7 +153,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
                               .
     ENDTRY.
 
-    set_column_titles( alv_grid ).
+    me->set_column_titles( alv_grid ).
 
     DATA(lo_display) = alv_grid->get_display_settings( ).
 
@@ -168,7 +185,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         no_navigation    = no_navigation.
 
 
-    APPEND vehicle_entry TO vehicle_stack.
+    APPEND vehicle_entry TO me->vehicle_stack.
 
     vehicle_entry->accelerate( speed01 ).
     vehicle_entry->accelerate( speed02 ).
@@ -206,7 +223,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         no_navigation    = no_navigation.
 
 
-    APPEND vehicle_entry TO vehicle_stack.
+    APPEND vehicle_entry TO me->vehicle_stack.
 
     vehicle_entry->accelerate( speed01 ).
     vehicle_entry->accelerate( speed02 ).
@@ -313,8 +330,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD show_report.
-    build_report( ).
-    present_report( ).
+    me->build_report( ).
+    me->present_report( ).
   ENDMETHOD.
 
 ENDCLASS.
