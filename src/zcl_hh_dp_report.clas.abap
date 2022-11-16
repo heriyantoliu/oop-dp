@@ -65,14 +65,13 @@ CLASS zcl_hh_dp_report DEFINITION
         speed_unit    TYPE zcl_hh_dp_vehicle=>speed_unit_type,
         weight        TYPE zcl_hh_dp_vehicle=>weight_type,
         weight_unit   TYPE zcl_hh_dp_vehicle=>weight_unit_type,
-        description   type zcl_hh_dp_vehicle=>description_type,
+        description   TYPE zcl_hh_dp_vehicle=>description_type,
       END   OF output_row,
       output_list TYPE STANDARD TABLE OF output_row.
 
     CLASS-DATA:
-      output_stack TYPE output_list,
-      car_stack    TYPE TABLE OF REF TO zcl_hh_dp_car,
-      truck_stack  TYPE TABLE OF REF TO zcl_hh_dp_truck.
+      output_stack  TYPE output_list,
+      vehicle_stack TYPE TABLE OF REF TO zcl_hh_dp_vehicle.
 
     CLASS-METHODS:
       build_report,
@@ -85,10 +84,10 @@ ENDCLASS.
 
 CLASS zcl_hh_dp_report IMPLEMENTATION.
   METHOD build_report.
-    DATA: output_entry LIKE LINE OF output_stack,
-          vehicle_entry type ref to zcl_hh_dp_vehicle.
+    DATA: output_entry  LIKE LINE OF output_stack,
+          vehicle_entry TYPE REF TO zcl_hh_dp_vehicle.
 
-    LOOP AT zcl_hh_dp_report=>car_stack
+    LOOP AT zcl_hh_dp_report=>vehicle_stack
       INTO vehicle_entry.
       vehicle_entry->get_characteristics(
         IMPORTING
@@ -111,28 +110,6 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       APPEND output_entry TO zcl_hh_dp_report=>output_stack.
     ENDLOOP.
 
-    LOOP AT zcl_hh_dp_report=>truck_stack
-      INTO vehicle_entry.
-      vehicle_entry->get_characteristics(
-        IMPORTING
-          serial_number = output_entry-serial_number
-          license_plate = output_entry-license_plate
-          brand         = output_entry-brand
-          model         = output_entry-model
-          year          = output_entry-year
-          color         = output_entry-color
-          location      = output_entry-location
-          speed_unit    = output_entry-speed_unit
-          weight_unit   = output_entry-weight_unit
-      ).
-
-      output_entry-heading = vehicle_entry->get_heading( ).
-      output_entry-speed = vehicle_entry->get_speed( ).
-      output_entry-weight = vehicle_entry->get_gross_weight( ).
-      output_entry-description = vehicle_entry->get_description( ).
-
-      APPEND output_entry TO zcl_hh_dp_report=>output_stack.
-    ENDLOOP.
   ENDMETHOD.
 
   METHOD present_report.
@@ -161,29 +138,34 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD register_car_entry.
-    DATA(car_entry) = NEW zcl_hh_dp_car(
-      license_plate = license_plate
-      brand         = brand
-      model         = model
-      year          = year
-      color         = color
-      location      = location
-      speed_unit    = speed_unit
-      heading       = heading
-      tare_weight   = tare_weight
-      weight_unit   = weight_unit
-      passengers    = passengers
-    ).
 
-    APPEND car_entry TO car_stack.
+    DATA: vehicle_entry TYPE REF TO zcl_hh_dp_vehicle.
 
-    car_entry->accelerate( speed01 ).
-    car_entry->accelerate( speed02 ).
-    car_entry->accelerate( speed03 ).
+    CREATE OBJECT vehicle_entry
+      TYPE zcl_hh_dp_car
+      EXPORTING
+        license_plate = license_plate
+        brand         = brand
+        model         = model
+        year          = year
+        color         = color
+        location      = location
+        speed_unit    = speed_unit
+        heading       = heading
+        tare_weight   = tare_weight
+        weight_unit   = weight_unit
+        passengers    = passengers.
 
-    car_entry->change_heading( turn01 ).
-    car_entry->change_heading( turn02 ).
-    car_entry->change_heading( turn03 ).
+
+    APPEND vehicle_entry TO vehicle_stack.
+
+    vehicle_entry->accelerate( speed01 ).
+    vehicle_entry->accelerate( speed02 ).
+    vehicle_entry->accelerate( speed03 ).
+
+    vehicle_entry->change_heading( turn01 ).
+    vehicle_entry->change_heading( turn02 ).
+    vehicle_entry->change_heading( turn03 ).
 
     MESSAGE s398(00) WITH 'Car entry registered for'
                           license_plate
@@ -192,29 +174,33 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
 
   METHOD register_truck_entry.
 
-    DATA(truck_entry) = NEW zcl_hh_dp_truck(
-      license_plate = license_plate
-      brand         = brand
-      model         = model
-      year          = year
-      color         = color
-      location      = location
-      speed_unit    = speed_unit
-      heading       = heading
-      tare_weight   = tare_weight
-      weight_unit   = weight_unit
-      cargo_weight  = cargo_weight
-    ).
+    DATA: vehicle_entry TYPE REF TO zcl_hh_dp_vehicle.
 
-    APPEND truck_entry TO truck_stack.
+    CREATE OBJECT vehicle_entry
+      TYPE zcl_hh_dp_truck
+      EXPORTING
+        license_plate = license_plate
+        brand         = brand
+        model         = model
+        year          = year
+        color         = color
+        location      = location
+        speed_unit    = speed_unit
+        heading       = heading
+        tare_weight   = tare_weight
+        weight_unit   = weight_unit
+        cargo_weight  = cargo_weight.
 
-    truck_entry->accelerate( speed01 ).
-    truck_entry->accelerate( speed02 ).
-    truck_entry->accelerate( speed03 ).
 
-    truck_entry->change_heading( turn01 ).
-    truck_entry->change_heading( turn02 ).
-    truck_entry->change_heading( turn03 ).
+    APPEND vehicle_entry TO vehicle_stack.
+
+    vehicle_entry->accelerate( speed01 ).
+    vehicle_entry->accelerate( speed02 ).
+    vehicle_entry->accelerate( speed03 ).
+
+    vehicle_entry->change_heading( turn01 ).
+    vehicle_entry->change_heading( turn02 ).
+    vehicle_entry->change_heading( turn03 ).
 
     MESSAGE s398(00) WITH 'Truck entry registered for'
                           license_plate
@@ -249,8 +235,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       column_title_weight        TYPE string VALUE 'Weight',
       column_name_weight_unit    TYPE lvc_fname VALUE 'WEIGHT_UNIT',
       column_title_weight_unit   TYPE string VALUE 'WUoM',
-      column_name_description    type lvc_fname value 'DESCRIPTION',
-      column_title_description   type string value 'Descriptor',
+      column_name_description    TYPE lvc_fname VALUE 'DESCRIPTION',
+      column_title_description   TYPE string VALUE 'Descriptor',
       minimum_column_width       TYPE int4      VALUE 08.
 
     DATA: grid_column_width       TYPE lvc_outlen,
@@ -296,7 +282,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         WHEN column_name_weight_unit.
           grid_column_title_short   = column_title_weight_unit.
           grid_column_width = minimum_column_width.
-        when column_name_description.
+        WHEN column_name_description.
           grid_column_title_short = column_title_description.
         WHEN OTHERS.
           CLEAR grid_column_title_short.
