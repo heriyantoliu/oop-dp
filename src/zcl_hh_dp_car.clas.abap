@@ -11,7 +11,11 @@ CLASS zcl_hh_dp_car DEFINITION
       license_plate_type TYPE f4txt,
       speed_type         TYPE int4,
       speed_unit_type    TYPE char3,
-      year_type          TYPE num4.
+      year_type          TYPE num4,
+      serial_type        TYPE num4.
+
+    CLASS-METHODS:
+      class_constructor.
 
     METHODS:
       accelerate
@@ -22,6 +26,7 @@ CLASS zcl_hh_dp_car DEFINITION
           turn TYPE zcl_hh_dp_navigator=>turn_type,
       get_characteristics
         EXPORTING
+          serial_number TYPE serial_type
           license_plate TYPE license_plate_type
           brand         TYPE brand_type
           model         TYPE model_type
@@ -48,6 +53,9 @@ CLASS zcl_hh_dp_car DEFINITION
 
   PROTECTED SECTION.
   PRIVATE SECTION.
+    CLASS-DATA:
+      last_serial_value TYPE serial_type.
+
     DATA:
       license_plate   TYPE license_plate_type,
       brand           TYPE brand_type,
@@ -57,7 +65,13 @@ CLASS zcl_hh_dp_car DEFINITION
       location        TYPE location_type,
       speed           TYPE speed_type,
       speed_unit      TYPE speed_unit_type,
+      serial_number   TYPE serial_type,
       navigation_unit TYPE REF TO zcl_hh_dp_navigator.
+
+    CLASS-METHODS:
+      get_serial_number
+        returning
+          value(serial_number) TYPE serial_type.
 
 ENDCLASS.
 
@@ -73,6 +87,7 @@ CLASS zcl_hh_dp_car IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_characteristics.
+    serial_number = me->serial_number.
     license_plate = me->license_plate.
     brand = me->brand.
     model = me->model.
@@ -91,6 +106,9 @@ CLASS zcl_hh_dp_car IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD constructor.
+
+    me->serial_number = me->get_serial_number( ).
+
     me->license_plate = license_plate.
     me->brand = brand.
     me->model = model.
@@ -100,6 +118,15 @@ CLASS zcl_hh_dp_car IMPLEMENTATION.
     me->speed_unit = speed_unit.
 
     me->navigation_unit = NEW #( heading ).
+  ENDMETHOD.
+
+  METHOD class_constructor.
+    last_serial_value = 1000.
+  ENDMETHOD.
+
+  METHOD get_serial_number.
+    add 1 to last_serial_value.
+    serial_number = last_serial_value.
   ENDMETHOD.
 
 ENDCLASS.

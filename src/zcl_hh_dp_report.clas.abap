@@ -28,18 +28,20 @@ CLASS zcl_hh_dp_report DEFINITION
       show_report.
   PROTECTED SECTION.
   PRIVATE SECTION.
-    TYPES: BEGIN OF output_row,
-             license_plate TYPE zcl_hh_dp_car=>license_plate_type,
-             brand         TYPE zcl_hh_dp_car=>brand_type,
-             model         TYPE zcl_hh_dp_car=>model_type,
-             year          TYPE zcl_hh_dp_car=>year_type,
-             color         TYPE zcl_hh_dp_car=>color_type,
-             location      TYPE zcl_hh_dp_car=>location_type,
-             heading       TYPE zcl_hh_dp_navigator=>heading_type,
-             speed         TYPE zcl_hh_dp_car=>speed_type,
-             speed_unit    TYPE zcl_hh_dp_car=>speed_unit_type,
-           END   OF output_row,
-           output_list TYPE STANDARD TABLE OF output_row.
+    TYPES:
+      BEGIN OF output_row,
+        serial_number TYPE zcl_hh_dp_car=>serial_type,
+        license_plate TYPE zcl_hh_dp_car=>license_plate_type,
+        brand         TYPE zcl_hh_dp_car=>brand_type,
+        model         TYPE zcl_hh_dp_car=>model_type,
+        year          TYPE zcl_hh_dp_car=>year_type,
+        color         TYPE zcl_hh_dp_car=>color_type,
+        location      TYPE zcl_hh_dp_car=>location_type,
+        heading       TYPE zcl_hh_dp_navigator=>heading_type,
+        speed         TYPE zcl_hh_dp_car=>speed_type,
+        speed_unit    TYPE zcl_hh_dp_car=>speed_unit_type,
+      END   OF output_row,
+      output_list TYPE STANDARD TABLE OF output_row.
 
     CLASS-DATA:
       output_stack TYPE output_list,
@@ -64,6 +66,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       INTO DATA(car_entry).
       car_entry->get_characteristics(
         IMPORTING
+          serial_number = output_entry-serial_number
           license_plate = output_entry-license_plate
           brand         = output_entry-brand
           model         = output_entry-model
@@ -135,6 +138,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
   METHOD set_column_titles.
 
     CONSTANTS:
+      column_name_serial_number  TYPE lvc_fname VALUE 'SERIAL_NUMBER',
+      column_title_serial_number TYPE string VALUE 'Serial Number',
       column_name_license_plate  TYPE lvc_fname VALUE 'LICENSE_PLATE',
       column_title_license_plate TYPE string    VALUE `License plate`,
       column_name_brand          TYPE lvc_fname VALUE 'BRAND',
@@ -165,9 +170,13 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     DATA(grid_column_stack) = grid_columns->get( ).
 
     LOOP AT grid_column_stack
-       INTO DATA(grid_column_entry).
+      INTO DATA(grid_column_entry).
+
       CLEAR grid_column_width.
+
       CASE grid_column_entry-columnname.
+        when column_name_serial_number.
+          grid_column_title_short = column_title_serial_number.
         WHEN column_name_license_plate.
           grid_column_title_short   = column_title_license_plate.
         WHEN column_name_brand.
