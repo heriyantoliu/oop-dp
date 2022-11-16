@@ -81,7 +81,7 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       speed_unit      TYPE speed_unit_type,
       weight_unit     TYPE weight_unit_type,
       serial_number   TYPE serial_type,
-      navigation_unit TYPE REF TO zcl_hh_dp_navigator.
+      navigation_unit TYPE REF TO zcl_hh_dp_gps.
 
     CLASS-METHODS:
       get_serial_number
