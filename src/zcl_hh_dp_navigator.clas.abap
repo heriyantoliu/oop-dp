@@ -3,52 +3,48 @@ CLASS zcl_hh_dp_navigator DEFINITION
   FINAL.
 
   PUBLIC SECTION.
-    TYPES:
-      turn_type    TYPE char1,
-      heading_type TYPE char1.
 
-    CONSTANTS:
-      left_turn  TYPE zcl_hh_dp_navigator=>turn_type VALUE 'L',
-      right_turn TYPE zcl_hh_dp_navigator=>turn_type VALUE 'R',
-      u_turn     TYPE zcl_hh_dp_navigator=>turn_type VALUE 'U'.
+    INTERFACES: zif_hh_dp_simple_navigation.
+
+    ALIASES:
+      change_heading FOR zif_hh_dp_simple_navigation~change_heading,
+      get_heading FOR zif_hh_dp_simple_navigation~get_heading.
+
+    CLASS-METHODS:
+      class_constructor.
 
     METHODS:
-      change_heading
-        IMPORTING
-          turn TYPE turn_type,
-      get_heading
-        RETURNING
-          VALUE(heading) TYPE heading_type,
       constructor
         IMPORTING
-          heading TYPE heading_type.
+          heading TYPE zif_hh_dp_simple_navigation=>heading_type.
   PROTECTED SECTION.
   PRIVATE SECTION.
     CONSTANTS:
-      compass                 TYPE char4 VALUE 'NESW',
-      compass_offset_limit_lo TYPE int4 VALUE 0,
-      compass_offset_limit_hi TYPE int4 VALUE 3.
+      compass_offset_limit_lo TYPE int4 VALUE 0.
+
+    class-data:
+      compass_offset_limit_hi TYPE int4.
 
     DATA:
-      heading TYPE heading_type.
+      heading TYPE zif_hh_dp_simple_navigation=>heading_type.
 ENDCLASS.
 
 
 
 CLASS zcl_hh_dp_navigator IMPLEMENTATION.
   METHOD change_heading.
-    CHECK turn EQ left_turn OR
-          turn EQ right_turn OR
-          turn EQ u_turn.
+    CHECK turn EQ zif_hh_dp_simple_navigation=>left_turn OR
+          turn EQ zif_hh_dp_simple_navigation=>right_turn OR
+          turn EQ zif_hh_dp_simple_navigation=>u_turn.
 
-    FIND heading IN compass
+    FIND heading IN zif_hh_dp_simple_navigation=>compass
       MATCH OFFSET DATA(compass_offset).
     CASE turn.
-      WHEN left_turn.
+      WHEN zif_hh_dp_simple_navigation=>left_turn.
         SUBTRACT 1 FROM compass_offset.
-      WHEN right_turn.
+      WHEN zif_hh_dp_simple_navigation=>right_turn.
         ADD 1 TO compass_offset.
-      WHEN u_turn.
+      WHEN zif_hh_dp_simple_navigation=>u_turn.
         ADD 2 TO compass_offset.
     ENDCASE.
 
@@ -60,7 +56,7 @@ CLASS zcl_hh_dp_navigator IMPLEMENTATION.
       SUBTRACT 4 FROM compass_offset.
     ENDIF.
 
-    heading = compass+compass_offset(1).
+    heading = zif_hh_dp_simple_navigation=>compass+compass_offset(1).
   ENDMETHOD.
 
   METHOD get_heading.
@@ -71,8 +67,12 @@ CLASS zcl_hh_dp_navigator IMPLEMENTATION.
     IF me->heading CA heading.
       me->heading = heading.
     ELSE.
-      me->heading = compass(1).
+      me->heading = zif_hh_dp_simple_navigation=>compass(1).
     ENDIF.
+  ENDMETHOD.
+
+  METHOD class_constructor.
+    compass_offset_limit_hi = strlen( zif_hh_dp_simple_navigation=>compass ) - 01.
   ENDMETHOD.
 
 ENDCLASS.

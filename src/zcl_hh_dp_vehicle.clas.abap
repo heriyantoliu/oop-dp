@@ -26,7 +26,7 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           acceleration TYPE speed_type,
       change_heading
         IMPORTING
-          turn TYPE zcl_hh_dp_navigator=>turn_type,
+          turn TYPE zif_hh_dp_simple_navigation=>turn_type,
       get_characteristics
         EXPORTING
           serial_number TYPE serial_type
@@ -46,7 +46,7 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           VALUE(gross_weight) TYPE weight_type,
       get_heading
         RETURNING
-          VALUE(heading) TYPE zcl_hh_dp_navigator=>heading_type,
+          VALUE(heading) TYPE zif_hh_dp_simple_navigation=>heading_type,
       get_speed
         RETURNING
           VALUE(speed) TYPE speed_type,
@@ -59,7 +59,7 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           color         TYPE color_type
           location      TYPE location_type
           speed_unit    TYPE speed_unit_type
-          heading       TYPE zcl_hh_dp_navigator=>heading_type
+          heading       TYPE zif_hh_dp_simple_navigation=>heading_type
           tare_weight   TYPE weight_type
           weight_unit   TYPE weight_unit_type.
   PROTECTED SECTION.

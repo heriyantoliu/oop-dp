@@ -16,7 +16,7 @@ CLASS zcl_hh_dp_car DEFINITION
           color         TYPE zcl_hh_dp_vehicle=>color_type
           location      TYPE zcl_hh_dp_vehicle=>location_type
           speed_unit    TYPE zcl_hh_dp_vehicle=>speed_unit_type
-          heading       TYPE zcl_hh_dp_navigator=>heading_type
+          heading       TYPE zif_hh_dp_simple_navigation=>heading_type
           tare_weight   TYPE zcl_hh_dp_vehicle=>weight_type
           weight_unit   TYPE zcl_hh_dp_vehicle=>weight_unit_type
           passengers    TYPE passengers_type,
