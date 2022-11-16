@@ -85,11 +85,12 @@ ENDCLASS.
 
 CLASS zcl_hh_dp_report IMPLEMENTATION.
   METHOD build_report.
-    DATA: output_entry LIKE LINE OF output_stack.
+    DATA: output_entry LIKE LINE OF output_stack,
+          vehicle_entry type ref to zcl_hh_dp_vehicle.
 
     LOOP AT zcl_hh_dp_report=>car_stack
-      INTO DATA(car_entry).
-      car_entry->get_characteristics(
+      INTO vehicle_entry.
+      vehicle_entry->get_characteristics(
         IMPORTING
           serial_number = output_entry-serial_number
           license_plate = output_entry-license_plate
@@ -102,17 +103,17 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
           weight_unit   = output_entry-weight_unit
       ).
 
-      output_entry-heading = car_entry->get_heading( ).
-      output_entry-speed = car_entry->get_speed( ).
-      output_entry-weight = car_entry->get_gross_weight( ).
-      output_entry-description = car_entry->get_description( ).
+      output_entry-heading = vehicle_entry->get_heading( ).
+      output_entry-speed = vehicle_entry->get_speed( ).
+      output_entry-weight = vehicle_entry->get_gross_weight( ).
+      output_entry-description = vehicle_entry->get_description( ).
 
       APPEND output_entry TO zcl_hh_dp_report=>output_stack.
     ENDLOOP.
 
     LOOP AT zcl_hh_dp_report=>truck_stack
-      INTO DATA(truck_entry).
-      truck_entry->get_characteristics(
+      INTO vehicle_entry.
+      vehicle_entry->get_characteristics(
         IMPORTING
           serial_number = output_entry-serial_number
           license_plate = output_entry-license_plate
@@ -125,10 +126,10 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
           weight_unit   = output_entry-weight_unit
       ).
 
-      output_entry-heading = truck_entry->get_heading( ).
-      output_entry-speed = truck_entry->get_speed( ).
-      output_entry-weight = truck_entry->get_gross_weight( ).
-      output_entry-description = truck_entry->get_description( ).
+      output_entry-heading = vehicle_entry->get_heading( ).
+      output_entry-speed = vehicle_entry->get_speed( ).
+      output_entry-weight = vehicle_entry->get_gross_weight( ).
+      output_entry-description = vehicle_entry->get_description( ).
 
       APPEND output_entry TO zcl_hh_dp_report=>output_stack.
     ENDLOOP.
