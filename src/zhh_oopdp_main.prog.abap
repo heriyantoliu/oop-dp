@@ -22,8 +22,10 @@ SELECTION-SCREEN BEGIN OF BLOCK block_a WITH FRAME.
               pspeed03 TYPE zcl_hh_dp_vehicle=>speed_type,
               pwghtu   TYPE zcl_hh_dp_vehicle=>weight_unit_type,
               pevw     TYPE zcl_hh_dp_vehicle=>weight_type,
-              pcargow  type zcl_hh_dp_vehicle=>weight_type,
-              ppsngrs  type zcl_hh_dp_car=>passengers_type.
+              pcargow  TYPE zcl_hh_dp_vehicle=>weight_type,
+              ppsngrs  TYPE zcl_hh_dp_car=>passengers_type,
+              xbnav    RADIOBUTTON GROUP nav,
+              xgps     RADIOBUTTON GROUP nav.
 SELECTION-SCREEN END OF BLOCK block_a.
 
 INITIALIZATION.
@@ -56,6 +58,8 @@ AT SELECTION-SCREEN.
           tare_weight   = pevw
           weight_unit   = pwghtu
           passengers    = ppsngrs
+          basic_navigation = xbnav
+          gps_navigation = xgps
       ).
 
     WHEN zcl_hh_dp_report=>add_new_truck.
@@ -79,6 +83,8 @@ AT SELECTION-SCREEN.
           tare_weight   = pevw
           weight_unit   = pwghtu
           cargo_weight  = pcargow
+          basic_navigation = xbnav
+          gps_navigation = xgps
       ).
 
     WHEN OTHERS.

@@ -986,6 +986,18 @@
      <ENTRY>Year</ENTRY>
      <LENGTH>12</LENGTH>
     </item>
+    <item>
+     <ID>S</ID>
+     <KEY>XBNAV</KEY>
+     <ENTRY>Equipped with basic navigation</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>XGPS</KEY>
+     <ENTRY>Equipped with GPS navigation</ENTRY>
+     <LENGTH>36</LENGTH>
+    </item>
    </TPOOL>
   </asx:values>
  </asx:abap>

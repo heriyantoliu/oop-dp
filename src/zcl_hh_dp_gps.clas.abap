@@ -11,6 +11,9 @@ CLASS zcl_hh_dp_gps DEFINITION
       change_heading FOR zif_hh_dp_simple_navigation~change_heading,
       get_heading FOR zif_hh_dp_simple_navigation~get_heading.
 
+    constants:
+      class_id type seoclsname value 'ZCL_HH_DP_GPS'.
+
     METHODS:
       constructor
         IMPORTING

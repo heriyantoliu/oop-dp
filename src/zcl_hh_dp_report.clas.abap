@@ -12,60 +12,65 @@ CLASS zcl_hh_dp_report DEFINITION
     CLASS-METHODS:
       register_car_entry
         IMPORTING
-          license_plate TYPE zcl_hh_dp_vehicle=>license_plate_type
-          brand         TYPE zcl_hh_dp_vehicle=>brand_type
-          year          TYPE zcl_hh_dp_vehicle=>year_type
-          model         TYPE zcl_hh_dp_vehicle=>model_type
-          color         TYPE zcl_hh_dp_vehicle=>color_type
-          location      TYPE zcl_hh_dp_vehicle=>location_type
-          heading       TYPE zif_hh_dp_simple_navigation=>heading_type
-          turn01        TYPE zif_hh_dp_simple_navigation=>turn_type
-          turn02        TYPE zif_hh_dp_simple_navigation=>turn_type
-          turn03        TYPE zif_hh_dp_simple_navigation=>turn_type
-          speed01       TYPE zcl_hh_dp_vehicle=>speed_type
-          speed02       TYPE zcl_hh_dp_vehicle=>speed_type
-          speed03       TYPE zcl_hh_dp_vehicle=>speed_type
-          speed_unit    TYPE zcl_hh_dp_vehicle=>speed_unit_type
-          tare_weight   TYPE zcl_hh_dp_vehicle=>weight_type
-          weight_unit   TYPE zcl_hh_dp_vehicle=>weight_unit_type
-          passengers    TYPE zcl_hh_dp_car=>passengers_type,
+          license_plate    TYPE zcl_hh_dp_vehicle=>license_plate_type
+          brand            TYPE zcl_hh_dp_vehicle=>brand_type
+          year             TYPE zcl_hh_dp_vehicle=>year_type
+          model            TYPE zcl_hh_dp_vehicle=>model_type
+          color            TYPE zcl_hh_dp_vehicle=>color_type
+          location         TYPE zcl_hh_dp_vehicle=>location_type
+          heading          TYPE zif_hh_dp_simple_navigation=>heading_type
+          turn01           TYPE zif_hh_dp_simple_navigation=>turn_type
+          turn02           TYPE zif_hh_dp_simple_navigation=>turn_type
+          turn03           TYPE zif_hh_dp_simple_navigation=>turn_type
+          speed01          TYPE zcl_hh_dp_vehicle=>speed_type
+          speed02          TYPE zcl_hh_dp_vehicle=>speed_type
+          speed03          TYPE zcl_hh_dp_vehicle=>speed_type
+          speed_unit       TYPE zcl_hh_dp_vehicle=>speed_unit_type
+          tare_weight      TYPE zcl_hh_dp_vehicle=>weight_type
+          weight_unit      TYPE zcl_hh_dp_vehicle=>weight_unit_type
+          passengers       TYPE zcl_hh_dp_car=>passengers_type
+          basic_navigation TYPE checkbox
+          gps_navigation   TYPE checkbox,
       register_truck_entry
         IMPORTING
-          license_plate TYPE zcl_hh_dp_vehicle=>license_plate_type
-          brand         TYPE zcl_hh_dp_vehicle=>brand_type
-          year          TYPE zcl_hh_dp_vehicle=>year_type
-          model         TYPE zcl_hh_dp_vehicle=>model_type
-          color         TYPE zcl_hh_dp_vehicle=>color_type
-          location      TYPE zcl_hh_dp_vehicle=>location_type
-          heading       TYPE zif_hh_dp_simple_navigation=>heading_type
-          turn01        TYPE zif_hh_dp_simple_navigation=>turn_type
-          turn02        TYPE zif_hh_dp_simple_navigation=>turn_type
-          turn03        TYPE zif_hh_dp_simple_navigation=>turn_type
-          speed01       TYPE zcl_hh_dp_vehicle=>speed_type
-          speed02       TYPE zcl_hh_dp_vehicle=>speed_type
-          speed03       TYPE zcl_hh_dp_vehicle=>speed_type
-          speed_unit    TYPE zcl_hh_dp_vehicle=>speed_unit_type
-          tare_weight   TYPE zcl_hh_dp_vehicle=>weight_type
-          weight_unit   TYPE zcl_hh_dp_vehicle=>weight_unit_type
-          cargo_weight  TYPE zcl_hh_dp_vehicle=>weight_type,
+          license_plate    TYPE zcl_hh_dp_vehicle=>license_plate_type
+          brand            TYPE zcl_hh_dp_vehicle=>brand_type
+          year             TYPE zcl_hh_dp_vehicle=>year_type
+          model            TYPE zcl_hh_dp_vehicle=>model_type
+          color            TYPE zcl_hh_dp_vehicle=>color_type
+          location         TYPE zcl_hh_dp_vehicle=>location_type
+          heading          TYPE zif_hh_dp_simple_navigation=>heading_type
+          turn01           TYPE zif_hh_dp_simple_navigation=>turn_type
+          turn02           TYPE zif_hh_dp_simple_navigation=>turn_type
+          turn03           TYPE zif_hh_dp_simple_navigation=>turn_type
+          speed01          TYPE zcl_hh_dp_vehicle=>speed_type
+          speed02          TYPE zcl_hh_dp_vehicle=>speed_type
+          speed03          TYPE zcl_hh_dp_vehicle=>speed_type
+          speed_unit       TYPE zcl_hh_dp_vehicle=>speed_unit_type
+          tare_weight      TYPE zcl_hh_dp_vehicle=>weight_type
+          weight_unit      TYPE zcl_hh_dp_vehicle=>weight_unit_type
+          cargo_weight     TYPE zcl_hh_dp_vehicle=>weight_type
+          basic_navigation TYPE checkbox
+          gps_navigation   TYPE checkbox,
       show_report.
   PROTECTED SECTION.
   PRIVATE SECTION.
     TYPES:
       BEGIN OF output_row,
-        serial_number TYPE zcl_hh_dp_vehicle=>serial_type,
-        license_plate TYPE zcl_hh_dp_vehicle=>license_plate_type,
-        brand         TYPE zcl_hh_dp_vehicle=>brand_type,
-        model         TYPE zcl_hh_dp_vehicle=>model_type,
-        year          TYPE zcl_hh_dp_vehicle=>year_type,
-        color         TYPE zcl_hh_dp_vehicle=>color_type,
-        location      TYPE zcl_hh_dp_vehicle=>location_type,
-        heading       TYPE zif_hh_dp_simple_navigation=>heading_type,
-        speed         TYPE zcl_hh_dp_vehicle=>speed_type,
-        speed_unit    TYPE zcl_hh_dp_vehicle=>speed_unit_type,
-        weight        TYPE zcl_hh_dp_vehicle=>weight_type,
-        weight_unit   TYPE zcl_hh_dp_vehicle=>weight_unit_type,
-        description   TYPE zcl_hh_dp_vehicle=>description_type,
+        serial_number   TYPE zcl_hh_dp_vehicle=>serial_type,
+        license_plate   TYPE zcl_hh_dp_vehicle=>license_plate_type,
+        brand           TYPE zcl_hh_dp_vehicle=>brand_type,
+        model           TYPE zcl_hh_dp_vehicle=>model_type,
+        year            TYPE zcl_hh_dp_vehicle=>year_type,
+        color           TYPE zcl_hh_dp_vehicle=>color_type,
+        location        TYPE zcl_hh_dp_vehicle=>location_type,
+        heading         TYPE zif_hh_dp_simple_navigation=>heading_type,
+        speed           TYPE zcl_hh_dp_vehicle=>speed_type,
+        speed_unit      TYPE zcl_hh_dp_vehicle=>speed_unit_type,
+        weight          TYPE zcl_hh_dp_vehicle=>weight_type,
+        weight_unit     TYPE zcl_hh_dp_vehicle=>weight_unit_type,
+        description     TYPE zcl_hh_dp_vehicle=>description_type,
+        navigation_type TYPE zcl_hh_dp_vehicle=>navigator_type,
       END   OF output_row,
       output_list TYPE STANDARD TABLE OF output_row.
 
@@ -100,6 +105,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
           location      = output_entry-location
           speed_unit    = output_entry-speed_unit
           weight_unit   = output_entry-weight_unit
+          navigation_type = output_entry-navigation_type
       ).
 
       output_entry-heading = vehicle_entry->get_heading( ).
@@ -144,17 +150,19 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     CREATE OBJECT vehicle_entry
       TYPE zcl_hh_dp_car
       EXPORTING
-        license_plate = license_plate
-        brand         = brand
-        model         = model
-        year          = year
-        color         = color
-        location      = location
-        speed_unit    = speed_unit
-        heading       = heading
-        tare_weight   = tare_weight
-        weight_unit   = weight_unit
-        passengers    = passengers.
+        license_plate    = license_plate
+        brand            = brand
+        model            = model
+        year             = year
+        color            = color
+        location         = location
+        speed_unit       = speed_unit
+        heading          = heading
+        tare_weight      = tare_weight
+        weight_unit      = weight_unit
+        passengers       = passengers
+        basic_navigation = basic_navigation
+        gps_navigation   = gps_navigation.
 
 
     APPEND vehicle_entry TO vehicle_stack.
@@ -179,17 +187,19 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     CREATE OBJECT vehicle_entry
       TYPE zcl_hh_dp_truck
       EXPORTING
-        license_plate = license_plate
-        brand         = brand
-        model         = model
-        year          = year
-        color         = color
-        location      = location
-        speed_unit    = speed_unit
-        heading       = heading
-        tare_weight   = tare_weight
-        weight_unit   = weight_unit
-        cargo_weight  = cargo_weight.
+        license_plate    = license_plate
+        brand            = brand
+        model            = model
+        year             = year
+        color            = color
+        location         = location
+        speed_unit       = speed_unit
+        heading          = heading
+        tare_weight      = tare_weight
+        weight_unit      = weight_unit
+        cargo_weight     = cargo_weight
+        basic_navigation = basic_navigation
+        gps_navigation   = gps_navigation.
 
 
     APPEND vehicle_entry TO vehicle_stack.
@@ -211,33 +221,35 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
   METHOD set_column_titles.
 
     CONSTANTS:
-      column_name_serial_number  TYPE lvc_fname VALUE 'SERIAL_NUMBER',
-      column_title_serial_number TYPE string VALUE 'Serial Number',
-      column_name_license_plate  TYPE lvc_fname VALUE 'LICENSE_PLATE',
-      column_title_license_plate TYPE string    VALUE `License plate`,
-      column_name_brand          TYPE lvc_fname VALUE 'BRAND',
-      column_title_brand         TYPE string    VALUE `Brand`,
-      column_name_model          TYPE lvc_fname VALUE 'MODEL',
-      column_title_model         TYPE string    VALUE `Model`,
-      column_name_year           TYPE lvc_fname VALUE 'YEAR',
-      column_title_year          TYPE string    VALUE `Year`,
-      column_name_color          TYPE lvc_fname VALUE 'COLOR',
-      column_title_color         TYPE string    VALUE `Color`,
-      column_name_location       TYPE lvc_fname VALUE 'LOCATION',
-      column_title_location      TYPE string    VALUE `Location`,
-      column_name_heading        TYPE lvc_fname VALUE 'HEADING',
-      column_title_heading       TYPE string    VALUE `Heading`,
-      column_name_speed          TYPE lvc_fname VALUE 'SPEED',
-      column_title_speed         TYPE string    VALUE `Speed`,
-      column_name_speed_unit     TYPE lvc_fname VALUE 'SPEED_UNIT',
-      column_title_speed_unit    TYPE string    VALUE `SUoM`,
-      column_name_weight         TYPE lvc_fname VALUE 'WEIGHT',
-      column_title_weight        TYPE string VALUE 'Weight',
-      column_name_weight_unit    TYPE lvc_fname VALUE 'WEIGHT_UNIT',
-      column_title_weight_unit   TYPE string VALUE 'WUoM',
-      column_name_description    TYPE lvc_fname VALUE 'DESCRIPTION',
-      column_title_description   TYPE string VALUE 'Descriptor',
-      minimum_column_width       TYPE int4      VALUE 08.
+      column_name_serial_number    TYPE lvc_fname VALUE 'SERIAL_NUMBER',
+      column_title_serial_number   TYPE string VALUE 'Serial Number',
+      column_name_license_plate    TYPE lvc_fname VALUE 'LICENSE_PLATE',
+      column_title_license_plate   TYPE string    VALUE `License plate`,
+      column_name_brand            TYPE lvc_fname VALUE 'BRAND',
+      column_title_brand           TYPE string    VALUE `Brand`,
+      column_name_model            TYPE lvc_fname VALUE 'MODEL',
+      column_title_model           TYPE string    VALUE `Model`,
+      column_name_year             TYPE lvc_fname VALUE 'YEAR',
+      column_title_year            TYPE string    VALUE `Year`,
+      column_name_color            TYPE lvc_fname VALUE 'COLOR',
+      column_title_color           TYPE string    VALUE `Color`,
+      column_name_location         TYPE lvc_fname VALUE 'LOCATION',
+      column_title_location        TYPE string    VALUE `Location`,
+      column_name_heading          TYPE lvc_fname VALUE 'HEADING',
+      column_title_heading         TYPE string    VALUE `Heading`,
+      column_name_speed            TYPE lvc_fname VALUE 'SPEED',
+      column_title_speed           TYPE string    VALUE `Speed`,
+      column_name_speed_unit       TYPE lvc_fname VALUE 'SPEED_UNIT',
+      column_title_speed_unit      TYPE string    VALUE `SUoM`,
+      column_name_weight           TYPE lvc_fname VALUE 'WEIGHT',
+      column_title_weight          TYPE string VALUE 'Weight',
+      column_name_weight_unit      TYPE lvc_fname VALUE 'WEIGHT_UNIT',
+      column_title_weight_unit     TYPE string VALUE 'WUoM',
+      column_name_description      TYPE lvc_fname VALUE 'DESCRIPTION',
+      column_title_description     TYPE string VALUE 'Descriptor',
+      column_name_navigation_type  TYPE lvc_fname VALUE 'NAVIGATION_TYPE',
+      column_title_navigation_type TYPE string VALUE 'Navigation Type',
+      minimum_column_width         TYPE int4      VALUE 08.
 
     DATA: grid_column_width       TYPE lvc_outlen,
           grid_column_title_short TYPE scrtext_s.
@@ -284,6 +296,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
           grid_column_width = minimum_column_width.
         WHEN column_name_description.
           grid_column_title_short = column_title_description.
+        when column_name_navigation_type.
+          grid_column_title_short = column_title_navigation_type.
         WHEN OTHERS.
           CLEAR grid_column_title_short.
       ENDCASE.

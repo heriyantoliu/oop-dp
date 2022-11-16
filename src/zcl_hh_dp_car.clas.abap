@@ -9,17 +9,19 @@ CLASS zcl_hh_dp_car DEFINITION
     METHODS:
       constructor
         IMPORTING
-          license_plate TYPE zcl_hh_dp_vehicle=>license_plate_type
-          brand         TYPE zcl_hh_dp_vehicle=>brand_type
-          model         TYPE zcl_hh_dp_vehicle=>model_type
-          year          TYPE zcl_hh_dp_vehicle=>year_type
-          color         TYPE zcl_hh_dp_vehicle=>color_type
-          location      TYPE zcl_hh_dp_vehicle=>location_type
-          speed_unit    TYPE zcl_hh_dp_vehicle=>speed_unit_type
-          heading       TYPE zif_hh_dp_simple_navigation=>heading_type
-          tare_weight   TYPE zcl_hh_dp_vehicle=>weight_type
-          weight_unit   TYPE zcl_hh_dp_vehicle=>weight_unit_type
-          passengers    TYPE passengers_type,
+          license_plate    TYPE zcl_hh_dp_vehicle=>license_plate_type
+          brand            TYPE zcl_hh_dp_vehicle=>brand_type
+          model            TYPE zcl_hh_dp_vehicle=>model_type
+          year             TYPE zcl_hh_dp_vehicle=>year_type
+          color            TYPE zcl_hh_dp_vehicle=>color_type
+          location         TYPE zcl_hh_dp_vehicle=>location_type
+          speed_unit       TYPE zcl_hh_dp_vehicle=>speed_unit_type
+          heading          TYPE zif_hh_dp_simple_navigation=>heading_type
+          tare_weight      TYPE zcl_hh_dp_vehicle=>weight_type
+          weight_unit      TYPE zcl_hh_dp_vehicle=>weight_unit_type
+          passengers       TYPE passengers_type
+          basic_navigation TYPE checkbox
+          gps_navigation   TYPE checkbox,
       get_description REDEFINITION,
       get_gross_weight REDEFINITION.
   PROTECTED SECTION.
@@ -46,6 +48,8 @@ CLASS zcl_hh_dp_car IMPLEMENTATION.
       heading = heading
       tare_weight = tare_weight
       weight_unit = weight_unit
+      basic_navigation = basic_navigation
+      gps_navigation = gps_navigation
     ).
 
     me->passengers = passengers.

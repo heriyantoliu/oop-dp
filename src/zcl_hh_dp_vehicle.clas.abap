@@ -9,6 +9,7 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       location_type      TYPE f4txt,
       model_type         TYPE f4txt,
       license_plate_type TYPE f4txt,
+      navigator_type     TYPE seoclsname,
       speed_type         TYPE int4,
       speed_unit_type    TYPE char3,
       year_type          TYPE num4,
@@ -29,18 +30,19 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           turn TYPE zif_hh_dp_simple_navigation=>turn_type,
       get_characteristics
         EXPORTING
-          serial_number TYPE serial_type
-          license_plate TYPE license_plate_type
-          brand         TYPE brand_type
-          model         TYPE model_type
-          year          TYPE year_type
-          color         TYPE color_type
-          location      TYPE location_type
-          speed_unit    TYPE speed_unit_type
-          weight_unit   TYPE weight_unit_type,
-      get_description abstract
-        returning
-          value(description) type description_type,
+          serial_number   TYPE serial_type
+          license_plate   TYPE license_plate_type
+          brand           TYPE brand_type
+          model           TYPE model_type
+          year            TYPE year_type
+          color           TYPE color_type
+          location        TYPE location_type
+          speed_unit      TYPE speed_unit_type
+          weight_unit     TYPE weight_unit_type
+          navigation_type TYPE navigator_type,
+      get_description ABSTRACT
+        RETURNING
+          VALUE(description) TYPE description_type,
       get_gross_weight ABSTRACT
         RETURNING
           VALUE(gross_weight) TYPE weight_type,
@@ -52,16 +54,18 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           VALUE(speed) TYPE speed_type,
       constructor
         IMPORTING
-          license_plate TYPE license_plate_type
-          brand         TYPE brand_type
-          model         TYPE model_type
-          year          TYPE year_type
-          color         TYPE color_type
-          location      TYPE location_type
-          speed_unit    TYPE speed_unit_type
-          heading       TYPE zif_hh_dp_simple_navigation=>heading_type
-          tare_weight   TYPE weight_type
-          weight_unit   TYPE weight_unit_type.
+          license_plate    TYPE license_plate_type
+          brand            TYPE brand_type
+          model            TYPE model_type
+          year             TYPE year_type
+          color            TYPE color_type
+          location         TYPE location_type
+          speed_unit       TYPE speed_unit_type
+          heading          TYPE zif_hh_dp_simple_navigation=>heading_type
+          tare_weight      TYPE weight_type
+          weight_unit      TYPE weight_unit_type
+          basic_navigation TYPE checkbox
+          gps_navigation   TYPE checkbox.
   PROTECTED SECTION.
     DATA:
       tare_weight TYPE weight_type.
@@ -81,7 +85,8 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       speed_unit      TYPE speed_unit_type,
       weight_unit     TYPE weight_unit_type,
       serial_number   TYPE serial_type,
-      navigation_unit TYPE REF TO zcl_hh_dp_gps.
+      navigation_type type navigator_type,
+      navigation_unit TYPE REF TO zif_hh_dp_simple_navigation.
 
     CLASS-METHODS:
       get_serial_number
@@ -108,6 +113,7 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     location = me->location.
     speed_unit = me->speed_unit.
     weight_unit = me->weight_unit.
+    navigation_type = me->navigation_type.
   ENDMETHOD.
 
   METHOD get_heading.
@@ -119,6 +125,11 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD constructor.
+
+    constants:
+      selected type checkbox value 'X',
+      default_navigation type zcl_hh_dp_vehicle=>navigator_type
+        value zcl_hh_dp_navigator=>class_id.
 
     me->serial_number = me->get_serial_number( ).
 
@@ -132,7 +143,17 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     me->tare_weight = tare_weight.
     me->weight_unit = weight_unit.
 
-    me->navigation_unit = NEW #( heading ).
+    case selected.
+      when gps_navigation.
+        me->navigation_type = zcl_hh_dp_gps=>class_id.
+      when others.
+        me->navigation_type = default_navigation.
+    endcase.
+
+    create object me->navigation_unit
+      type (me->navigation_type)
+      exporting
+        heading = heading.
   ENDMETHOD.
 
   METHOD class_constructor.
