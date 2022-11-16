@@ -7,45 +7,63 @@ CLASS zcl_hh_dp_report DEFINITION
     CONSTANTS:
       execute                      TYPE sy-ucomm VALUE 'ONLI',
       add_new_car                  TYPE sy-ucomm VALUE 'NEWCAR',
+      add_new_truck                TYPE sy-ucomm VALUE 'NEWTRUCK',
       selection_screen_status_name TYPE sy-pfkey VALUE 'SELECTION_SCREEN'.
     CLASS-METHODS:
       register_car_entry
         IMPORTING
-          license_plate TYPE zcl_hh_dp_car=>license_plate_type
-          brand         TYPE zcl_hh_dp_car=>brand_type
-          year          TYPE zcl_hh_dp_car=>year_type
-          model         TYPE zcl_hh_dp_car=>model_type
-          color         TYPE zcl_hh_dp_car=>color_type
-          location      TYPE zcl_hh_dp_car=>location_type
+          license_plate TYPE zcl_hh_dp_vehicle=>license_plate_type
+          brand         TYPE zcl_hh_dp_vehicle=>brand_type
+          year          TYPE zcl_hh_dp_vehicle=>year_type
+          model         TYPE zcl_hh_dp_vehicle=>model_type
+          color         TYPE zcl_hh_dp_vehicle=>color_type
+          location      TYPE zcl_hh_dp_vehicle=>location_type
           heading       TYPE zcl_hh_dp_navigator=>heading_type
           turn01        TYPE zcl_hh_dp_navigator=>turn_type
           turn02        TYPE zcl_hh_dp_navigator=>turn_type
           turn03        TYPE zcl_hh_dp_navigator=>turn_type
-          speed01       TYPE zcl_hh_dp_car=>speed_type
-          speed02       TYPE zcl_hh_dp_car=>speed_type
-          speed03       TYPE zcl_hh_dp_car=>speed_type
-          speed_unit    TYPE zcl_hh_dp_car=>speed_unit_type,
+          speed01       TYPE zcl_hh_dp_vehicle=>speed_type
+          speed02       TYPE zcl_hh_dp_vehicle=>speed_type
+          speed03       TYPE zcl_hh_dp_vehicle=>speed_type
+          speed_unit    TYPE zcl_hh_dp_vehicle=>speed_unit_type,
+      register_truck_entry
+        IMPORTING
+          license_plate TYPE zcl_hh_dp_vehicle=>license_plate_type
+          brand         TYPE zcl_hh_dp_vehicle=>brand_type
+          year          TYPE zcl_hh_dp_vehicle=>year_type
+          model         TYPE zcl_hh_dp_vehicle=>model_type
+          color         TYPE zcl_hh_dp_vehicle=>color_type
+          location      TYPE zcl_hh_dp_vehicle=>location_type
+          heading       TYPE zcl_hh_dp_navigator=>heading_type
+          turn01        TYPE zcl_hh_dp_navigator=>turn_type
+          turn02        TYPE zcl_hh_dp_navigator=>turn_type
+          turn03        TYPE zcl_hh_dp_navigator=>turn_type
+          speed01       TYPE zcl_hh_dp_vehicle=>speed_type
+          speed02       TYPE zcl_hh_dp_vehicle=>speed_type
+          speed03       TYPE zcl_hh_dp_vehicle=>speed_type
+          speed_unit    TYPE zcl_hh_dp_vehicle=>speed_unit_type,
       show_report.
   PROTECTED SECTION.
   PRIVATE SECTION.
     TYPES:
       BEGIN OF output_row,
-        serial_number TYPE zcl_hh_dp_car=>serial_type,
-        license_plate TYPE zcl_hh_dp_car=>license_plate_type,
-        brand         TYPE zcl_hh_dp_car=>brand_type,
-        model         TYPE zcl_hh_dp_car=>model_type,
-        year          TYPE zcl_hh_dp_car=>year_type,
-        color         TYPE zcl_hh_dp_car=>color_type,
-        location      TYPE zcl_hh_dp_car=>location_type,
+        serial_number TYPE zcl_hh_dp_vehicle=>serial_type,
+        license_plate TYPE zcl_hh_dp_vehicle=>license_plate_type,
+        brand         TYPE zcl_hh_dp_vehicle=>brand_type,
+        model         TYPE zcl_hh_dp_vehicle=>model_type,
+        year          TYPE zcl_hh_dp_vehicle=>year_type,
+        color         TYPE zcl_hh_dp_vehicle=>color_type,
+        location      TYPE zcl_hh_dp_vehicle=>location_type,
         heading       TYPE zcl_hh_dp_navigator=>heading_type,
-        speed         TYPE zcl_hh_dp_car=>speed_type,
-        speed_unit    TYPE zcl_hh_dp_car=>speed_unit_type,
+        speed         TYPE zcl_hh_dp_vehicle=>speed_type,
+        speed_unit    TYPE zcl_hh_dp_vehicle=>speed_unit_type,
       END   OF output_row,
       output_list TYPE STANDARD TABLE OF output_row.
 
     CLASS-DATA:
       output_stack TYPE output_list,
-      car_stack    TYPE TABLE OF REF TO zcl_hh_dp_car.
+      car_stack    TYPE TABLE OF REF TO zcl_hh_dp_car,
+      truck_stack  TYPE TABLE OF REF TO zcl_hh_dp_truck.
 
     CLASS-METHODS:
       build_report,
@@ -78,6 +96,26 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
 
       output_entry-heading = car_entry->get_heading( ).
       output_entry-speed = car_entry->get_speed( ).
+
+      APPEND output_entry TO zcl_hh_dp_report=>output_stack.
+    ENDLOOP.
+
+    LOOP AT zcl_hh_dp_report=>truck_stack
+      INTO DATA(truck_entry).
+      truck_entry->get_characteristics(
+        IMPORTING
+          serial_number = output_entry-serial_number
+          license_plate = output_entry-license_plate
+          brand         = output_entry-brand
+          model         = output_entry-model
+          year          = output_entry-year
+          color         = output_entry-color
+          location      = output_entry-location
+          speed_unit    = output_entry-speed_unit
+      ).
+
+      output_entry-heading = truck_entry->get_heading( ).
+      output_entry-speed = truck_entry->get_speed( ).
 
       APPEND output_entry TO zcl_hh_dp_report=>output_stack.
     ENDLOOP.
@@ -130,9 +168,38 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     car_entry->change_heading( turn02 ).
     car_entry->change_heading( turn03 ).
 
-    MESSAGE s398(00) WITH 'Entry registered for'
+    MESSAGE s398(00) WITH 'Car entry registered for'
                           license_plate
                           space space.
+  ENDMETHOD.
+
+  METHOD register_truck_entry.
+
+    DATA(truck_entry) = NEW zcl_hh_dp_truck(
+      license_plate = license_plate
+      brand         = brand
+      model         = model
+      year          = year
+      color         = color
+      location      = location
+      speed_unit    = speed_unit
+      heading       = heading
+    ).
+
+    APPEND truck_entry TO truck_stack.
+
+    truck_entry->accelerate( speed01 ).
+    truck_entry->accelerate( speed02 ).
+    truck_entry->accelerate( speed03 ).
+
+    truck_entry->change_heading( turn01 ).
+    truck_entry->change_heading( turn02 ).
+    truck_entry->change_heading( turn03 ).
+
+    MESSAGE s398(00) WITH 'Truck entry registered for'
+                          license_plate
+                          space space.
+
   ENDMETHOD.
 
   METHOD set_column_titles.
@@ -175,7 +242,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       CLEAR grid_column_width.
 
       CASE grid_column_entry-columnname.
-        when column_name_serial_number.
+        WHEN column_name_serial_number.
           grid_column_title_short = column_title_serial_number.
         WHEN column_name_license_plate.
           grid_column_title_short   = column_title_license_plate.

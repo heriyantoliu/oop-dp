@@ -177,6 +177,15 @@
       <ICON_TEXT>New Car</ICON_TEXT>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
+      <CODE>NEWTRUCK</CODE>
+      <TEXTNO>001</TEXTNO>
+      <TEXT_TYPE>S</TEXT_TYPE>
+      <TEXT_NAME>ICON_CREATE</TEXT_NAME>
+      <ICON_ID>@0Y@</ICON_ID>
+      <FUN_TEXT>Add new truck</FUN_TEXT>
+      <ICON_TEXT>New Truck</ICON_TEXT>
+     </RSMPE_FUNT>
+     <RSMPE_FUNT>
       <CODE>ONLI</CODE>
       <TEXTNO>001</TEXTNO>
       <TEXT_TYPE>S</TEXT_TYPE>
@@ -553,6 +562,12 @@
       <NO>12</NO>
       <PFNO>05</PFNO>
      </RSMPE_BUT>
+     <RSMPE_BUT>
+      <PFK_CODE>000001</PFK_CODE>
+      <CODE>0001</CODE>
+      <NO>13</NO>
+      <PFNO>06</PFNO>
+     </RSMPE_BUT>
     </BUT>
     <PFK>
      <RSMPE_PFK>
@@ -571,6 +586,12 @@
       <CODE>000001</CODE>
       <PFNO>05</PFNO>
       <FUNCODE>NEWCAR</FUNCODE>
+      <FUNNO>001</FUNNO>
+     </RSMPE_PFK>
+     <RSMPE_PFK>
+      <CODE>000001</CODE>
+      <PFNO>06</PFNO>
+      <FUNCODE>NEWTRUCK</FUNCODE>
       <FUNNO>001</FUNNO>
      </RSMPE_PFK>
      <RSMPE_PFK>
@@ -772,6 +793,10 @@
      <RSMPE_STAF>
       <STATUS>SELECTION_SCREEN</STATUS>
       <FUNCTION>NEWCAR</FUNCTION>
+     </RSMPE_STAF>
+     <RSMPE_STAF>
+      <STATUS>SELECTION_SCREEN</STATUS>
+      <FUNCTION>NEWTRUCK</FUNCTION>
      </RSMPE_STAF>
      <RSMPE_STAF>
       <STATUS>SELECTION_SCREEN</STATUS>
