@@ -96,4 +96,5 @@ AT SELECTION-SCREEN.
 START-OF-SELECTION.
 
 END-OF-SELECTION.
+  zcl_hh_dp_trck_axle_wght_mntr=>singleton->show_over_2_axle_limit_count( ).
   zcl_hh_dp_report=>singleton->show_report( ).
