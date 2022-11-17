@@ -127,11 +127,6 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
 
   METHOD constructor.
 
-    CONSTANTS:
-      selected           TYPE checkbox VALUE 'X',
-      default_navigation TYPE zcl_hh_dp_vehicle=>navigator_type
-        VALUE zcl_hh_dp_dead_reckoning=>class_id.
-
     me->serial_number = me->get_serial_number( ).
 
     me->license_plate = license_plate.
@@ -144,19 +139,17 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     me->tare_weight = tare_weight.
     me->weight_unit = weight_unit.
 
-    CASE selected.
-      WHEN gps_navigation.
-        me->navigation_type = zcl_hh_dp_gps=>class_id.
-      when basic_navigation.
-        me->navigation_type = zcl_hh_dp_navigator=>class_id.
-      WHEN OTHERS.
-        me->navigation_type = default_navigation.
-    ENDCASE.
-
-    CREATE OBJECT me->navigation_unit
-      TYPE (me->navigation_type)
+    zcl_hh_dp_vehicle_accs_store=>get_navigation_unit(
       EXPORTING
-        heading = heading.
+        heading          = heading
+        basic_navigation = basic_navigation
+        gps_navigation   = gps_navigation
+        no_navigation    = no_navigation
+      IMPORTING
+        navigation_unit  = me->navigation_unit
+        unit_type        = me->navigation_type
+    ).
+
   ENDMETHOD.
 
   METHOD class_constructor.
