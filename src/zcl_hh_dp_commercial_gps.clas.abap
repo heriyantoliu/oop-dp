@@ -13,8 +13,8 @@ CLASS zcl_hh_dp_commercial_gps DEFINITION
         importing
           change type bearing_type,
       get_bearing
-        exporting
-          bearing type bearing_type.
+        returning
+          value(bearing) type bearing_type.
 
   private section.
     constants:

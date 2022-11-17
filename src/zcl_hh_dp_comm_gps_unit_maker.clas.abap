@@ -21,7 +21,7 @@ ENDCLASS.
 
 CLASS zcl_hh_dp_comm_gps_unit_maker IMPLEMENTATION.
   METHOD create_unit.
-    unit_type = zcl_hh_dp_comm_gps_adapter_a=>class_id.
+    unit_type = zcl_hh_dp_comm_gps_adapter_b=>class_id.
     create object navigation_unit type (unit_type)
       exporting
         heading = heading.
