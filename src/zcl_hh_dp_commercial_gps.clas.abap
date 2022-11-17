@@ -1,53 +1,40 @@
 CLASS zcl_hh_dp_commercial_gps DEFINITION
-  PUBLIC
-  FINAL
-  CREATE PUBLIC .
+  PUBLIC.
 
   PUBLIC SECTION.
-
-    INTERFACES zif_hh_dp_simple_navigation .
-
-    aliases:
-      change_heading
-        for zif_hh_dp_simple_navigation~change_heading,
-      get_heading
-        for zif_hh_dp_simple_navigation~get_heading.
-
-    constants:
-      class_id type seoclsname value 'ZCL_HH_DP_COMMERCIAL_GPS'.
+    types:
+      bearing_type type int4.
 
     methods:
       constructor
         importing
-          heading type zif_hh_dp_simple_navigation=>heading_type.
-  PROTECTED SECTION.
-  PRIVATE SECTION.
+          bearing type bearing_type,
+      change_bearing
+        importing
+          change type bearing_type,
+      get_bearing
+        exporting
+          bearing type bearing_type.
+
+  private section.
     constants:
-      degrees_90 type int4 value 90,
-      degrees_180 type int4 value 180,
       degrees_360 type int4 value 360.
 
     data:
-      bearing type int4.
+      bearing type bearing_type.
+
 ENDCLASS.
 
 
 
 CLASS zcl_hh_dp_commercial_gps IMPLEMENTATION.
 
-  METHOD change_heading.
-    check turn eq zif_hh_dp_simple_navigation=>left_turn or
-          turn eq zif_hh_dp_simple_navigation=>right_turn or
-          turn eq zif_hh_dp_simple_navigation=>u_turn.
+  METHOD constructor.
+    me->bearing = bearing.
+  ENDMETHOD.
 
-    case turn.
-      when zif_hh_dp_simple_navigation=>left_turn.
-        subtract degrees_90 from me->bearing.
-      when zif_hh_dp_simple_navigation=>right_turn.
-        add degrees_90 to me->bearing.
-      when zif_hh_dp_simple_navigation=>u_turn.
-        add degrees_180 to me->bearing.
-    endcase.
+  METHOD change_bearing.
+    add change to me->bearing.
 
     if me->bearing lt 0.
       add degrees_360 to me->bearing.
@@ -58,19 +45,8 @@ CLASS zcl_hh_dp_commercial_gps IMPLEMENTATION.
     endif.
   ENDMETHOD.
 
-  METHOD get_heading.
-    data: compass_offset type int4.
-
-    compass_offset = me->bearing / degrees_90.
-    heading = zif_hh_dp_simple_navigation=>compass+compass_offset(1).
-  ENDMETHOD.
-
-  METHOD constructor.
-    find heading in zif_hh_dp_simple_navigation=>compass
-      match offset data(compass_offset).
-
-    me->bearing = compass_offset * degrees_90.
-
+  METHOD get_bearing.
+    bearing = me->bearing.
   ENDMETHOD.
 
 ENDCLASS.
