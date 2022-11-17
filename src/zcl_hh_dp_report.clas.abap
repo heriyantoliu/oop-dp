@@ -10,13 +10,13 @@ CLASS zcl_hh_dp_report DEFINITION
       add_new_truck                TYPE sy-ucomm VALUE 'NEWTRUCK',
       selection_screen_status_name TYPE sy-pfkey VALUE 'SELECTION_SCREEN'.
 
-    class-data:
-      singleton type ref to zcl_hh_dp_report read-only.
+    CLASS-DATA:
+      singleton TYPE REF TO zcl_hh_dp_report READ-ONLY.
 
     CLASS-METHODS:
       class_constructor.
 
-    methods:
+    METHODS:
       register_car_entry
         IMPORTING
           license_plate    TYPE zcl_hh_dp_vehicle=>license_plate_type
@@ -128,7 +128,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD class_constructor.
-    zcl_hh_dp_report=>singleton = new #( ).
+    zcl_hh_dp_report=>singleton = NEW #( ).
   ENDMETHOD.
 
   METHOD present_report.
@@ -158,11 +158,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
 
   METHOD register_car_entry.
 
-    DATA: vehicle_entry TYPE REF TO zcl_hh_dp_vehicle.
-
-    CREATE OBJECT vehicle_entry
-      TYPE zcl_hh_dp_car
-      EXPORTING
+    data(vehicle_entry) = zcl_hh_dp_car=>create(
         license_plate    = license_plate
         brand            = brand
         model            = model
@@ -176,8 +172,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         passengers       = passengers
         basic_navigation = basic_navigation
         gps_navigation   = gps_navigation
-        no_navigation    = no_navigation.
-
+        no_navigation    = no_navigation
+    ).
 
     APPEND vehicle_entry TO me->vehicle_stack.
 
@@ -196,25 +192,22 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
 
   METHOD register_truck_entry.
 
-    DATA: vehicle_entry TYPE REF TO zcl_hh_dp_vehicle.
-
-    CREATE OBJECT vehicle_entry
-      TYPE zcl_hh_dp_truck
-      EXPORTING
-        license_plate    = license_plate
-        brand            = brand
-        model            = model
-        year             = year
-        color            = color
-        location         = location
-        speed_unit       = speed_unit
-        heading          = heading
-        tare_weight      = tare_weight
-        weight_unit      = weight_unit
-        cargo_weight     = cargo_weight
-        basic_navigation = basic_navigation
-        gps_navigation   = gps_navigation
-        no_navigation    = no_navigation.
+    data(vehicle_entry) = zcl_hh_dp_truck=>create(
+      license_plate    = license_plate
+      brand            = brand
+      model            = model
+      year             = year
+      color            = color
+      location         = location
+      speed_unit       = speed_unit
+      heading          = heading
+      tare_weight      = tare_weight
+      weight_unit      = weight_unit
+      cargo_weight     = cargo_weight
+      basic_navigation = basic_navigation
+      gps_navigation   = gps_navigation
+      no_navigation    = no_navigation
+    ).
 
 
     APPEND vehicle_entry TO me->vehicle_stack.
