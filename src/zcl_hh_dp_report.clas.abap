@@ -38,7 +38,9 @@ CLASS zcl_hh_dp_report DEFINITION
           passengers       TYPE zcl_hh_dp_car=>passengers_type
           basic_navigation TYPE checkbox
           gps_navigation   TYPE checkbox
-          no_navigation    TYPE checkbox,
+          no_navigation    TYPE checkbox
+          has_option_vl    TYPE checkbox
+          has_option_cc    TYPE checkbox,
       register_truck_entry
         IMPORTING
           license_plate    TYPE zcl_hh_dp_vehicle=>license_plate_type
@@ -60,7 +62,9 @@ CLASS zcl_hh_dp_report DEFINITION
           cargo_weight     TYPE zcl_hh_dp_vehicle=>weight_type
           basic_navigation TYPE checkbox
           gps_navigation   TYPE checkbox
-          no_navigation    TYPE checkbox,
+          no_navigation    TYPE checkbox
+          has_option_vl    TYPE checkbox
+          has_option_cc    TYPE checkbox,
       show_report.
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -158,7 +162,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
 
   METHOD register_car_entry.
 
-    data(vehicle_entry) = zcl_hh_dp_car=>create(
+    DATA(vehicle_entry) = zcl_hh_dp_car=>create(
         license_plate    = license_plate
         brand            = brand
         model            = model
@@ -173,6 +177,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         basic_navigation = basic_navigation
         gps_navigation   = gps_navigation
         no_navigation    = no_navigation
+        has_option_vl = has_option_vl
+        has_option_cc = has_option_cc
     ).
 
     APPEND vehicle_entry TO me->vehicle_stack.
@@ -192,7 +198,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
 
   METHOD register_truck_entry.
 
-    data(vehicle_entry) = zcl_hh_dp_truck=>create(
+    DATA(vehicle_entry) = zcl_hh_dp_truck=>create(
       license_plate    = license_plate
       brand            = brand
       model            = model
@@ -207,6 +213,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       basic_navigation = basic_navigation
       gps_navigation   = gps_navigation
       no_navigation    = no_navigation
+      has_option_vl = has_option_vl
+      has_option_cc = has_option_cc
     ).
 
 

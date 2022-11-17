@@ -7,8 +7,8 @@ CLASS zcl_hh_dp_car DEFINITION
     TYPES:
       passengers_type TYPE int4.
 
-    constants:
-      class_id type seoclsname value 'ZCL_HH_DP_CAR'.
+    CONSTANTS:
+      class_id TYPE seoclsname VALUE 'ZCL_HH_DP_CAR'.
 
     CLASS-METHODS:
       create
@@ -27,6 +27,8 @@ CLASS zcl_hh_dp_car DEFINITION
           basic_navigation        TYPE checkbox
           gps_navigation          TYPE checkbox
           no_navigation           TYPE checkbox
+          has_option_vl           TYPE checkbox
+          has_option_cc           TYPE checkbox
         RETURNING
           VALUE(vehicle_instance) TYPE REF TO zcl_hh_dp_vehicle.
 
@@ -115,6 +117,10 @@ CLASS zcl_hh_dp_car IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD create.
+
+    data: options_stack type table of seoclsname,
+          object_to_be_wrapped type ref to zcl_hh_dp_vehicle.
+
     CREATE OBJECT vehicle_instance TYPE zcl_hh_dp_car
       EXPORTING
         license_plate    = license_plate
@@ -131,6 +137,24 @@ CLASS zcl_hh_dp_car IMPLEMENTATION.
         basic_navigation = basic_navigation
         gps_navigation   = gps_navigation
         no_navigation    = no_navigation.
+
+    if has_option_vl is not initial.
+      append zcl_hh_dp_vehicle_option_vl=>class_id
+        to options_stack.
+    endif.
+
+    if has_option_cc is not initial.
+      append zcl_hh_dp_vehicle_option_cc=>class_id
+        to options_stack.
+    endif.
+
+    loop at options_stack into data(options_entry).
+      object_to_be_wrapped = vehicle_instance.
+
+      create object vehicle_instance type (options_entry)
+        exporting
+          wrapped_object = object_to_be_wrapped.
+    endloop.
   ENDMETHOD.
 
   METHOD get_description.

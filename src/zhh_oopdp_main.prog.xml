@@ -1004,6 +1004,18 @@
      <ENTRY>Equipped with no navigation</ENTRY>
      <LENGTH>35</LENGTH>
     </item>
+    <item>
+     <ID>S</ID>
+     <KEY>XOPTCC</KEY>
+     <ENTRY>Cold Climate option</ENTRY>
+     <LENGTH>27</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>XOPTVL</KEY>
+     <ENTRY>Vehicle locator option</ENTRY>
+     <LENGTH>30</LENGTH>
+    </item>
    </TPOOL>
   </asx:values>
  </asx:abap>

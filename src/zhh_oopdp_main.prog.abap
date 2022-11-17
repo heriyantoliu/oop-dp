@@ -26,7 +26,9 @@ SELECTION-SCREEN BEGIN OF BLOCK block_a WITH FRAME.
               ppsngrs  TYPE zcl_hh_dp_car=>passengers_type,
               xbnav    RADIOBUTTON GROUP nav,
               xgps     RADIOBUTTON GROUP nav,
-              xnonav   RADIOBUTTON GROUP nav.
+              xnonav   RADIOBUTTON GROUP nav,
+              xoptvl   AS CHECKBOX,
+              xoptcc   AS CHECKBOX.
 SELECTION-SCREEN END OF BLOCK block_a.
 
 INITIALIZATION.
@@ -62,6 +64,8 @@ AT SELECTION-SCREEN.
           basic_navigation = xbnav
           gps_navigation = xgps
           no_navigation = xnonav
+          has_option_vl = xoptvl
+          has_option_cc = xoptcc
       ).
 
     WHEN zcl_hh_dp_report=>add_new_truck.
@@ -88,6 +92,8 @@ AT SELECTION-SCREEN.
           basic_navigation = xbnav
           gps_navigation = xgps
           no_navigation = xnonav
+          has_option_vl = xoptvl
+          has_option_cc = xoptcc
       ).
 
     WHEN OTHERS.
