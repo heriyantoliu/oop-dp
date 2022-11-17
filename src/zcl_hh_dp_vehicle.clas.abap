@@ -16,7 +16,8 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       serial_type        TYPE num4,
       weight_type        TYPE int4,
       weight_unit_type   TYPE char3,
-      description_type   TYPE char15.
+      description_type   TYPE char15,
+      vehicle_type       TYPE seoclsname.
 
     CLASS-METHODS:
       class_constructor.
@@ -54,19 +55,20 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           VALUE(speed) TYPE speed_type,
       constructor
         IMPORTING
-          license_plate    TYPE license_plate_type
-          brand            TYPE brand_type
-          model            TYPE model_type
-          year             TYPE year_type
-          color            TYPE color_type
-          location         TYPE location_type
-          speed_unit       TYPE speed_unit_type
-          heading          TYPE zif_hh_dp_simple_navigation=>heading_type
-          tare_weight      TYPE weight_type
-          weight_unit      TYPE weight_unit_type
-          basic_navigation TYPE checkbox
-          gps_navigation   TYPE checkbox
-          no_navigation    TYPE checkbox.
+          license_plate          TYPE license_plate_type
+          brand                  TYPE brand_type
+          model                  TYPE model_type
+          year                   TYPE year_type
+          color                  TYPE color_type
+          location               TYPE location_type
+          speed_unit             TYPE speed_unit_type
+          heading                TYPE zif_hh_dp_simple_navigation=>heading_type
+          tare_weight            TYPE weight_type
+          weight_unit            TYPE weight_unit_type
+          basic_navigation       TYPE checkbox
+          gps_navigation         TYPE checkbox
+          no_navigation          TYPE checkbox
+          vehicle_classification TYPE vehicle_type.
   PROTECTED SECTION.
     DATA:
       tare_weight TYPE weight_type.
@@ -141,6 +143,7 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
 
     zcl_hh_dp_vehicle_accs_store=>get_navigation_unit(
       EXPORTING
+        vehicle_classification = vehicle_classification
         heading          = heading
         basic_navigation = basic_navigation
         gps_navigation   = gps_navigation

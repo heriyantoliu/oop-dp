@@ -7,6 +7,9 @@ CLASS zcl_hh_dp_car DEFINITION
     TYPES:
       passengers_type TYPE int4.
 
+    constants:
+      class_id type seoclsname value 'ZCL_HH_DP_CAR'.
+
     CLASS-METHODS:
       create
         IMPORTING
@@ -73,6 +76,7 @@ CLASS zcl_hh_dp_car IMPLEMENTATION.
       basic_navigation = basic_navigation
       gps_navigation = gps_navigation
       no_navigation = no_navigation
+      vehicle_classification = class_id
     ).
 
     me->passengers = passengers.

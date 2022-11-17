@@ -5,18 +5,20 @@ CLASS zcl_hh_dp_vehicle_accs_store DEFINITION
 
   PUBLIC SECTION.
     TYPES:
-      navigation_unit_type TYPE seoclsname.
+      navigation_unit_type TYPE seoclsname,
+      vehicle_type         TYPE seoclsname.
 
     CLASS-METHODS:
       get_navigation_unit
         IMPORTING
-          heading          TYPE zif_hh_dp_simple_navigation=>heading_type
-          basic_navigation TYPE checkbox
-          gps_navigation   TYPE checkbox
-          no_navigation    TYPE checkbox
+          vehicle_classification TYPE vehicle_type
+          heading                TYPE zif_hh_dp_simple_navigation=>heading_type
+          basic_navigation       TYPE checkbox
+          gps_navigation         TYPE checkbox
+          no_navigation          TYPE checkbox
         EXPORTING
-          navigation_unit  TYPE REF TO zif_hh_dp_simple_navigation
-          unit_type        TYPE navigation_unit_type.
+          navigation_unit        TYPE REF TO zif_hh_dp_simple_navigation
+          unit_type              TYPE navigation_unit_type.
 
   PROTECTED SECTION.
 
@@ -24,45 +26,55 @@ CLASS zcl_hh_dp_vehicle_accs_store DEFINITION
     CLASS-DATA:
       dead_reckoning_unit_shop TYPE REF TO zcl_hh_dp_nav_accsr_maker,
       navigator_unit_shop      TYPE REF TO zcl_hh_dp_nav_accsr_maker,
-      gps_unit_shop            TYPE REF TO zcl_hh_dp_nav_accsr_maker.
+      gps_unit_shop            TYPE REF TO zcl_hh_dp_nav_accsr_maker,
+      commercial_gps_unit_shop TYPE REF TO zcl_hh_dp_nav_accsr_maker.
 ENDCLASS.
 
 
 
 CLASS zcl_hh_dp_vehicle_accs_store IMPLEMENTATION.
   METHOD get_navigation_unit.
-    constants: selected type checkbox value 'X'.
+    CONSTANTS: selected TYPE checkbox VALUE 'X'.
 
-    data: unit_production_shop type ref to zcl_hh_dp_nav_accsr_maker.
+    DATA: unit_production_shop TYPE REF TO zcl_hh_dp_nav_accsr_maker.
 
-    case selected.
-      when basic_navigation.
-        if navigator_unit_shop is not bound.
-          create object navigator_unit_shop type zcl_hh_dp_nav_unit_maker.
-        endif.
+    CASE selected.
+      WHEN basic_navigation.
+        IF navigator_unit_shop IS NOT BOUND.
+          CREATE OBJECT navigator_unit_shop TYPE zcl_hh_dp_nav_unit_maker.
+        ENDIF.
 
         unit_production_shop = zcl_hh_dp_vehicle_accs_store=>navigator_unit_shop.
-      when gps_navigation.
-        if gps_unit_shop is not bound.
-          create object gps_unit_shop type zcl_hh_dp_gps_unit_maker.
-        endif.
+      WHEN gps_navigation.
+        CASE vehicle_classification.
+          WHEN zcl_hh_dp_truck=>class_id.
+            IF commercial_gps_unit_shop IS NOT BOUND.
+              CREATE OBJECT commercial_gps_unit_shop TYPE zcl_hh_dp_comm_gps_unit_maker.
+            ENDIF.
+            unit_production_shop = commercial_gps_unit_shop.
+          WHEN zcl_hh_dp_car=>class_id.
+            IF gps_unit_shop IS NOT BOUND.
+              CREATE OBJECT gps_unit_shop TYPE zcl_hh_dp_gps_unit_maker.
+            ENDIF.
 
-        unit_production_shop = zcl_hh_dp_vehicle_accs_store=>gps_unit_shop.
-      when others.
-        if dead_reckoning_unit_shop is not bound.
-          create object dead_reckoning_unit_shop type zcl_hh_dp_dead_reck_unit_maker.
-        endif.
+            unit_production_shop = zcl_hh_dp_vehicle_accs_store=>gps_unit_shop.
+        ENDCASE.
+
+      WHEN OTHERS.
+        IF dead_reckoning_unit_shop IS NOT BOUND.
+          CREATE OBJECT dead_reckoning_unit_shop TYPE zcl_hh_dp_dead_reck_unit_maker.
+        ENDIF.
 
         unit_production_shop = zcl_hh_dp_vehicle_accs_store=>dead_reckoning_unit_shop.
-      endcase.
+    ENDCASE.
 
-      unit_production_shop->make_navigation_unit(
-        EXPORTING
-          heading         = heading
-        IMPORTING
-          navigation_unit = navigation_unit
-          unit_type       = unit_type
-      ).
+    unit_production_shop->make_navigation_unit(
+      EXPORTING
+        heading         = heading
+      IMPORTING
+        navigation_unit = navigation_unit
+        unit_type       = unit_type
+    ).
   ENDMETHOD.
 
 ENDCLASS.

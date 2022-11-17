@@ -4,6 +4,9 @@ CLASS zcl_hh_dp_truck DEFINITION
   CREATE PRIVATE.
 
   PUBLIC SECTION.
+    constants:
+      class_id type seoclsname value 'ZCL_HH_DP_TRUCK'.
+
     EVENTS: weight_exceeds_2_axle_limit.
 
     CLASS-METHODS:
@@ -90,6 +93,7 @@ CLASS zcl_hh_dp_truck IMPLEMENTATION.
       basic_navigation = basic_navigation
       gps_navigation = gps_navigation
       no_navigation = no_navigation
+      vehicle_classification = class_id
     ).
 
     me->cargo_weight = cargo_weight.
