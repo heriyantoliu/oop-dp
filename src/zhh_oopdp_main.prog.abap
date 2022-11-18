@@ -28,7 +28,13 @@ SELECTION-SCREEN BEGIN OF BLOCK block_a WITH FRAME.
               xgps     RADIOBUTTON GROUP nav,
               xnonav   RADIOBUTTON GROUP nav,
               xoptvl   AS CHECKBOX,
-              xoptcc   AS CHECKBOX.
+              xoptcc   AS CHECKBOX,
+              xoptmt   AS CHECKBOX,
+              xoptoo   AS CHECKBOX,
+              xoptcr   AS CHECKBOX,
+              xoptxr   AS CHECKBOX,
+              xoptcg   AS CHECKBOX,
+              xoptls   AS CHECKBOX.
 SELECTION-SCREEN END OF BLOCK block_a.
 
 INITIALIZATION.
@@ -66,6 +72,12 @@ AT SELECTION-SCREEN.
           no_navigation = xnonav
           has_option_vl = xoptvl
           has_option_cc = xoptcc
+          has_option_mt = xoptmt
+          has_option_oo = xoptoo
+          has_option_cr = xoptcr
+          has_option_xr = xoptxr
+          has_option_cg = xoptcg
+          has_option_ls = xoptls
       ).
 
     WHEN zcl_hh_dp_report=>add_new_truck.
@@ -94,6 +106,12 @@ AT SELECTION-SCREEN.
           no_navigation = xnonav
           has_option_vl = xoptvl
           has_option_cc = xoptcc
+          has_option_mt = xoptmt
+          has_option_oo = xoptoo
+          has_option_cr = xoptcr
+          has_option_xr = xoptxr
+          has_option_cg = xoptcg
+          has_option_ls = xoptls
       ).
 
     WHEN OTHERS.

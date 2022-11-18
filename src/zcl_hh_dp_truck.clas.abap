@@ -29,6 +29,12 @@ CLASS zcl_hh_dp_truck DEFINITION
           no_navigation           TYPE checkbox
           has_option_vl           TYPE checkbox
           has_option_cc           TYPE checkbox
+          has_option_mt           TYPE checkbox
+          has_option_oo           TYPE checkbox
+          has_option_cr           TYPE checkbox
+          has_option_xr           TYPE checkbox
+          has_option_cg           TYPE checkbox
+          has_option_ls           TYPE checkbox
         RETURNING
           VALUE(vehicle_instance) TYPE REF TO zcl_hh_dp_vehicle.
 
@@ -135,6 +141,36 @@ CLASS zcl_hh_dp_truck IMPLEMENTATION.
       append zcl_hh_dp_vehicle_option_cc=>class_id
         to options_stack.
     endif.
+
+    IF has_option_mt IS NOT INITIAL.
+      APPEND zcl_hh_dp_vehicle_option_mt=>class_id
+        TO options_stack.
+    ENDIF.
+
+    IF has_option_oo IS NOT INITIAL.
+      APPEND zcl_hh_dp_vehicle_option_oo=>class_id
+        TO options_stack.
+    ENDIF.
+
+    IF has_option_cr IS NOT INITIAL.
+      APPEND zcl_hh_dp_vehicle_option_cr=>class_id
+        TO options_stack.
+    ENDIF.
+
+    IF has_option_xr IS NOT INITIAL.
+      APPEND zcl_hh_dp_vehicle_option_xr=>class_id
+        TO options_stack.
+    ENDIF.
+
+    IF has_option_cg IS NOT INITIAL.
+      APPEND zcl_hh_dp_vehicle_option_cg=>class_id
+        TO options_stack.
+    ENDIF.
+
+    IF has_option_ls IS NOT INITIAL.
+      APPEND zcl_hh_dp_vehicle_option_ls=>class_id
+        TO options_stack.
+    ENDIF.
 
     loop at options_stack into data(options_entry).
       object_to_be_wrapped = vehicle_instance.

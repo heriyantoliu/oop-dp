@@ -1012,9 +1012,45 @@
     </item>
     <item>
      <ID>S</ID>
+     <KEY>XOPTCG</KEY>
+     <ENTRY>Chrome galore option</ENTRY>
+     <LENGTH>28</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>XOPTCR</KEY>
+     <ENTRY>Corrosion resistance option</ENTRY>
+     <LENGTH>35</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>XOPTLS</KEY>
+     <ENTRY>Light spectacular option</ENTRY>
+     <LENGTH>32</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>XOPTMT</KEY>
+     <ENTRY>Mountainous terrain option</ENTRY>
+     <LENGTH>34</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>XOPTOO</KEY>
+     <ENTRY>Off-road operation option</ENTRY>
+     <LENGTH>33</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
      <KEY>XOPTVL</KEY>
      <ENTRY>Vehicle locator option</ENTRY>
      <LENGTH>30</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>XOPTXR</KEY>
+     <ENTRY>Extended range option</ENTRY>
+     <LENGTH>29</LENGTH>
     </item>
    </TPOOL>
   </asx:values>

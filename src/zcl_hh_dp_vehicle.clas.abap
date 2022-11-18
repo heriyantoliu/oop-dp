@@ -16,7 +16,7 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       serial_type        TYPE num4,
       weight_type        TYPE int4,
       weight_unit_type   TYPE char3,
-      description_type   TYPE char15,
+      description_type   TYPE char30,
       vehicle_type       TYPE seoclsname.
 
     CLASS-METHODS:

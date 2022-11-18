@@ -29,6 +29,12 @@ CLASS zcl_hh_dp_car DEFINITION
           no_navigation           TYPE checkbox
           has_option_vl           TYPE checkbox
           has_option_cc           TYPE checkbox
+          has_option_mt           TYPE checkbox
+          has_option_oo           TYPE checkbox
+          has_option_cr           TYPE checkbox
+          has_option_xr           TYPE checkbox
+          has_option_cg           TYPE checkbox
+          has_option_ls           TYPE checkbox
         RETURNING
           VALUE(vehicle_instance) TYPE REF TO zcl_hh_dp_vehicle.
 
@@ -118,8 +124,8 @@ CLASS zcl_hh_dp_car IMPLEMENTATION.
 
   METHOD create.
 
-    data: options_stack type table of seoclsname,
-          object_to_be_wrapped type ref to zcl_hh_dp_vehicle.
+    DATA: options_stack        TYPE TABLE OF seoclsname,
+          object_to_be_wrapped TYPE REF TO zcl_hh_dp_vehicle.
 
     CREATE OBJECT vehicle_instance TYPE zcl_hh_dp_car
       EXPORTING
@@ -138,23 +144,53 @@ CLASS zcl_hh_dp_car IMPLEMENTATION.
         gps_navigation   = gps_navigation
         no_navigation    = no_navigation.
 
-    if has_option_vl is not initial.
-      append zcl_hh_dp_vehicle_option_vl=>class_id
-        to options_stack.
-    endif.
+    IF has_option_vl IS NOT INITIAL.
+      APPEND zcl_hh_dp_vehicle_option_vl=>class_id
+        TO options_stack.
+    ENDIF.
 
-    if has_option_cc is not initial.
-      append zcl_hh_dp_vehicle_option_cc=>class_id
-        to options_stack.
-    endif.
+    IF has_option_cc IS NOT INITIAL.
+      APPEND zcl_hh_dp_vehicle_option_cc=>class_id
+        TO options_stack.
+    ENDIF.
 
-    loop at options_stack into data(options_entry).
+    IF has_option_mt IS NOT INITIAL.
+      APPEND zcl_hh_dp_vehicle_option_mt=>class_id
+        TO options_stack.
+    ENDIF.
+
+    IF has_option_oo IS NOT INITIAL.
+      APPEND zcl_hh_dp_vehicle_option_oo=>class_id
+        TO options_stack.
+    ENDIF.
+
+    IF has_option_cr IS NOT INITIAL.
+      APPEND zcl_hh_dp_vehicle_option_cr=>class_id
+        TO options_stack.
+    ENDIF.
+
+    IF has_option_xr IS NOT INITIAL.
+      APPEND zcl_hh_dp_vehicle_option_xr=>class_id
+        TO options_stack.
+    ENDIF.
+
+    IF has_option_cg IS NOT INITIAL.
+      APPEND zcl_hh_dp_vehicle_option_cg=>class_id
+        TO options_stack.
+    ENDIF.
+
+    IF has_option_ls IS NOT INITIAL.
+      APPEND zcl_hh_dp_vehicle_option_ls=>class_id
+        TO options_stack.
+    ENDIF.
+
+    LOOP AT options_stack INTO DATA(options_entry).
       object_to_be_wrapped = vehicle_instance.
 
-      create object vehicle_instance type (options_entry)
-        exporting
+      CREATE OBJECT vehicle_instance TYPE (options_entry)
+        EXPORTING
           wrapped_object = object_to_be_wrapped.
-    endloop.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD get_description.

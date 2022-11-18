@@ -40,7 +40,13 @@ CLASS zcl_hh_dp_report DEFINITION
           gps_navigation   TYPE checkbox
           no_navigation    TYPE checkbox
           has_option_vl    TYPE checkbox
-          has_option_cc    TYPE checkbox,
+          has_option_cc    TYPE checkbox
+          has_option_mt    TYPE checkbox
+          has_option_oo    TYPE checkbox
+          has_option_cr    TYPE checkbox
+          has_option_xr    TYPE checkbox
+          has_option_cg    TYPE checkbox
+          has_option_ls    TYPE checkbox,
       register_truck_entry
         IMPORTING
           license_plate    TYPE zcl_hh_dp_vehicle=>license_plate_type
@@ -64,7 +70,13 @@ CLASS zcl_hh_dp_report DEFINITION
           gps_navigation   TYPE checkbox
           no_navigation    TYPE checkbox
           has_option_vl    TYPE checkbox
-          has_option_cc    TYPE checkbox,
+          has_option_cc    TYPE checkbox
+          has_option_mt    TYPE checkbox
+          has_option_oo    TYPE checkbox
+          has_option_cr    TYPE checkbox
+          has_option_xr    TYPE checkbox
+          has_option_cg    TYPE checkbox
+          has_option_ls    TYPE checkbox,
       show_report.
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -179,6 +191,12 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         no_navigation    = no_navigation
         has_option_vl = has_option_vl
         has_option_cc = has_option_cc
+        has_option_mt = has_option_mt
+        has_option_oo = has_option_oo
+        has_option_cr = has_option_cr
+        has_option_xr = has_option_xr
+        has_option_cg = has_option_cg
+        has_option_ls = has_option_ls
     ).
 
     APPEND vehicle_entry TO me->vehicle_stack.
@@ -215,6 +233,12 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       no_navigation    = no_navigation
       has_option_vl = has_option_vl
       has_option_cc = has_option_cc
+      has_option_mt = has_option_mt
+      has_option_oo = has_option_oo
+      has_option_cr = has_option_cr
+      has_option_xr = has_option_xr
+      has_option_cg = has_option_cg
+      has_option_ls = has_option_ls
     ).
 
 
