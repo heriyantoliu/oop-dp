@@ -27,14 +27,14 @@ SELECTION-SCREEN BEGIN OF BLOCK block_a WITH FRAME.
               xbnav    RADIOBUTTON GROUP nav,
               xgps     RADIOBUTTON GROUP nav,
               xnonav   RADIOBUTTON GROUP nav,
-              xoptvl   AS CHECKBOX,
-              xoptcc   AS CHECKBOX,
-              xoptmt   AS CHECKBOX,
-              xoptoo   AS CHECKBOX,
-              xoptcr   AS CHECKBOX,
-              xoptxr   AS CHECKBOX,
-              xoptcg   AS CHECKBOX,
-              xoptls   AS CHECKBOX.
+              xoptvl   type zcl_hh_dp_vehicle=>option_count,
+              xoptcc   type zcl_hh_dp_vehicle=>option_count,
+              xoptmt   type zcl_hh_dp_vehicle=>option_count,
+              xoptoo   type zcl_hh_dp_vehicle=>option_count,
+              xoptcr   type zcl_hh_dp_vehicle=>option_count,
+              xoptxr   type zcl_hh_dp_vehicle=>option_count,
+              xoptcg   type zcl_hh_dp_vehicle=>option_count,
+              xoptls   type zcl_hh_dp_vehicle=>option_count.
 SELECTION-SCREEN END OF BLOCK block_a.
 
 INITIALIZATION.

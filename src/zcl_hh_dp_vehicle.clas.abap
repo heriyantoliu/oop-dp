@@ -4,20 +4,21 @@ CLASS zcl_hh_dp_vehicle DEFINITION
 
   PUBLIC SECTION.
     TYPES:
-      brand_type         TYPE f4txt,
-      color_type         TYPE f4txt,
-      location_type      TYPE f4txt,
-      model_type         TYPE f4txt,
-      license_plate_type TYPE f4txt,
-      navigator_type     TYPE seoclsname,
-      speed_type         TYPE int4,
-      speed_unit_type    TYPE char3,
-      year_type          TYPE num4,
-      serial_type        TYPE num4,
-      weight_type        TYPE int4,
-      weight_unit_type   TYPE char3,
-      description_type   TYPE char30,
-      vehicle_type       TYPE seoclsname.
+      brand_type            TYPE f4txt,
+      color_type            TYPE f4txt,
+      location_type         TYPE f4txt,
+      model_type            TYPE f4txt,
+      license_plate_type    TYPE f4txt,
+      navigator_type        TYPE seoclsname,
+      speed_type            TYPE int4,
+      speed_unit_type       TYPE char3,
+      year_type             TYPE num4,
+      serial_type           TYPE num4,
+      weight_type           TYPE int4,
+      weight_unit_type      TYPE char3,
+      description_type(221) TYPE c,
+      vehicle_type          TYPE seoclsname,
+      option_count          TYPE n LENGTH 1.
 
     CLASS-METHODS:
       class_constructor.

@@ -39,14 +39,14 @@ CLASS zcl_hh_dp_report DEFINITION
           basic_navigation TYPE checkbox
           gps_navigation   TYPE checkbox
           no_navigation    TYPE checkbox
-          has_option_vl    TYPE checkbox
-          has_option_cc    TYPE checkbox
-          has_option_mt    TYPE checkbox
-          has_option_oo    TYPE checkbox
-          has_option_cr    TYPE checkbox
-          has_option_xr    TYPE checkbox
-          has_option_cg    TYPE checkbox
-          has_option_ls    TYPE checkbox,
+          has_option_vl    TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_cc    TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_mt    TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_oo    TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_cr    TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_xr    TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_cg    TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_ls    TYPE zcl_hh_dp_vehicle=>option_count,
       register_truck_entry
         IMPORTING
           license_plate    TYPE zcl_hh_dp_vehicle=>license_plate_type
@@ -69,14 +69,14 @@ CLASS zcl_hh_dp_report DEFINITION
           basic_navigation TYPE checkbox
           gps_navigation   TYPE checkbox
           no_navigation    TYPE checkbox
-          has_option_vl    TYPE checkbox
-          has_option_cc    TYPE checkbox
-          has_option_mt    TYPE checkbox
-          has_option_oo    TYPE checkbox
-          has_option_cr    TYPE checkbox
-          has_option_xr    TYPE checkbox
-          has_option_cg    TYPE checkbox
-          has_option_ls    TYPE checkbox,
+          has_option_vl    TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_cc    TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_mt    TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_oo    TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_cr    TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_xr    TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_cg    TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_ls    TYPE zcl_hh_dp_vehicle=>option_count,
       show_report.
   PROTECTED SECTION.
   PRIVATE SECTION.
