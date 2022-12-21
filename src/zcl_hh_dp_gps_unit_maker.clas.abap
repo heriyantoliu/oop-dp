@@ -4,8 +4,13 @@ CLASS zcl_hh_dp_gps_unit_maker DEFINITION
   FINAL.
 
   PUBLIC SECTION.
+    constants:
+      class_id type seoclsname value 'ZCL_HH_DP_GPS_UNIT_MAKER'.
     METHODS:
-      make_navigation_unit REDEFINITION.
+      make_navigation_unit REDEFINITION,
+      constructor
+        importing
+          successor type ref to zcl_hh_dp_nav_accsr_maker.
 
   PROTECTED SECTION.
     METHODS:
@@ -45,6 +50,13 @@ CLASS zcl_hh_dp_gps_unit_maker IMPLEMENTATION.
     me->calibrate_unit( ).
     me->download_software_to_unit( ).
     me->register_unit( ).
+  ENDMETHOD.
+
+  METHOD constructor.
+
+    super->constructor( successor ).
+    me->speciality = zcl_hh_dp_gps=>class_id.
+
   ENDMETHOD.
 
 ENDCLASS.

@@ -4,6 +4,12 @@ CLASS zcl_hh_dp_dead_reck_unit_maker DEFINITION
   FINAL.
 
   PUBLIC SECTION.
+    constants:
+      class_id type seoclsname value 'ZCL_HH_DP_DEAD_RECK_UNIT_MAKER'.
+    methods:
+      constructor
+        importing
+          successor type ref to zcl_hh_dp_nav_accsr_maker.
   PROTECTED SECTION.
     methods:
       create_unit REDEFINITION,
@@ -29,6 +35,12 @@ CLASS zcl_hh_dp_dead_reck_unit_maker IMPLEMENTATION.
 
   METHOD register_unit.
 
+  ENDMETHOD.
+
+  METHOD constructor.
+
+    super->constructor( successor ).
+    me->speciality = zcl_hh_dp_dead_reckoning=>class_id.
   ENDMETHOD.
 
 ENDCLASS.

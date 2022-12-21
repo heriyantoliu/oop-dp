@@ -12,8 +12,19 @@ CLASS zcl_hh_dp_nav_accsr_maker DEFINITION
           heading type zif_hh_dp_simple_navigation=>heading_type
         exporting
           navigation_unit type ref to zif_hh_dp_simple_navigation
-          unit_type type navigation_unit_type.
+          unit_type type navigation_unit_type,
+      constructor
+        importing
+          successor type ref to zcl_hh_dp_nav_accsr_maker,
+      locate_manufacturer
+        importing
+          unit_type type navigation_unit_type
+        exporting
+          manufacturer type ref to zcl_hh_dp_nav_accsr_maker.
   PROTECTED SECTION.
+    data:
+      speciality type seoclsname,
+      successor type ref to zcl_hh_dp_nav_accsr_maker.
     methods:
       calibrate_unit,
       create_unit abstract
@@ -50,6 +61,24 @@ CLASS zcl_hh_dp_nav_accsr_maker IMPLEMENTATION.
   METHOD register_unit.
     message i398(00) with 'Navigation unit has been registered. Thank you'
                           space space space.
+  ENDMETHOD.
+
+  METHOD constructor.
+    me->successor = successor.
+  ENDMETHOD.
+
+  METHOD locate_manufacturer.
+    if unit_type eq me->speciality or
+       me->successor is not bound.
+      manufacturer = me.
+    else.
+      me->successor->locate_manufacturer(
+        EXPORTING
+          unit_type    = unit_type
+        IMPORTING
+          manufacturer = manufacturer
+      ).
+    endif.
   ENDMETHOD.
 
 ENDCLASS.
