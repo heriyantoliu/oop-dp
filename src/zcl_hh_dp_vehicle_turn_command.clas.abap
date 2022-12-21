@@ -9,7 +9,7 @@ CLASS zcl_hh_dp_vehicle_turn_command DEFINITION
 
     ALIASES:
       execute FOR zif_hh_dp_command~execute,
-      undo for zif_hh_dp_command~undo.
+      undo FOR zif_hh_dp_command~undo.
 
     METHODS:
       constructor
@@ -19,8 +19,9 @@ CLASS zcl_hh_dp_vehicle_turn_command DEFINITION
   PROTECTED SECTION.
   PRIVATE SECTION.
     DATA:
-      corresponding_vehicle TYPE REF TO zcl_hh_dp_vehicle,
-      last_turn             TYPE zif_hh_dp_simple_navigation=>turn_type.
+      corresponding_vehicle         TYPE REF TO zcl_hh_dp_vehicle,
+      last_turn                     TYPE zif_hh_dp_simple_navigation=>turn_type,
+      number_of_times_turn_repeated TYPE int4.
 ENDCLASS.
 
 
@@ -36,8 +37,10 @@ CLASS zcl_hh_dp_vehicle_turn_command IMPLEMENTATION.
         license_plate   = license_plate
     ).
 
-    message i398(00) with 'Last turn' me->last_turn
+    MESSAGE i398(00) WITH 'Last turn' me->last_turn
                           'repeated for' license_plate.
+
+    add 1 to me->number_of_times_turn_repeated.
   ENDMETHOD.
 
   METHOD constructor.
@@ -46,27 +49,31 @@ CLASS zcl_hh_dp_vehicle_turn_command IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD zif_hh_dp_command~undo.
-    data: turn_translator type string,
-          turn_to_apply type zif_hh_dp_simple_navigation=>turn_type,
-          license_plate type zcl_hh_dp_vehicle=>location_type.
+    DATA: turn_translator TYPE string,
+          turn_to_apply   TYPE zif_hh_dp_simple_navigation=>turn_type,
+          license_plate   TYPE zcl_hh_dp_vehicle=>location_type.
 
-    concatenate zif_hh_dp_simple_navigation=>left_turn
+    check me->number_of_times_turn_repeated gt 0.
+
+    CONCATENATE zif_hh_dp_simple_navigation=>left_turn
                 zif_hh_dp_simple_navigation=>right_turn
                 zif_hh_dp_simple_navigation=>right_turn
                 zif_hh_dp_simple_navigation=>left_turn
-      into turn_translator.
+      INTO turn_translator.
 
     turn_to_apply = me->last_turn.
-    translate turn_to_apply using turn_translator.
+    TRANSLATE turn_to_apply USING turn_translator.
 
     me->corresponding_vehicle->change_heading( turn_to_apply ).
     me->corresponding_vehicle->get_characteristics(
-      importing
+      IMPORTING
         license_plate = license_plate
     ).
 
-    message i398(00) with 'Last turn' me->last_turn
+    MESSAGE i398(00) WITH 'Last turn' me->last_turn
                           'reversed for' license_plate.
+
+    subtract 1 from me->number_of_times_turn_repeated.
   ENDMETHOD.
 
 ENDCLASS.
