@@ -37,6 +37,7 @@ CLASS zcl_hh_dp_nav_mafct_agent IMPLEMENTATION.
     append zcl_hh_dp_nav_unit_maker=>class_id to manufacturer_stack.
     append zcl_hh_dp_gps_unit_maker=>class_id to manufacturer_stack.
     append zcl_hh_dp_comm_gps_unit_maker=>class_id to manufacturer_stack.
+    append zcl_hh_dp_iphone_unit_maker=>class_id to manufacturer_stack.
 
     loop at manufacturer_stack into data(manufacturer_entry).
       create object me->chain_of_manufacturers type (manufacturer_entry)
