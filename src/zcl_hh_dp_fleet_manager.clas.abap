@@ -4,10 +4,14 @@ CLASS zcl_hh_dp_fleet_manager DEFINITION
   CREATE PUBLIC .
 
   PUBLIC SECTION.
-    class-data: singleton type ref to zcl_hh_dp_fleet_manager read-only.
 
-    data:
-      vehicle_stack type standard table of ref to zcl_hh_dp_vehicle read-only.
+    interfaces: zif_hh_dp_aggregate.
+
+    aliases:
+      create_iterator for zif_hh_dp_aggregate~create_iterator.
+
+    class-data:
+      singleton type ref to zcl_hh_dp_fleet_manager read-only.
 
     class-methods:
       class_constructor.
@@ -78,6 +82,8 @@ CLASS zcl_hh_dp_fleet_manager DEFINITION
 
   PROTECTED SECTION.
   PRIVATE SECTION.
+    data:
+      vehicle_stack type standard table of ref to zcl_hh_dp_vehicle.
 ENDCLASS.
 
 
@@ -173,6 +179,12 @@ CLASS zcl_hh_dp_fleet_manager IMPLEMENTATION.
                           license_plate
                           space space.
 
+  ENDMETHOD.
+
+  METHOD create_iterator.
+    create object iterator type zcl_hh_dp_fleet_iterator
+      exporting
+        fleet_stack = vehicle_stack.
   ENDMETHOD.
 
 ENDCLASS.

@@ -48,10 +48,21 @@ ENDCLASS.
 CLASS zcl_hh_dp_report IMPLEMENTATION.
   METHOD build_report.
     DATA: output_entry  LIKE LINE OF output_stack,
-          vehicle_entry TYPE REF TO zcl_hh_dp_vehicle.
+          vehicle_entry TYPE REF TO zcl_hh_dp_vehicle,
+          fleet_iterator type ref to zif_hh_dp_iterator,
+          iteration_object type ref to object.
 
-    LOOP AT zcl_hh_dp_fleet_manager=>singleton->vehicle_stack
-      INTO vehicle_entry.
+    fleet_iterator = zcl_hh_dp_fleet_manager=>singleton->create_iterator( ).
+
+    while fleet_iterator->has_next( ) eq zif_hh_dp_iterator=>true.
+      iteration_object = fleet_iterator->get_next( ).
+
+      try.
+        vehicle_entry ?= iteration_object.
+      catch cx_sy_move_cast_error.
+        continue.
+      endtry.
+
       vehicle_entry->get_characteristics(
         IMPORTING
           serial_number = output_entry-serial_number
@@ -72,7 +83,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       output_entry-description = vehicle_entry->get_description( ).
 
       APPEND output_entry TO me->output_stack.
-    ENDLOOP.
+    endwhile.
 
   ENDMETHOD.
 
