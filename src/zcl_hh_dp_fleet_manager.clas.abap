@@ -1,7 +1,7 @@
 CLASS zcl_hh_dp_fleet_manager DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PRIVATE .
 
   PUBLIC SECTION.
 
@@ -87,6 +87,8 @@ CLASS zcl_hh_dp_fleet_manager DEFINITION
     data:
       first_vehicle_in_chain type ref to zcl_hh_dp_vehicle,
       vehicle_last_turn_command type ref to zif_hh_dp_command.
+    methods:
+      constructor.
 ENDCLASS.
 
 
@@ -207,6 +209,10 @@ CLASS zcl_hh_dp_fleet_manager IMPLEMENTATION.
 
   METHOD reverse_last_turn.
     me->vehicle_last_turn_command->undo( ).
+  ENDMETHOD.
+
+  METHOD constructor.
+    create object zcl_hh_dp_fleet_manager=>singleton->vehicle_last_turn_command type zcl_hh_dp_null_command.
   ENDMETHOD.
 
 ENDCLASS.
