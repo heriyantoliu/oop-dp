@@ -7,7 +7,7 @@ CLASS zcl_hh_dp_nav_accsr_maker DEFINITION
       navigation_unit_type type seoclsname.
 
     methods:
-      make_navigation_unit
+      make_navigation_unit final
         importing
           heading type zif_hh_dp_simple_navigation=>heading_type
         exporting
@@ -33,6 +33,7 @@ CLASS zcl_hh_dp_nav_accsr_maker DEFINITION
         exporting
           navigation_unit type ref to zif_hh_dp_simple_navigation
           unit_type type navigation_unit_type,
+      prepare_unit_for_installation,
       register_unit.
   PRIVATE SECTION.
 ENDCLASS.
@@ -55,6 +56,7 @@ CLASS zcl_hh_dp_nav_accsr_maker IMPLEMENTATION.
     ).
 
     me->calibrate_unit( ).
+    me->prepare_unit_for_installation( ).
     me->register_unit( ).
   ENDMETHOD.
 
@@ -79,6 +81,10 @@ CLASS zcl_hh_dp_nav_accsr_maker IMPLEMENTATION.
           manufacturer = manufacturer
       ).
     endif.
+  ENDMETHOD.
+
+  METHOD prepare_unit_for_installation.
+
   ENDMETHOD.
 
 ENDCLASS.

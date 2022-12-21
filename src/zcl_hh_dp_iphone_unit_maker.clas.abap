@@ -9,13 +9,14 @@ CLASS zcl_hh_dp_iphone_unit_maker DEFINITION
       class_id type seoclsname value 'ZCL_HH_DP_IPHONE_UNIT_MAKER'.
 
     methods:
-      make_navigation_unit redefinition,
       constructor
         importing
           successor type ref to zcl_hh_dp_nav_accsr_maker.
   PROTECTED SECTION.
     methods:
-      create_unit redefinition.
+      create_unit redefinition,
+      prepare_unit_for_installation REDEFINITION.
+
   PRIVATE SECTION.
     methods:
       download_software_to_unit.
@@ -44,18 +45,8 @@ CLASS zcl_hh_dp_iphone_unit_maker IMPLEMENTATION.
                           space space.
   ENDMETHOD.
 
-  METHOD make_navigation_unit.
-    me->create_unit(
-      EXPORTING
-        heading         = heading
-      IMPORTING
-        navigation_unit = navigation_unit
-        unit_type       = unit_type
-    ).
-
-    me->calibrate_unit( ).
+  METHOD prepare_unit_for_installation.
     me->download_software_to_unit( ).
-    me->register_unit( ).
   ENDMETHOD.
 
 ENDCLASS.
