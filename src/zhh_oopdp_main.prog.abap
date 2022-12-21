@@ -39,15 +39,15 @@ SELECTION-SCREEN BEGIN OF BLOCK block_a WITH FRAME.
 SELECTION-SCREEN END OF BLOCK block_a.
 
 INITIALIZATION.
-  SET PF-STATUS zcl_hh_dp_report=>selection_screen_status_name.
+  SET PF-STATUS zif_hh_dp_registration_screen=>selection_screen_status_name.
 
 AT SELECTION-SCREEN.
-  CHECK sy-ucomm EQ zcl_hh_dp_report=>execute OR
-        sy-ucomm EQ zcl_hh_dp_report=>add_new_car OR
-        sy-ucomm EQ zcl_hh_dp_report=>add_new_truck.
+  CHECK sy-ucomm EQ zif_hh_dp_registration_screen=>execute OR
+        sy-ucomm EQ zif_hh_dp_registration_screen=>add_new_car OR
+        sy-ucomm EQ zif_hh_dp_registration_screen=>add_new_truck.
 
   CASE sy-ucomm.
-    WHEN zcl_hh_dp_report=>add_new_car.
+    WHEN zif_hh_dp_registration_screen=>add_new_car.
 
       zcl_hh_dp_report=>singleton->register_car_entry(
         EXPORTING
@@ -82,7 +82,7 @@ AT SELECTION-SCREEN.
           has_option_ls = xoptls
       ).
 
-    WHEN zcl_hh_dp_report=>add_new_truck.
+    WHEN zif_hh_dp_registration_screen=>add_new_truck.
 
       zcl_hh_dp_report=>singleton->register_truck_entry(
         EXPORTING

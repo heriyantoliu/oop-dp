@@ -4,12 +4,6 @@ CLASS zcl_hh_dp_report DEFINITION
   CREATE PRIVATE.
 
   PUBLIC SECTION.
-    CONSTANTS:
-      execute                      TYPE sy-ucomm VALUE 'ONLI',
-      add_new_car                  TYPE sy-ucomm VALUE 'NEWCAR',
-      add_new_truck                TYPE sy-ucomm VALUE 'NEWTRUCK',
-      selection_screen_status_name TYPE sy-pfkey VALUE 'SELECTION_SCREEN'.
-
     CLASS-DATA:
       singleton TYPE REF TO zcl_hh_dp_report READ-ONLY.
 
