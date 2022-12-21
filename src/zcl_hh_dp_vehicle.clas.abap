@@ -68,6 +68,7 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           weight_unit            TYPE weight_unit_type
           basic_navigation       TYPE checkbox
           gps_navigation         TYPE checkbox
+          iphone_navigation      TYPE checkbox
           no_navigation          TYPE checkbox
           vehicle_classification TYPE vehicle_type.
   PROTECTED SECTION.
@@ -130,7 +131,7 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
 
   METHOD constructor.
 
-    constants: selected type checkbox value 'X'.
+    CONSTANTS: selected TYPE checkbox VALUE 'X'.
 
     me->serial_number = me->get_serial_number( ).
 
@@ -144,26 +145,28 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     me->tare_weight = tare_weight.
     me->weight_unit = weight_unit.
 
-    case selected.
-      when basic_navigation.
+    CASE selected.
+      when iphone_navigation.
+        me->navigation_type = zcl_hh_dp_iphone_sextant=>class_id.
+      WHEN basic_navigation.
         me->navigation_type = zcl_hh_dp_navigator=>class_id.
-      when gps_navigation.
-        case vehicle_classification.
-          when zcl_hh_dp_truck=>class_id.
+      WHEN gps_navigation.
+        CASE vehicle_classification.
+          WHEN zcl_hh_dp_truck=>class_id.
             me->navigation_type = zcl_hh_dp_comm_gps_adapter_b=>class_id.
-          when others.
+          WHEN OTHERS.
             me->navigation_type = zcl_hh_dp_gps=>class_id.
-        endcase.
-      when others.
+        ENDCASE.
+      WHEN OTHERS.
         me->navigation_type = zcl_hh_dp_dead_reckoning=>class_id.
-    endcase.
+    ENDCASE.
 
     zcl_hh_dp_vehicle_accs_store=>get_navigation_unit(
       EXPORTING
         heading          = heading
       IMPORTING
         navigation_unit  = me->navigation_unit
-      changing
+      CHANGING
         unit_type        = me->navigation_type
     ).
 

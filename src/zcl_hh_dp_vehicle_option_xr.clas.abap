@@ -41,6 +41,7 @@ CLASS ZCL_HH_DP_VEHICLE_OPTION_XR IMPLEMENTATION.
         weight_unit            = space
         basic_navigation       = space
         gps_navigation         = space
+        iphone_navigation      = space
         no_navigation          = space
         vehicle_classification = space
     ).

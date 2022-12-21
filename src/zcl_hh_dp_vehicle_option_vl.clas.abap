@@ -4,19 +4,19 @@ CLASS zcl_hh_dp_vehicle_option_vl DEFINITION
   FINAL.
 
   PUBLIC SECTION.
-    constants:
-      class_id type seoclsname value 'ZCL_HH_DP_VEHICLE_OPTION_VL'.
+    CONSTANTS:
+      class_id TYPE seoclsname VALUE 'ZCL_HH_DP_VEHICLE_OPTION_VL'.
 
-    methods:
+    METHODS:
       constructor
-        importing
-          wrapped_object type ref to zcl_hh_dp_vehicle.
+        IMPORTING
+          wrapped_object TYPE REF TO zcl_hh_dp_vehicle.
   PROTECTED SECTION.
   PRIVATE SECTION.
-    constants:
-      this_option_weight type zcl_hh_dp_vehicle=>weight_unit_type value 55,
-      this_option_weight_unit type msehi value 'LB',
-      this_option_abbreviation type zcl_hh_dp_vehicle=>description_type value 'VL'.
+    CONSTANTS:
+      this_option_weight       TYPE zcl_hh_dp_vehicle=>weight_unit_type VALUE 55,
+      this_option_weight_unit  TYPE msehi VALUE 'LB',
+      this_option_abbreviation TYPE zcl_hh_dp_vehicle=>description_type VALUE 'VL'.
 
 ENDCLASS.
 
@@ -39,6 +39,7 @@ CLASS zcl_hh_dp_vehicle_option_vl IMPLEMENTATION.
         weight_unit            = space
         basic_navigation       = space
         gps_navigation         = space
+        iphone_navigation      = space
         no_navigation          = space
         vehicle_classification = space
     ).

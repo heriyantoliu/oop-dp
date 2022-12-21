@@ -1000,6 +1000,12 @@
     </item>
     <item>
      <ID>S</ID>
+     <KEY>XISNAV</KEY>
+     <ENTRY>Equipped with iphone navigat&apos;n</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
      <KEY>XNONAV</KEY>
      <ENTRY>Equipped with no navigation</ENTRY>
      <LENGTH>35</LENGTH>

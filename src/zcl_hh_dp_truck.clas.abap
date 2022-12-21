@@ -26,6 +26,7 @@ CLASS zcl_hh_dp_truck DEFINITION
           cargo_weight            TYPE zcl_hh_dp_vehicle=>weight_type
           basic_navigation        TYPE checkbox
           gps_navigation          TYPE checkbox
+          iphone_navigation       TYPE checkbox
           no_navigation           TYPE checkbox
           has_option_vl           TYPE zcl_hh_dp_vehicle=>option_count
           has_option_cc           TYPE zcl_hh_dp_vehicle=>option_count
@@ -41,20 +42,21 @@ CLASS zcl_hh_dp_truck DEFINITION
     METHODS:
       constructor
         IMPORTING
-          license_plate    TYPE zcl_hh_dp_vehicle=>license_plate_type
-          brand            TYPE zcl_hh_dp_vehicle=>brand_type
-          model            TYPE zcl_hh_dp_vehicle=>model_type
-          year             TYPE zcl_hh_dp_vehicle=>year_type
-          color            TYPE zcl_hh_dp_vehicle=>color_type
-          location         TYPE zcl_hh_dp_vehicle=>location_type
-          speed_unit       TYPE zcl_hh_dp_vehicle=>speed_unit_type
-          heading          TYPE zif_hh_dp_simple_navigation=>heading_type
-          tare_weight      TYPE zcl_hh_dp_vehicle=>weight_type
-          weight_unit      TYPE zcl_hh_dp_vehicle=>weight_unit_type
-          cargo_weight     TYPE zcl_hh_dp_vehicle=>weight_type
-          basic_navigation TYPE checkbox
-          gps_navigation   TYPE checkbox
-          no_navigation    TYPE checkbox,
+          license_plate     TYPE zcl_hh_dp_vehicle=>license_plate_type
+          brand             TYPE zcl_hh_dp_vehicle=>brand_type
+          model             TYPE zcl_hh_dp_vehicle=>model_type
+          year              TYPE zcl_hh_dp_vehicle=>year_type
+          color             TYPE zcl_hh_dp_vehicle=>color_type
+          location          TYPE zcl_hh_dp_vehicle=>location_type
+          speed_unit        TYPE zcl_hh_dp_vehicle=>speed_unit_type
+          heading           TYPE zif_hh_dp_simple_navigation=>heading_type
+          tare_weight       TYPE zcl_hh_dp_vehicle=>weight_type
+          weight_unit       TYPE zcl_hh_dp_vehicle=>weight_unit_type
+          cargo_weight      TYPE zcl_hh_dp_vehicle=>weight_type
+          basic_navigation  TYPE checkbox
+          gps_navigation    TYPE checkbox
+          iphone_navigation TYPE checkbox
+          no_navigation     TYPE checkbox,
       get_description REDEFINITION,
       get_gross_weight REDEFINITION.
   PROTECTED SECTION.
@@ -100,6 +102,7 @@ CLASS zcl_hh_dp_truck IMPLEMENTATION.
       weight_unit = weight_unit
       basic_navigation = basic_navigation
       gps_navigation = gps_navigation
+      iphone_navigation = iphone_navigation
       no_navigation = no_navigation
       vehicle_classification = class_id
     ).
@@ -112,25 +115,26 @@ CLASS zcl_hh_dp_truck IMPLEMENTATION.
 
   METHOD create.
 
-    data: options_stack type table of seoclsname,
-          object_to_be_wrapped type ref to zcl_hh_dp_vehicle.
+    DATA: options_stack        TYPE TABLE OF seoclsname,
+          object_to_be_wrapped TYPE REF TO zcl_hh_dp_vehicle.
 
     CREATE OBJECT vehicle_instance TYPE zcl_hh_dp_truck
       EXPORTING
-        license_plate    = license_plate
-        brand            = brand
-        model            = model
-        year             = year
-        color            = color
-        location         = location
-        speed_unit       = speed_unit
-        heading          = heading
-        tare_weight      = tare_weight
-        weight_unit      = weight_unit
-        cargo_weight     = cargo_weight
-        basic_navigation = basic_navigation
-        gps_navigation   = gps_navigation
-        no_navigation    = no_navigation.
+        license_plate     = license_plate
+        brand             = brand
+        model             = model
+        year              = year
+        color             = color
+        location          = location
+        speed_unit        = speed_unit
+        heading           = heading
+        tare_weight       = tare_weight
+        weight_unit       = weight_unit
+        cargo_weight      = cargo_weight
+        basic_navigation  = basic_navigation
+        gps_navigation    = gps_navigation
+        iphone_navigation = iphone_navigation
+        no_navigation     = no_navigation.
 
     DO has_option_vl TIMES.
       APPEND zcl_hh_dp_vehicle_option_vl=>class_id
@@ -172,13 +176,13 @@ CLASS zcl_hh_dp_truck IMPLEMENTATION.
         TO options_stack.
     ENDDO.
 
-    loop at options_stack into data(options_entry).
+    LOOP AT options_stack INTO DATA(options_entry).
       object_to_be_wrapped = vehicle_instance.
 
-      create object vehicle_instance type (options_entry)
-        exporting
+      CREATE OBJECT vehicle_instance TYPE (options_entry)
+        EXPORTING
           wrapped_object = object_to_be_wrapped.
-    endloop.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD get_description.

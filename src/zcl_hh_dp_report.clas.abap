@@ -19,64 +19,66 @@ CLASS zcl_hh_dp_report DEFINITION
     METHODS:
       register_car_entry
         IMPORTING
-          license_plate    TYPE zcl_hh_dp_vehicle=>license_plate_type
-          brand            TYPE zcl_hh_dp_vehicle=>brand_type
-          year             TYPE zcl_hh_dp_vehicle=>year_type
-          model            TYPE zcl_hh_dp_vehicle=>model_type
-          color            TYPE zcl_hh_dp_vehicle=>color_type
-          location         TYPE zcl_hh_dp_vehicle=>location_type
-          heading          TYPE zif_hh_dp_simple_navigation=>heading_type
-          turn01           TYPE zif_hh_dp_simple_navigation=>turn_type
-          turn02           TYPE zif_hh_dp_simple_navigation=>turn_type
-          turn03           TYPE zif_hh_dp_simple_navigation=>turn_type
-          speed01          TYPE zcl_hh_dp_vehicle=>speed_type
-          speed02          TYPE zcl_hh_dp_vehicle=>speed_type
-          speed03          TYPE zcl_hh_dp_vehicle=>speed_type
-          speed_unit       TYPE zcl_hh_dp_vehicle=>speed_unit_type
-          tare_weight      TYPE zcl_hh_dp_vehicle=>weight_type
-          weight_unit      TYPE zcl_hh_dp_vehicle=>weight_unit_type
-          passengers       TYPE zcl_hh_dp_car=>passengers_type
-          basic_navigation TYPE checkbox
-          gps_navigation   TYPE checkbox
-          no_navigation    TYPE checkbox
-          has_option_vl    TYPE zcl_hh_dp_vehicle=>option_count
-          has_option_cc    TYPE zcl_hh_dp_vehicle=>option_count
-          has_option_mt    TYPE zcl_hh_dp_vehicle=>option_count
-          has_option_oo    TYPE zcl_hh_dp_vehicle=>option_count
-          has_option_cr    TYPE zcl_hh_dp_vehicle=>option_count
-          has_option_xr    TYPE zcl_hh_dp_vehicle=>option_count
-          has_option_cg    TYPE zcl_hh_dp_vehicle=>option_count
-          has_option_ls    TYPE zcl_hh_dp_vehicle=>option_count,
+          license_plate     TYPE zcl_hh_dp_vehicle=>license_plate_type
+          brand             TYPE zcl_hh_dp_vehicle=>brand_type
+          year              TYPE zcl_hh_dp_vehicle=>year_type
+          model             TYPE zcl_hh_dp_vehicle=>model_type
+          color             TYPE zcl_hh_dp_vehicle=>color_type
+          location          TYPE zcl_hh_dp_vehicle=>location_type
+          heading           TYPE zif_hh_dp_simple_navigation=>heading_type
+          turn01            TYPE zif_hh_dp_simple_navigation=>turn_type
+          turn02            TYPE zif_hh_dp_simple_navigation=>turn_type
+          turn03            TYPE zif_hh_dp_simple_navigation=>turn_type
+          speed01           TYPE zcl_hh_dp_vehicle=>speed_type
+          speed02           TYPE zcl_hh_dp_vehicle=>speed_type
+          speed03           TYPE zcl_hh_dp_vehicle=>speed_type
+          speed_unit        TYPE zcl_hh_dp_vehicle=>speed_unit_type
+          tare_weight       TYPE zcl_hh_dp_vehicle=>weight_type
+          weight_unit       TYPE zcl_hh_dp_vehicle=>weight_unit_type
+          passengers        TYPE zcl_hh_dp_car=>passengers_type
+          basic_navigation  TYPE checkbox
+          gps_navigation    TYPE checkbox
+          iphone_navigation TYPE checkbox
+          no_navigation     TYPE checkbox
+          has_option_vl     TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_cc     TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_mt     TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_oo     TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_cr     TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_xr     TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_cg     TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_ls     TYPE zcl_hh_dp_vehicle=>option_count,
       register_truck_entry
         IMPORTING
-          license_plate    TYPE zcl_hh_dp_vehicle=>license_plate_type
-          brand            TYPE zcl_hh_dp_vehicle=>brand_type
-          year             TYPE zcl_hh_dp_vehicle=>year_type
-          model            TYPE zcl_hh_dp_vehicle=>model_type
-          color            TYPE zcl_hh_dp_vehicle=>color_type
-          location         TYPE zcl_hh_dp_vehicle=>location_type
-          heading          TYPE zif_hh_dp_simple_navigation=>heading_type
-          turn01           TYPE zif_hh_dp_simple_navigation=>turn_type
-          turn02           TYPE zif_hh_dp_simple_navigation=>turn_type
-          turn03           TYPE zif_hh_dp_simple_navigation=>turn_type
-          speed01          TYPE zcl_hh_dp_vehicle=>speed_type
-          speed02          TYPE zcl_hh_dp_vehicle=>speed_type
-          speed03          TYPE zcl_hh_dp_vehicle=>speed_type
-          speed_unit       TYPE zcl_hh_dp_vehicle=>speed_unit_type
-          tare_weight      TYPE zcl_hh_dp_vehicle=>weight_type
-          weight_unit      TYPE zcl_hh_dp_vehicle=>weight_unit_type
-          cargo_weight     TYPE zcl_hh_dp_vehicle=>weight_type
-          basic_navigation TYPE checkbox
-          gps_navigation   TYPE checkbox
-          no_navigation    TYPE checkbox
-          has_option_vl    TYPE zcl_hh_dp_vehicle=>option_count
-          has_option_cc    TYPE zcl_hh_dp_vehicle=>option_count
-          has_option_mt    TYPE zcl_hh_dp_vehicle=>option_count
-          has_option_oo    TYPE zcl_hh_dp_vehicle=>option_count
-          has_option_cr    TYPE zcl_hh_dp_vehicle=>option_count
-          has_option_xr    TYPE zcl_hh_dp_vehicle=>option_count
-          has_option_cg    TYPE zcl_hh_dp_vehicle=>option_count
-          has_option_ls    TYPE zcl_hh_dp_vehicle=>option_count,
+          license_plate     TYPE zcl_hh_dp_vehicle=>license_plate_type
+          brand             TYPE zcl_hh_dp_vehicle=>brand_type
+          year              TYPE zcl_hh_dp_vehicle=>year_type
+          model             TYPE zcl_hh_dp_vehicle=>model_type
+          color             TYPE zcl_hh_dp_vehicle=>color_type
+          location          TYPE zcl_hh_dp_vehicle=>location_type
+          heading           TYPE zif_hh_dp_simple_navigation=>heading_type
+          turn01            TYPE zif_hh_dp_simple_navigation=>turn_type
+          turn02            TYPE zif_hh_dp_simple_navigation=>turn_type
+          turn03            TYPE zif_hh_dp_simple_navigation=>turn_type
+          speed01           TYPE zcl_hh_dp_vehicle=>speed_type
+          speed02           TYPE zcl_hh_dp_vehicle=>speed_type
+          speed03           TYPE zcl_hh_dp_vehicle=>speed_type
+          speed_unit        TYPE zcl_hh_dp_vehicle=>speed_unit_type
+          tare_weight       TYPE zcl_hh_dp_vehicle=>weight_type
+          weight_unit       TYPE zcl_hh_dp_vehicle=>weight_unit_type
+          cargo_weight      TYPE zcl_hh_dp_vehicle=>weight_type
+          basic_navigation  TYPE checkbox
+          gps_navigation    TYPE checkbox
+          iphone_navigation TYPE checkbox
+          no_navigation     TYPE checkbox
+          has_option_vl     TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_cc     TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_mt     TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_oo     TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_cr     TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_xr     TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_cg     TYPE zcl_hh_dp_vehicle=>option_count
+          has_option_ls     TYPE zcl_hh_dp_vehicle=>option_count,
       show_report.
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -188,6 +190,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         passengers       = passengers
         basic_navigation = basic_navigation
         gps_navigation   = gps_navigation
+        iphone_navigation = iphone_navigation
         no_navigation    = no_navigation
         has_option_vl = has_option_vl
         has_option_cc = has_option_cc
@@ -230,6 +233,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       cargo_weight     = cargo_weight
       basic_navigation = basic_navigation
       gps_navigation   = gps_navigation
+      iphone_navigation = iphone_navigation
       no_navigation    = no_navigation
       has_option_vl = has_option_vl
       has_option_cc = has_option_cc

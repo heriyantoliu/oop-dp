@@ -26,15 +26,16 @@ SELECTION-SCREEN BEGIN OF BLOCK block_a WITH FRAME.
               ppsngrs  TYPE zcl_hh_dp_car=>passengers_type,
               xbnav    RADIOBUTTON GROUP nav,
               xgps     RADIOBUTTON GROUP nav,
+              xisnav   RADIOBUTTON GROUP nav,
               xnonav   RADIOBUTTON GROUP nav,
-              xoptvl   type zcl_hh_dp_vehicle=>option_count,
-              xoptcc   type zcl_hh_dp_vehicle=>option_count,
-              xoptmt   type zcl_hh_dp_vehicle=>option_count,
-              xoptoo   type zcl_hh_dp_vehicle=>option_count,
-              xoptcr   type zcl_hh_dp_vehicle=>option_count,
-              xoptxr   type zcl_hh_dp_vehicle=>option_count,
-              xoptcg   type zcl_hh_dp_vehicle=>option_count,
-              xoptls   type zcl_hh_dp_vehicle=>option_count.
+              xoptvl   TYPE zcl_hh_dp_vehicle=>option_count,
+              xoptcc   TYPE zcl_hh_dp_vehicle=>option_count,
+              xoptmt   TYPE zcl_hh_dp_vehicle=>option_count,
+              xoptoo   TYPE zcl_hh_dp_vehicle=>option_count,
+              xoptcr   TYPE zcl_hh_dp_vehicle=>option_count,
+              xoptxr   TYPE zcl_hh_dp_vehicle=>option_count,
+              xoptcg   TYPE zcl_hh_dp_vehicle=>option_count,
+              xoptls   TYPE zcl_hh_dp_vehicle=>option_count.
 SELECTION-SCREEN END OF BLOCK block_a.
 
 INITIALIZATION.
@@ -69,6 +70,7 @@ AT SELECTION-SCREEN.
           passengers    = ppsngrs
           basic_navigation = xbnav
           gps_navigation = xgps
+          iphone_navigation = xisnav
           no_navigation = xnonav
           has_option_vl = xoptvl
           has_option_cc = xoptcc
@@ -103,6 +105,7 @@ AT SELECTION-SCREEN.
           cargo_weight  = pcargow
           basic_navigation = xbnav
           gps_navigation = xgps
+          iphone_navigation = xisnav
           no_navigation = xnonav
           has_option_vl = xoptvl
           has_option_cc = xoptcc
