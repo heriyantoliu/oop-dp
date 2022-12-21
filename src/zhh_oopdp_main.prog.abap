@@ -44,12 +44,15 @@ INITIALIZATION.
 AT SELECTION-SCREEN.
   CHECK sy-ucomm EQ zif_hh_dp_registration_screen=>execute OR
         sy-ucomm eq zif_hh_dp_registration_screen=>repeat_last_turn or
+        sy-ucomm eq zif_hh_dp_registration_screen=>reverse_last_turn or
         sy-ucomm EQ zif_hh_dp_registration_screen=>add_new_car OR
         sy-ucomm EQ zif_hh_dp_registration_screen=>add_new_truck.
 
   CASE sy-ucomm.
     when zif_hh_dp_registration_screen=>repeat_last_turn.
       zcl_hh_dp_fleet_manager=>singleton->repeat_last_turn( ).
+    when zif_hh_dp_registration_screen=>reverse_last_turn.
+      zcl_hh_dp_fleet_manager=>singleton->reverse_last_turn( ).
     WHEN zif_hh_dp_registration_screen=>add_new_car.
 
       zcl_hh_dp_fleet_manager=>singleton->register_car_entry(

@@ -79,7 +79,8 @@ CLASS zcl_hh_dp_fleet_manager DEFINITION
           has_option_xr     TYPE zcl_hh_dp_vehicle=>option_count
           has_option_cg     TYPE zcl_hh_dp_vehicle=>option_count
           has_option_ls     TYPE zcl_hh_dp_vehicle=>option_count,
-      repeat_last_turn.
+      repeat_last_turn,
+      reverse_last_turn.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -202,6 +203,10 @@ CLASS zcl_hh_dp_fleet_manager IMPLEMENTATION.
 
   METHOD repeat_last_turn.
     me->vehicle_last_turn_command->execute( ).
+  ENDMETHOD.
+
+  METHOD reverse_last_turn.
+    me->vehicle_last_turn_command->undo( ).
   ENDMETHOD.
 
 ENDCLASS.
