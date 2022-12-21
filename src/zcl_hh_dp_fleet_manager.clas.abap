@@ -83,7 +83,7 @@ CLASS zcl_hh_dp_fleet_manager DEFINITION
   PROTECTED SECTION.
   PRIVATE SECTION.
     data:
-      vehicle_stack type standard table of ref to zcl_hh_dp_vehicle.
+      first_vehicle_in_chain type ref to zcl_hh_dp_vehicle.
 ENDCLASS.
 
 
@@ -121,7 +121,8 @@ CLASS zcl_hh_dp_fleet_manager IMPLEMENTATION.
         has_option_ls = has_option_ls
     ).
 
-    APPEND vehicle_entry TO me->vehicle_stack.
+    vehicle_entry->assign_next_in_chain( me->first_vehicle_in_chain ).
+    me->first_vehicle_in_chain = vehicle_entry.
 
     vehicle_entry->accelerate( speed01 ).
     vehicle_entry->accelerate( speed02 ).
@@ -164,8 +165,8 @@ CLASS zcl_hh_dp_fleet_manager IMPLEMENTATION.
       has_option_ls = has_option_ls
     ).
 
-
-    APPEND vehicle_entry TO me->vehicle_stack.
+    vehicle_entry->assign_next_in_chain( me->first_vehicle_in_chain ).
+    me->first_vehicle_in_chain = vehicle_entry.
 
     vehicle_entry->accelerate( speed01 ).
     vehicle_entry->accelerate( speed02 ).
@@ -184,7 +185,7 @@ CLASS zcl_hh_dp_fleet_manager IMPLEMENTATION.
   METHOD create_iterator.
     create object iterator type zcl_hh_dp_fleet_iterator
       exporting
-        fleet_stack = vehicle_stack.
+        first_fleet_entry = first_vehicle_in_chain.
   ENDMETHOD.
 
 ENDCLASS.

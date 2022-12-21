@@ -70,10 +70,17 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           gps_navigation         TYPE checkbox
           iphone_navigation      TYPE checkbox
           no_navigation          TYPE checkbox
-          vehicle_classification TYPE vehicle_type.
+          vehicle_classification TYPE vehicle_type,
+      assign_next_in_chain
+        importing
+          next type ref to zcl_hh_dp_vehicle,
+      get_next_in_chain
+        returning
+          value(next) type ref to zcl_hh_dp_vehicle.
   PROTECTED SECTION.
     DATA:
-      tare_weight TYPE weight_type.
+      tare_weight TYPE weight_type,
+      next type ref to zcl_hh_dp_vehicle.
 
   PRIVATE SECTION.
     CLASS-DATA:
@@ -179,6 +186,14 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
   METHOD get_serial_number.
     ADD 1 TO last_serial_value.
     serial_number = last_serial_value.
+  ENDMETHOD.
+
+  METHOD assign_next_in_chain.
+    me->next = next.
+  ENDMETHOD.
+
+  METHOD get_next_in_chain.
+    next = me->next.
   ENDMETHOD.
 
 ENDCLASS.

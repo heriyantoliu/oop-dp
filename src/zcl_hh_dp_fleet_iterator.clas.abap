@@ -6,7 +6,7 @@ CLASS zcl_hh_dp_fleet_iterator DEFINITION
   PUBLIC SECTION.
 
     types:
-      fleet_list type standard table of ref to zcl_hh_dp_vehicle.
+      fleet_entry type ref to zcl_hh_dp_vehicle.
 
     INTERFACES zif_hh_dp_iterator.
 
@@ -17,38 +17,29 @@ CLASS zcl_hh_dp_fleet_iterator DEFINITION
     methods:
       constructor
         importing
-          fleet_stack type fleet_list.
+          first_fleet_entry type fleet_entry.
   PROTECTED SECTION.
   PRIVATE SECTION.
     data:
-      fleet_stack type fleet_list,
-      fleet_stack_entries type int4,
-      next_entry type int4.
+      next_entry type fleet_entry.
 ENDCLASS.
-
-
 
 CLASS zcl_hh_dp_fleet_iterator IMPLEMENTATION.
 
   METHOD constructor.
-    me->fleet_stack = fleet_stack.
-    describe table me->fleet_stack lines me->fleet_stack_entries.
-    me->next_entry = 1.
+    me->next_entry = first_fleet_entry.
   ENDMETHOD.
 
   METHOD get_next.
-    read table me->fleet_stack into next
-      index me->next_entry.
-    add 1 to me->next_entry.
+    next = me->next_entry.
+    me->next_entry = me->next_entry->get_next_in_chain( ).
   ENDMETHOD.
 
   METHOD has_next.
-    if me->next_entry le me->fleet_stack_entries.
+    if me->next_entry is bound.
       more = zif_hh_dp_iterator=>true.
     else.
       more = zif_hh_dp_iterator=>false.
     endif.
   ENDMETHOD.
-
-
 ENDCLASS.
