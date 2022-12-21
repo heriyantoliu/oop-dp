@@ -49,7 +49,7 @@ AT SELECTION-SCREEN.
   CASE sy-ucomm.
     WHEN zif_hh_dp_registration_screen=>add_new_car.
 
-      zcl_hh_dp_report=>singleton->register_car_entry(
+      zcl_hh_dp_fleet_manager=>singleton->register_car_entry(
         EXPORTING
           license_plate = pplate
           brand         = pbrand
@@ -84,7 +84,7 @@ AT SELECTION-SCREEN.
 
     WHEN zif_hh_dp_registration_screen=>add_new_truck.
 
-      zcl_hh_dp_report=>singleton->register_truck_entry(
+      zcl_hh_dp_fleet_manager=>singleton->register_truck_entry(
         EXPORTING
           license_plate = pplate
           brand         = pbrand
