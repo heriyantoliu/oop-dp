@@ -78,12 +78,14 @@ CLASS zcl_hh_dp_fleet_manager DEFINITION
           has_option_cr     TYPE zcl_hh_dp_vehicle=>option_count
           has_option_xr     TYPE zcl_hh_dp_vehicle=>option_count
           has_option_cg     TYPE zcl_hh_dp_vehicle=>option_count
-          has_option_ls     TYPE zcl_hh_dp_vehicle=>option_count.
+          has_option_ls     TYPE zcl_hh_dp_vehicle=>option_count,
+      repeat_last_turn.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
     data:
-      first_vehicle_in_chain type ref to zcl_hh_dp_vehicle.
+      first_vehicle_in_chain type ref to zcl_hh_dp_vehicle,
+      vehicle_last_turn_command type ref to zif_hh_dp_command.
 ENDCLASS.
 
 
@@ -132,6 +134,11 @@ CLASS zcl_hh_dp_fleet_manager IMPLEMENTATION.
     vehicle_entry->change_heading( turn02 ).
     vehicle_entry->change_heading( turn03 ).
 
+    create object zcl_hh_dp_fleet_manager=>singleton->vehicle_last_turn_command type zcl_hh_dp_vehicle_turn_command
+      exporting
+        vehicle = vehicle_entry
+        last_turn = turn03.
+
     MESSAGE s398(00) WITH 'Car entry registered for'
                           license_plate
                           space space.
@@ -176,6 +183,11 @@ CLASS zcl_hh_dp_fleet_manager IMPLEMENTATION.
     vehicle_entry->change_heading( turn02 ).
     vehicle_entry->change_heading( turn03 ).
 
+    create object zcl_hh_dp_fleet_manager=>singleton->vehicle_last_turn_command type zcl_hh_dp_vehicle_turn_command
+      exporting
+        vehicle = vehicle_entry
+        last_turn = turn03.
+
     MESSAGE s398(00) WITH 'Truck entry registered for'
                           license_plate
                           space space.
@@ -186,6 +198,10 @@ CLASS zcl_hh_dp_fleet_manager IMPLEMENTATION.
     create object iterator type zcl_hh_dp_fleet_iterator
       exporting
         first_fleet_entry = first_vehicle_in_chain.
+  ENDMETHOD.
+
+  METHOD repeat_last_turn.
+    me->vehicle_last_turn_command->execute( ).
   ENDMETHOD.
 
 ENDCLASS.

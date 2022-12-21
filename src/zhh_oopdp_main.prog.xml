@@ -251,6 +251,15 @@
       <USAGE>A</USAGE>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
+      <CODE>TURNAGAIN</CODE>
+      <TEXTNO>001</TEXTNO>
+      <TEXT_TYPE>S</TEXT_TYPE>
+      <TEXT_NAME>ICON_SYSTEM_REDO</TEXT_NAME>
+      <ICON_ID>@4R@</ICON_ID>
+      <FUN_TEXT>Repeat last turn</FUN_TEXT>
+      <ICON_TEXT>Repeat last turn</ICON_TEXT>
+     </RSMPE_FUNT>
+     <RSMPE_FUNT>
       <CODE>VDEL</CODE>
       <TEXTNO>001</TEXTNO>
       <TEXT_TYPE>S</TEXT_TYPE>
@@ -568,6 +577,12 @@
       <NO>13</NO>
       <PFNO>06</PFNO>
      </RSMPE_BUT>
+     <RSMPE_BUT>
+      <PFK_CODE>000001</PFK_CODE>
+      <CODE>0001</CODE>
+      <NO>14</NO>
+      <PFNO>23</PFNO>
+     </RSMPE_BUT>
     </BUT>
     <PFK>
      <RSMPE_PFK>
@@ -664,6 +679,12 @@
       <CODE>000001</CODE>
       <PFNO>20</PFNO>
       <FUNCODE>FEWS</FUNCODE>
+      <FUNNO>001</FUNNO>
+     </RSMPE_PFK>
+     <RSMPE_PFK>
+      <CODE>000001</CODE>
+      <PFNO>23</PFNO>
+      <FUNCODE>TURNAGAIN</FUNCODE>
       <FUNNO>001</FUNNO>
      </RSMPE_PFK>
      <RSMPE_PFK>
@@ -837,6 +858,10 @@
      <RSMPE_STAF>
       <STATUS>SELECTION_SCREEN</STATUS>
       <FUNCTION>SVUV</FUNCTION>
+     </RSMPE_STAF>
+     <RSMPE_STAF>
+      <STATUS>SELECTION_SCREEN</STATUS>
+      <FUNCTION>TURNAGAIN</FUNCTION>
      </RSMPE_STAF>
      <RSMPE_STAF>
       <STATUS>SELECTION_SCREEN</STATUS>
