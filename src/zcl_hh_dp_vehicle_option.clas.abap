@@ -11,7 +11,8 @@ CLASS zcl_hh_dp_vehicle_option DEFINITION
       get_description REDEFINITION,
       get_gross_weight REDEFINITION,
       get_heading REDEFINITION,
-      get_speed REDEFINITION.
+      get_speed REDEFINITION,
+      get_distance_traveled REDEFINITION.
 
   PROTECTED SECTION.
     DATA:
@@ -91,6 +92,10 @@ CLASS zcl_hh_dp_vehicle_option IMPLEMENTATION.
 
   METHOD get_speed.
     speed = me->decorated_object->get_speed( ).
+  ENDMETHOD.
+
+  METHOD get_distance_traveled.
+    distance = me->decorated_object->get_distance_traveled( ).
   ENDMETHOD.
 
 ENDCLASS.
