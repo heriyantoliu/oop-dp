@@ -18,7 +18,9 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       weight_unit_type      TYPE char3,
       description_type(221) TYPE c,
       vehicle_type          TYPE seoclsname,
-      option_count          TYPE n LENGTH 1.
+      option_count          TYPE n LENGTH 1,
+      odometer_type         TYPE p LENGTH 7 DECIMALS 3,
+      time_stamp_type       TYPE timestamp.
 
     CLASS-METHODS:
       class_constructor.
@@ -45,6 +47,9 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       get_description ABSTRACT
         RETURNING
           VALUE(description) TYPE description_type,
+      get_distance_traveled
+        RETURNING
+          VALUE(distance) TYPE odometer_type,
       get_gross_weight ABSTRACT
         RETURNING
           VALUE(gross_weight) TYPE weight_type,
@@ -70,35 +75,37 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           gps_navigation         TYPE checkbox
           iphone_navigation      TYPE checkbox
           no_navigation          TYPE checkbox
-          vehicle_classification TYPE vehicle_type,
+          vehicle_classification TYPE vehicle_type
+          time_started_moving    TYPE time_stamp_type DEFAULT 0,
       assign_next_in_chain
-        importing
-          next type ref to zcl_hh_dp_vehicle,
+        IMPORTING
+          next TYPE REF TO zcl_hh_dp_vehicle,
       get_next_in_chain
-        returning
-          value(next) type ref to zcl_hh_dp_vehicle.
+        RETURNING
+          VALUE(next) TYPE REF TO zcl_hh_dp_vehicle.
   PROTECTED SECTION.
     DATA:
       tare_weight TYPE weight_type,
-      next type ref to zcl_hh_dp_vehicle.
+      next        TYPE REF TO zcl_hh_dp_vehicle.
 
   PRIVATE SECTION.
     CLASS-DATA:
       last_serial_value TYPE serial_type.
 
     DATA:
-      license_plate   TYPE license_plate_type,
-      brand           TYPE brand_type,
-      model           TYPE model_type,
-      year            TYPE year_type,
-      color           TYPE color_type,
-      location        TYPE location_type,
-      speed           TYPE speed_type,
-      speed_unit      TYPE speed_unit_type,
-      weight_unit     TYPE weight_unit_type,
-      serial_number   TYPE serial_type,
-      navigation_type TYPE navigator_type,
-      navigation_unit TYPE REF TO zif_hh_dp_simple_navigation.
+      license_plate       TYPE license_plate_type,
+      brand               TYPE brand_type,
+      model               TYPE model_type,
+      year                TYPE year_type,
+      color               TYPE color_type,
+      location            TYPE location_type,
+      speed               TYPE speed_type,
+      speed_unit          TYPE speed_unit_type,
+      weight_unit         TYPE weight_unit_type,
+      serial_number       TYPE serial_type,
+      navigation_type     TYPE navigator_type,
+      navigation_unit     TYPE REF TO zif_hh_dp_simple_navigation,
+      time_started_moving TYPE time_stamp_type.
 
     CLASS-METHODS:
       get_serial_number
@@ -151,9 +158,10 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     me->speed_unit = speed_unit.
     me->tare_weight = tare_weight.
     me->weight_unit = weight_unit.
+    me->time_started_moving = time_started_moving.
 
     CASE selected.
-      when iphone_navigation.
+      WHEN iphone_navigation.
         me->navigation_type = zcl_hh_dp_iphone_sextant=>class_id.
       WHEN basic_navigation.
         me->navigation_type = zcl_hh_dp_navigator=>class_id.
@@ -194,6 +202,24 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
 
   METHOD get_next_in_chain.
     next = me->next.
+  ENDMETHOD.
+
+  METHOD get_distance_traveled.
+    constants:
+      seconds_in_one_hour type int4 value 3600.
+
+    data:
+      time_interval_in_seconds type tzntstmpl,
+      now type time_stamp_type.
+
+    get time stamp field now.
+    time_interval_in_seconds = cl_abap_tstmp=>subtract(
+                                 tstmp1 = now
+                                 tstmp2 = me->time_started_moving
+                               ).
+    distance = me->speed * time_interval_in_seconds / seconds_in_one_hour.
+
+
   ENDMETHOD.
 
 ENDCLASS.

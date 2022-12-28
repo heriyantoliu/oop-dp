@@ -95,7 +95,7 @@ ENDCLASS.
 
 CLASS zcl_hh_dp_fleet_manager IMPLEMENTATION.
   METHOD class_constructor.
-    singleton = new #( ).
+    create object zcl_hh_dp_fleet_manager=>singleton.
   ENDMETHOD.
 
   METHOD register_car_entry.

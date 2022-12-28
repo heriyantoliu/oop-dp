@@ -89,6 +89,10 @@ CLASS zcl_hh_dp_truck IMPLEMENTATION.
 
   METHOD constructor.
 
+    data: now type zcl_hh_dp_vehicle=>time_stamp_type.
+
+    get time stamp field now.
+
     super->constructor(
       license_plate = license_plate
       brand = brand
@@ -105,6 +109,7 @@ CLASS zcl_hh_dp_truck IMPLEMENTATION.
       iphone_navigation = iphone_navigation
       no_navigation = no_navigation
       vehicle_classification = class_id
+      time_started_moving = now
     ).
 
     me->cargo_weight = cargo_weight.

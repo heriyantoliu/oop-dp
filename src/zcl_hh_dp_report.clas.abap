@@ -10,13 +10,15 @@ CLASS zcl_hh_dp_report DEFINITION
     CLASS-METHODS:
       class_constructor.
 
-    methods:
+    METHODS:
       show_report.
   PROTECTED SECTION.
   PRIVATE SECTION.
     TYPES:
       BEGIN OF output_row,
         serial_number   TYPE zcl_hh_dp_vehicle=>serial_type,
+        trip_odometer   TYPE zcl_hh_dp_vehicle=>odometer_type,
+        vehicle_entry   TYPE REF TO zcl_hh_dp_vehicle,
         license_plate   TYPE zcl_hh_dp_vehicle=>license_plate_type,
         brand           TYPE zcl_hh_dp_vehicle=>brand_type,
         model           TYPE zcl_hh_dp_vehicle=>model_type,
@@ -34,11 +36,16 @@ CLASS zcl_hh_dp_report DEFINITION
       output_list TYPE STANDARD TABLE OF output_row.
 
     DATA:
-      output_stack  TYPE output_list.
+      output_stack TYPE output_list,
+      alv_grid     TYPE REF TO cl_salv_table.
 
     METHODS:
       build_report,
+      on_user_command
+        FOR EVENT added_function OF cl_salv_events
+        IMPORTING e_salv_function,
       present_report,
+      refresh,
       set_column_titles
         IMPORTING
           alv_grid TYPE REF TO cl_salv_table.
@@ -47,23 +54,22 @@ ENDCLASS.
 
 CLASS zcl_hh_dp_report IMPLEMENTATION.
   METHOD build_report.
-    DATA: output_entry  LIKE LINE OF output_stack,
-          vehicle_entry TYPE REF TO zcl_hh_dp_vehicle,
-          fleet_iterator type ref to zif_hh_dp_iterator,
-          iteration_object type ref to object.
+    DATA: output_entry     LIKE LINE OF output_stack,
+          fleet_iterator   TYPE REF TO zif_hh_dp_iterator,
+          iteration_object TYPE REF TO object.
 
     fleet_iterator = zcl_hh_dp_fleet_manager=>singleton->create_iterator( ).
 
-    while fleet_iterator->has_next( ) eq zif_hh_dp_iterator=>true.
+    WHILE fleet_iterator->has_next( ) EQ zif_hh_dp_iterator=>true.
       iteration_object = fleet_iterator->get_next( ).
 
-      try.
-        vehicle_entry ?= iteration_object.
-      catch cx_sy_move_cast_error.
-        continue.
-      endtry.
+      TRY.
+          output_entry-vehicle_entry ?= iteration_object.
+        CATCH cx_sy_move_cast_error.
+          CONTINUE.
+      ENDTRY.
 
-      vehicle_entry->get_characteristics(
+      output_entry-vehicle_entry->get_characteristics(
         IMPORTING
           serial_number = output_entry-serial_number
           license_plate = output_entry-license_plate
@@ -77,13 +83,13 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
           navigation_type = output_entry-navigation_type
       ).
 
-      output_entry-heading = vehicle_entry->get_heading( ).
-      output_entry-speed = vehicle_entry->get_speed( ).
-      output_entry-weight = vehicle_entry->get_gross_weight( ).
-      output_entry-description = vehicle_entry->get_description( ).
+      output_entry-heading = output_entry-vehicle_entry->get_heading( ).
+      output_entry-speed = output_entry-vehicle_entry->get_speed( ).
+      output_entry-weight = output_entry-vehicle_entry->get_gross_weight( ).
+      output_entry-description = output_entry-vehicle_entry->get_description( ).
 
       APPEND output_entry TO me->output_stack.
-    endwhile.
+    ENDWHILE.
 
   ENDMETHOD.
 
@@ -92,11 +98,15 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD present_report.
-    DATA: alv_grid TYPE REF TO cl_salv_table.
+
+    constants: lc_repid type sy-repid value 'ZHH_OOPDP_MAIN'.
+
+    DATA: grid_events TYPE REF TO cl_salv_events_table.
+
     TRY.
         cl_salv_table=>factory(
           IMPORTING
-            r_salv_table = alv_grid
+            r_salv_table = me->alv_grid
           CHANGING
             t_table      = me->output_stack ).
       CATCH cx_salv_msg.
@@ -107,11 +117,21 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
                               .
     ENDTRY.
 
-    me->set_column_titles( alv_grid ).
+    me->set_column_titles( me->alv_grid ).
 
-    DATA(lo_display) = alv_grid->get_display_settings( ).
+    me->alv_grid->set_screen_status(
+      EXPORTING
+        report        = lc_repid
+        pfstatus      = zif_hh_dp_report_screen=>report_status_name
+        set_functions = me->alv_grid->c_functions_all
+    ).
 
-    lo_display->set_striped_pattern( 'X' ).
+    grid_events = me->alv_grid->get_event( ).
+    set handler me->on_user_command for grid_events.
+
+*    DATA(lo_display) = alv_grid->get_display_settings( ).
+*
+*    lo_display->set_striped_pattern( 'X' ).
 
     alv_grid->display( ).
   ENDMETHOD.
@@ -121,6 +141,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     CONSTANTS:
       column_name_serial_number    TYPE lvc_fname VALUE 'SERIAL_NUMBER',
       column_title_serial_number   TYPE string VALUE 'Serial Number',
+      column_name_trip_odometer    TYPE lvc_fname VALUE 'TRIP_ODOMETER',
+      column_title_trip_odometer   TYPE string VALUE 'Trip Odometer',
       column_name_license_plate    TYPE lvc_fname VALUE 'LICENSE_PLATE',
       column_title_license_plate   TYPE string    VALUE `License plate`,
       column_name_brand            TYPE lvc_fname VALUE 'BRAND',
@@ -166,6 +188,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       CASE grid_column_entry-columnname.
         WHEN column_name_serial_number.
           grid_column_title_short = column_title_serial_number.
+        WHEN column_name_trip_odometer.
+          grid_column_title_short = column_title_trip_odometer.
         WHEN column_name_license_plate.
           grid_column_title_short = column_title_license_plate.
         WHEN column_name_brand.
@@ -209,6 +233,22 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
   METHOD show_report.
     me->build_report( ).
     me->present_report( ).
+  ENDMETHOD.
+
+  METHOD on_user_command.
+    CASE e_salv_function.
+      WHEN zif_hh_dp_report_screen=>refresh.
+        me->refresh( ).
+    ENDCASE.
+  ENDMETHOD.
+
+  METHOD refresh.
+    FIELD-SYMBOLS: <output_entry> LIKE LINE OF output_stack.
+
+    LOOP AT me->output_stack ASSIGNING <output_entry>.
+      <output_entry>-trip_odometer = <output_entry>-vehicle_entry->get_distance_traveled( ).
+    ENDLOOP.
+    me->alv_grid->refresh( ).
   ENDMETHOD.
 
 ENDCLASS.
