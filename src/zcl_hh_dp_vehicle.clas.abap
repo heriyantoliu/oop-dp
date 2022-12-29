@@ -94,7 +94,9 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           VALUE(current_state) TYPE current_state_type,
       set_current_state
         IMPORTING
-          current_state TYPE current_state_type.
+          current_state TYPE current_state_type,
+      resume,
+      stop.
   PROTECTED SECTION.
     DATA:
       tare_weight TYPE weight_type,
@@ -105,20 +107,21 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       last_serial_value TYPE serial_type.
 
     DATA:
-      license_plate       TYPE license_plate_type,
-      brand               TYPE brand_type,
-      model               TYPE model_type,
-      year                TYPE year_type,
-      color               TYPE color_type,
-      location            TYPE location_type,
-      speed               TYPE speed_type,
-      speed_unit          TYPE speed_unit_type,
-      weight_unit         TYPE weight_unit_type,
-      serial_number       TYPE serial_type,
-      navigation_type     TYPE navigator_type,
-      navigation_unit     TYPE REF TO zif_hh_dp_simple_navigation,
-      time_started_moving TYPE time_stamp_type,
-      current_state       TYPE current_state_type.
+      license_plate                 TYPE license_plate_type,
+      brand                         TYPE brand_type,
+      model                         TYPE model_type,
+      year                          TYPE year_type,
+      color                         TYPE color_type,
+      location                      TYPE location_type,
+      speed                         TYPE speed_type,
+      speed_unit                    TYPE speed_unit_type,
+      weight_unit                   TYPE weight_unit_type,
+      serial_number                 TYPE serial_type,
+      navigation_type               TYPE navigator_type,
+      navigation_unit               TYPE REF TO zif_hh_dp_simple_navigation,
+      time_started_moving           TYPE time_stamp_type,
+      current_state                 TYPE current_state_type,
+      distance_traveled_before_stop TYPE odometer_type.
 
     CLASS-METHODS:
       get_serial_number
@@ -226,12 +229,21 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
       time_interval_in_seconds TYPE tzntstmpl,
       now                      TYPE time_stamp_type.
 
+    case me->current_state.
+      when state_cruising.
+      when others.
+        distance = me->distance_traveled_before_stop.
+        return.
+    endcase.
+
     GET TIME STAMP FIELD now.
     time_interval_in_seconds = cl_abap_tstmp=>subtract(
                                  tstmp1 = now
                                  tstmp2 = me->time_started_moving
                                ).
-    distance = me->speed * time_interval_in_seconds / seconds_in_one_hour.
+    distance = me->speed * time_interval_in_seconds /
+               seconds_in_one_hour +
+               me->distance_traveled_before_stop.
 
 
   ENDMETHOD.
@@ -242,6 +254,19 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
 
   METHOD set_current_state.
     me->current_state = current_state.
+  ENDMETHOD.
+
+  METHOD resume.
+    data: now type timestamp.
+
+    get time stamp field now.
+    me->time_started_moving = now.
+    me->set_current_state( state_cruising ).
+  ENDMETHOD.
+
+  METHOD stop.
+    me->distance_traveled_before_stop = me->get_distance_traveled( ).
+    me->set_current_state( state_stopped ).
   ENDMETHOD.
 
 ENDCLASS.

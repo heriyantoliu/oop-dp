@@ -14,7 +14,9 @@ CLASS zcl_hh_dp_vehicle_option DEFINITION
       get_speed REDEFINITION,
       get_distance_traveled REDEFINITION,
       get_current_state REDEFINITION,
-      set_current_state REDEFINITION.
+      set_current_state REDEFINITION,
+      resume REDEFINITION,
+      stop REDEFINITION.
 
   PROTECTED SECTION.
     DATA:
@@ -106,6 +108,14 @@ CLASS zcl_hh_dp_vehicle_option IMPLEMENTATION.
 
   METHOD set_current_state.
     me->decorated_object->set_current_state( current_state ).
+  ENDMETHOD.
+
+  METHOD resume.
+    me->decorated_object->resume( ).
+  ENDMETHOD.
+
+  METHOD stop.
+    me->decorated_object->stop( ).
   ENDMETHOD.
 
 ENDCLASS.

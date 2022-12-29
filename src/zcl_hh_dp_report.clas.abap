@@ -275,7 +275,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
   METHOD turn.
     DATA: selected_rows_stack TYPE salv_t_row,
           selected_rows_entry LIKE LINE OF selected_rows_stack,
-          output_entry        LIKE LINE OF output_stack.
+          output_entry        LIKE LINE OF output_stack,
+          current_state       TYPE zcl_hh_dp_vehicle=>current_state_type.
 
     selected_rows_stack = me->alv_grid->get_selections( )->get_selected_rows( ).
     IF selected_rows_stack IS INITIAL.
@@ -286,6 +287,14 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     LOOP AT selected_rows_stack INTO selected_rows_entry.
       READ TABLE me->output_stack INTO output_entry
         INDEX selected_rows_entry.
+
+      current_state = output_entry-vehicle_entry->get_current_state( ).
+
+      case current_state.
+        when zcl_hh_dp_vehicle=>state_cruising.
+        when others.
+          continue.
+      endcase.
       output_entry-vehicle_entry->change_heading( turn ).
     ENDLOOP.
 
@@ -308,7 +317,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     LOOP AT selected_rows_stack INTO selected_rows_entry.
       READ TABLE me->output_stack INTO output_entry
         INDEX selected_rows_entry.
-      output_entry-vehicle_entry->set_current_state( zcl_hh_dp_vehicle=>state_cruising ).
+      output_entry-vehicle_entry->resume( ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
@@ -330,7 +339,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     LOOP AT selected_rows_stack INTO selected_rows_entry.
       READ TABLE me->output_stack INTO output_entry
         INDEX selected_rows_entry.
-      output_entry-vehicle_entry->set_current_state( zcl_hh_dp_vehicle=>state_stopped ).
+      output_entry-vehicle_entry->stop( ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
