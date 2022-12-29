@@ -16,6 +16,7 @@ CLASS zcl_hh_dp_vehicle_option DEFINITION
       get_current_state REDEFINITION,
       set_current_state REDEFINITION,
       resume REDEFINITION,
+      slow REDEFINITION,
       stop REDEFINITION.
 
   PROTECTED SECTION.
@@ -116,6 +117,10 @@ CLASS zcl_hh_dp_vehicle_option IMPLEMENTATION.
 
   METHOD stop.
     me->decorated_object->stop( ).
+  ENDMETHOD.
+
+  METHOD slow.
+    me->decorated_object->slow( ).
   ENDMETHOD.
 
 ENDCLASS.

@@ -712,6 +712,15 @@
       <PATH>I</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
+      <CODE>SLOW</CODE>
+      <TEXTNO>001</TEXTNO>
+      <TEXT_TYPE>S</TEXT_TYPE>
+      <TEXT_NAME>ICON_PS_WBS_ELEMENT</TEXT_NAME>
+      <ICON_ID>@ED@</ICON_ID>
+      <FUN_TEXT>Slow</FUN_TEXT>
+      <ICON_TEXT>Slow</ICON_TEXT>
+     </RSMPE_FUNT>
+     <RSMPE_FUNT>
       <CODE>SPOS</CODE>
       <TEXTNO>001</TEXTNO>
       <TEXT_TYPE>S</TEXT_TYPE>
@@ -1612,6 +1621,12 @@
       <NO>23</NO>
       <PFNO>17</PFNO>
      </RSMPE_BUT>
+     <RSMPE_BUT>
+      <PFK_CODE>000002</PFK_CODE>
+      <CODE>0001</CODE>
+      <NO>24</NO>
+      <PFNO>07</PFNO>
+     </RSMPE_BUT>
     </BUT>
     <PFK>
      <RSMPE_PFK>
@@ -1798,6 +1813,12 @@
       <CODE>000002</CODE>
       <PFNO>06</PFNO>
       <FUNCODE>&amp;SAL</FUNCODE>
+      <FUNNO>001</FUNNO>
+     </RSMPE_PFK>
+     <RSMPE_PFK>
+      <CODE>000002</CODE>
+      <PFNO>07</PFNO>
+      <FUNCODE>SLOW</FUNCODE>
       <FUNNO>001</FUNNO>
      </RSMPE_PFK>
      <RSMPE_PFK>
@@ -2513,6 +2534,10 @@
      <RSMPE_STAF>
       <STATUS>REPORT_SCREEN</STATUS>
       <FUNCTION>SKOM</FUNCTION>
+     </RSMPE_STAF>
+     <RSMPE_STAF>
+      <STATUS>REPORT_SCREEN</STATUS>
+      <FUNCTION>SLOW</FUNCTION>
      </RSMPE_STAF>
      <RSMPE_STAF>
       <STATUS>REPORT_SCREEN</STATUS>

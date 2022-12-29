@@ -51,6 +51,7 @@ CLASS zcl_hh_dp_report DEFINITION
         IMPORTING
           alv_grid TYPE REF TO cl_salv_table,
       resume,
+      slow,
       stop,
       turn
         IMPORTING
@@ -256,6 +257,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         me->turn( zif_hh_dp_simple_navigation=>right_turn ).
       WHEN zif_hh_dp_report_screen=>resume.
         me->resume( ).
+      when zif_hh_dp_report_screen=>slow.
+        me->slow( ).
       WHEN zif_hh_dp_report_screen=>stop.
         me->stop( ).
     ENDCASE.
@@ -268,6 +271,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       <output_entry>-trip_odometer = <output_entry>-vehicle_entry->get_distance_traveled( ).
       <output_entry>-heading = <output_entry>-vehicle_entry->get_heading( ).
       <output_entry>-state_description = <output_entry>-vehicle_entry->get_current_state( ).
+      <output_entry>-speed = <output_entry>-vehicle_entry->get_speed( ).
     ENDLOOP.
     me->alv_grid->refresh( ).
   ENDMETHOD.
@@ -291,7 +295,9 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       current_state = output_entry-vehicle_entry->get_current_state( ).
 
       case current_state.
-        when zcl_hh_dp_vehicle=>state_cruising.
+        when zcl_hh_dp_vehicle=>state_cruising or
+             zcl_hh_dp_vehicle=>state_in_heavy_traffic.
+
         when others.
           continue.
       endcase.
@@ -345,6 +351,29 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     CLEAR selected_rows_stack.
     me->alv_grid->get_selections( )->set_selected_rows( selected_rows_stack ).
     me->refresh( ).
+  ENDMETHOD.
+
+  METHOD slow.
+    DATA: selected_rows_stack TYPE salv_t_row,
+          selected_rows_entry LIKE LINE OF selected_rows_stack,
+          output_entry        LIKE LINE OF output_stack.
+
+    selected_rows_stack = me->alv_grid->get_selections( )->get_selected_rows( ).
+    IF selected_rows_stack IS INITIAL.
+      MESSAGE i398(00) WITH 'No rows selected'.
+      RETURN.
+    ENDIF.
+
+    LOOP AT selected_rows_stack INTO selected_rows_entry.
+      READ TABLE me->output_stack INTO output_entry
+        INDEX selected_rows_entry.
+      output_entry-vehicle_entry->slow( ).
+    ENDLOOP.
+
+    CLEAR selected_rows_stack.
+    me->alv_grid->get_selections( )->set_selected_rows( selected_rows_stack ).
+    me->refresh( ).
+
   ENDMETHOD.
 
 ENDCLASS.
