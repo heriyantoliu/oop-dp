@@ -120,7 +120,16 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           VALUE(stopped_state) TYPE REF TO zif_hh_dp_state,
       get_out_of_service_state
         RETURNING
-          VALUE(out_of_service_state) TYPE REF TO zif_hh_dp_state.
+          VALUE(out_of_service_state) TYPE REF TO zif_hh_dp_state,
+      get_available_state
+        RETURNING
+          VALUE(available_state) TYPE REF TO zif_hh_dp_state,
+      get_being_towed_state
+        RETURNING
+          VALUE(being_towed_state) TYPE REF TO zif_hh_dp_state,
+      get_in_shop_state
+        RETURNING
+          VALUE(in_shop_state) TYPE REF TO zif_hh_dp_state.
 
   PROTECTED SECTION.
     DATA:
@@ -152,7 +161,10 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       cruising_state                TYPE REF TO zif_hh_dp_state,
       in_heavy_traffic_state        TYPE REF TO zif_hh_dp_state,
       stopped_state                 TYPE REF TO zif_hh_dp_state,
-      out_of_service_state          TYPE REF TO zif_hh_dp_state.
+      out_of_service_state          TYPE REF TO zif_hh_dp_state,
+      available_state               TYPE REF TO zif_hh_dp_state,
+      being_towed_state             TYPE REF TO zif_hh_dp_state,
+      in_shop_state                 TYPE REF TO zif_hh_dp_state.
 
     CLASS-METHODS:
       get_serial_number
@@ -222,6 +234,21 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
 
     CREATE OBJECT me->out_of_service_state
       TYPE (zcl_hh_dp_out_of_service_state=>class_id)
+      EXPORTING
+        vehicle = me.
+
+    CREATE OBJECT me->available_state
+      TYPE (zcl_hh_dp_available_state=>class_id)
+      EXPORTING
+        vehicle = me.
+
+    CREATE OBJECT me->being_towed_state
+      TYPE (zcl_hh_dp_being_towed_state=>class_id)
+      EXPORTING
+        vehicle = me.
+
+    CREATE OBJECT me->in_shop_state
+      TYPE (zcl_hh_dp_in_shop_state=>class_id)
       EXPORTING
         vehicle = me.
 
@@ -325,6 +352,18 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
 
   METHOD get_out_of_service_state.
     out_of_service_state = me->out_of_service_state.
+  ENDMETHOD.
+
+  METHOD get_available_state.
+    available_state = me->available_state.
+  ENDMETHOD.
+
+  METHOD get_being_towed_state.
+    being_towed_state = me->being_towed_state.
+  ENDMETHOD.
+
+  METHOD get_in_shop_state.
+    in_shop_state = me->in_shop_state.
   ENDMETHOD.
 
 ENDCLASS.

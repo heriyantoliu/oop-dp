@@ -17,5 +17,10 @@ INTERFACE zif_hh_dp_state
       stop,
       turn
         importing
-          turn type zif_hh_dp_simple_navigation=>turn_type.
+          turn type zif_hh_dp_simple_navigation=>turn_type,
+      maintain,
+      make_available,
+      repair,
+      start,
+      tow.
 ENDINTERFACE.

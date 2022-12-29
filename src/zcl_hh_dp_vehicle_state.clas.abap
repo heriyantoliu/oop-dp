@@ -12,7 +12,13 @@ CLASS zcl_hh_dp_vehicle_state DEFINITION
       resume FOR zif_hh_dp_state~resume,
       slow FOR zif_hh_dp_state~slow,
       stop FOR zif_hh_dp_state~stop,
-      turn FOR zif_hh_dp_state~turn.
+      turn FOR zif_hh_dp_state~turn,
+      maintain FOR zif_hh_dp_state~maintain,
+      make_available FOR zif_hh_dp_state~make_available,
+      repair FOR zif_hh_dp_state~repair,
+      start FOR zif_hh_dp_state~start,
+      tow FOR zif_hh_dp_state~tow.
+
   PROTECTED SECTION.
     DATA:
       vehicle    TYPE REF TO zcl_hh_dp_vehicle,
@@ -102,6 +108,27 @@ CLASS zcl_hh_dp_vehicle_state IMPLEMENTATION.
   ENDMETHOD.
 
   method place_out_of_service.
+
   endmethod.
+
+  METHOD maintain.
+
+  ENDMETHOD.
+
+  METHOD make_available.
+
+  ENDMETHOD.
+
+  METHOD repair.
+
+  ENDMETHOD.
+
+  METHOD start.
+
+  ENDMETHOD.
+
+  METHOD tow.
+
+  ENDMETHOD.
 
 ENDCLASS.

@@ -13,6 +13,7 @@ CLASS zcl_hh_dp_stopped_state DEFINITION
       constructor
         IMPORTING
           vehicle TYPE REF TO zcl_hh_dp_vehicle,
+      make_available REDEFINITION,
       place_out_of_service REDEFINITION,
       resume REDEFINITION.
 
@@ -57,6 +58,14 @@ CLASS zcl_hh_dp_stopped_state IMPLEMENTATION.
 
     me->vehicle->set_previous_state( me ).
     next_state = me->vehicle->get_out_of_service_state( ).
+    me->vehicle->set_current_state( next_state ).
+  ENDMETHOD.
+
+  METHOD make_available.
+    data: next_state type ref to zif_hh_dp_state.
+
+    me->vehicle->set_previous_state( me ).
+    next_state = me->vehicle->get_available_state( ).
     me->vehicle->set_current_state( next_state ).
   ENDMETHOD.
 
