@@ -8,6 +8,7 @@ CLASS zcl_hh_dp_vehicle_state DEFINITION
     ALIASES:
       get_description FOR zif_hh_dp_state~get_description,
       get_distance_traveled FOR zif_hh_dp_state~get_distance_traveled,
+      place_out_of_service for zif_hh_dp_state~place_out_of_service,
       resume FOR zif_hh_dp_state~resume,
       slow FOR zif_hh_dp_state~slow,
       stop FOR zif_hh_dp_state~stop,
@@ -99,5 +100,8 @@ CLASS zcl_hh_dp_vehicle_state IMPLEMENTATION.
   METHOD turn.
 
   ENDMETHOD.
+
+  method place_out_of_service.
+  endmethod.
 
 ENDCLASS.

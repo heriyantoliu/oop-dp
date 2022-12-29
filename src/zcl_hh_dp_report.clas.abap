@@ -45,6 +45,7 @@ CLASS zcl_hh_dp_report DEFINITION
       on_user_command
         FOR EVENT added_function OF cl_salv_events
         IMPORTING e_salv_function,
+      place_out_of_service,
       present_report,
       refresh,
       set_column_titles
@@ -265,6 +266,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         me->slow( ).
       WHEN zif_hh_dp_report_screen=>stop.
         me->stop( ).
+      when zif_hh_dp_report_screen=>place_out_of_service.
+        me->place_out_of_service( ).
     ENDCASE.
   ENDMETHOD.
 
@@ -384,6 +387,31 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     me->alv_grid->get_selections( )->set_selected_rows( selected_rows_stack ).
     me->refresh( ).
 
+  ENDMETHOD.
+
+  METHOD place_out_of_service.
+    DATA: selected_rows_stack TYPE salv_t_row,
+          selected_rows_entry LIKE LINE OF selected_rows_stack,
+          output_entry        LIKE LINE OF output_stack,
+          current_state       TYPE REF TO zif_hh_dp_state.
+
+    selected_rows_stack = me->alv_grid->get_selections( )->get_selected_rows( ).
+    IF selected_rows_stack IS INITIAL.
+      MESSAGE i398(00) WITH 'No rows selected'.
+      RETURN.
+    ENDIF.
+
+    LOOP AT selected_rows_stack INTO selected_rows_entry.
+      READ TABLE me->output_stack INTO output_entry
+        INDEX selected_rows_entry.
+
+      current_state = output_entry-vehicle_entry->get_current_state( ).
+      current_state->place_out_of_service( ).
+    ENDLOOP.
+
+    CLEAR selected_rows_stack.
+    me->alv_grid->get_selections( )->set_selected_rows( selected_rows_stack ).
+    me->refresh( ).
   ENDMETHOD.
 
 ENDCLASS.

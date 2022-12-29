@@ -24,7 +24,8 @@ CLASS zcl_hh_dp_vehicle_option DEFINITION
       set_previous_state_speed REDEFINITION,
       get_cruising_state REDEFINITION,
       get_in_heavy_traffic_state REDEFINITION,
-      get_stopped_state REDEFINITION.
+      get_stopped_state REDEFINITION,
+      get_out_of_service_state REDEFINITION.
 
   PROTECTED SECTION.
     DATA:
@@ -156,6 +157,10 @@ CLASS zcl_hh_dp_vehicle_option IMPLEMENTATION.
 
   METHOD set_time_started_moving.
     me->decorated_object->set_time_started_moving( time_started_moving ).
+  ENDMETHOD.
+
+  METHOD get_out_of_service_state.
+    out_of_service_state = me->decorated_object->get_out_of_service_state( ).
   ENDMETHOD.
 
 ENDCLASS.

@@ -659,6 +659,15 @@
       <PATH>O</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
+      <CODE>PLACE_OOS</CODE>
+      <TEXTNO>001</TEXTNO>
+      <TEXT_TYPE>S</TEXT_TYPE>
+      <TEXT_NAME>ICON_DEFECT</TEXT_NAME>
+      <ICON_ID>@F1@</ICON_ID>
+      <FUN_TEXT>Place Out of Service</FUN_TEXT>
+      <ICON_TEXT>Out of Service</ICON_TEXT>
+     </RSMPE_FUNT>
+     <RSMPE_FUNT>
       <CODE>PRIN</CODE>
       <TEXTNO>001</TEXTNO>
       <TEXT_TYPE>S</TEXT_TYPE>
@@ -1627,6 +1636,12 @@
       <NO>24</NO>
       <PFNO>07</PFNO>
      </RSMPE_BUT>
+     <RSMPE_BUT>
+      <PFK_CODE>000002</PFK_CODE>
+      <CODE>0001</CODE>
+      <NO>25</NO>
+      <PFNO>08</PFNO>
+     </RSMPE_BUT>
     </BUT>
     <PFK>
      <RSMPE_PFK>
@@ -1819,6 +1834,12 @@
       <CODE>000002</CODE>
       <PFNO>07</PFNO>
       <FUNCODE>SLOW</FUNCODE>
+      <FUNNO>001</FUNNO>
+     </RSMPE_PFK>
+     <RSMPE_PFK>
+      <CODE>000002</CODE>
+      <PFNO>08</PFNO>
+      <FUNCODE>PLACE_OOS</FUNCODE>
       <FUNNO>001</FUNNO>
      </RSMPE_PFK>
      <RSMPE_PFK>
@@ -2466,6 +2487,10 @@
      <RSMPE_STAF>
       <STATUS>REPORT_SCREEN</STATUS>
       <FUNCTION>PICK</FUNCTION>
+     </RSMPE_STAF>
+     <RSMPE_STAF>
+      <STATUS>REPORT_SCREEN</STATUS>
+      <FUNCTION>PLACE_OOS</FUNCTION>
      </RSMPE_STAF>
      <RSMPE_STAF>
       <STATUS>REPORT_SCREEN</STATUS>

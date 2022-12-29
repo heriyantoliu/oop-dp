@@ -11,6 +11,7 @@ INTERFACE zif_hh_dp_state
       get_distance_traveled
         returning
           value(distance) type odometer_type,
+      place_out_of_service,
       resume,
       slow,
       stop,

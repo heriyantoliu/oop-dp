@@ -7,6 +7,7 @@ INTERFACE zif_hh_dp_report_screen
       slow type syucomm value 'SLOW',
       stop type syucomm value 'STOP',
       turn_left type syucomm value 'TURNLEFT',
-      turn_right type syucomm value 'TURNRIGHT'.
+      turn_right type syucomm value 'TURNRIGHT',
+      place_out_of_service type syucomm value 'PLACE_OOS'.
 
 ENDINTERFACE.

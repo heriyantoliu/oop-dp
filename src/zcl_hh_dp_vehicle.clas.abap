@@ -117,7 +117,10 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           VALUE(in_heavy_traffic_state) TYPE REF TO zif_hh_dp_state,
       get_stopped_state
         RETURNING
-          VALUE(stopped_state) TYPE REF TO zif_hh_dp_state.
+          VALUE(stopped_state) TYPE REF TO zif_hh_dp_state,
+      get_out_of_service_state
+        RETURNING
+          VALUE(out_of_service_state) TYPE REF TO zif_hh_dp_state.
 
   PROTECTED SECTION.
     DATA:
@@ -148,7 +151,8 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       previous_state_speed          TYPE speed_type,
       cruising_state                TYPE REF TO zif_hh_dp_state,
       in_heavy_traffic_state        TYPE REF TO zif_hh_dp_state,
-      stopped_state                 TYPE REF TO zif_hh_dp_state.
+      stopped_state                 TYPE REF TO zif_hh_dp_state,
+      out_of_service_state          TYPE REF TO zif_hh_dp_state.
 
     CLASS-METHODS:
       get_serial_number
@@ -203,17 +207,22 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     me->weight_unit = weight_unit.
     me->time_started_moving = time_started_moving.
 
-    create object me->cruising_state
-      type (zcl_hh_dp_cruising_state=>class_id)
-      exporting
+    CREATE OBJECT me->cruising_state
+      TYPE (zcl_hh_dp_cruising_state=>class_id)
+      EXPORTING
         vehicle = me.
-    create object me->in_heavy_traffic_state
-      type (zcl_hh_dp_heavy_traffic_state=>class_id)
-      exporting
+    CREATE OBJECT me->in_heavy_traffic_state
+      TYPE (zcl_hh_dp_heavy_traffic_state=>class_id)
+      EXPORTING
         vehicle = me.
-    create object me->stopped_state
-      type (zcl_hh_dp_stopped_state=>class_id)
-      exporting
+    CREATE OBJECT me->stopped_state
+      TYPE (zcl_hh_dp_stopped_state=>class_id)
+      EXPORTING
+        vehicle = me.
+
+    CREATE OBJECT me->out_of_service_state
+      TYPE (zcl_hh_dp_out_of_service_state=>class_id)
+      EXPORTING
         vehicle = me.
 
     me->current_state = me->cruising_state.
@@ -312,6 +321,10 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
 
   METHOD set_time_started_moving.
     me->time_started_moving = time_started_moving.
+  ENDMETHOD.
+
+  METHOD get_out_of_service_state.
+    out_of_service_state = me->out_of_service_state.
   ENDMETHOD.
 
 ENDCLASS.
