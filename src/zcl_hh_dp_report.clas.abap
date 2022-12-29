@@ -17,8 +17,8 @@ CLASS zcl_hh_dp_report DEFINITION
     TYPES:
       BEGIN OF output_row,
         serial_number     TYPE zcl_hh_dp_vehicle=>serial_type,
-        state_description TYPE zcl_hh_dp_vehicle=>current_state_type,
-        trip_odometer     TYPE zcl_hh_dp_vehicle=>odometer_type,
+        state_description TYPE zif_hh_dp_state=>description_type,
+        trip_odometer     TYPE zif_hh_dp_state=>odometer_type,
         vehicle_entry     TYPE REF TO zcl_hh_dp_vehicle,
         license_plate     TYPE zcl_hh_dp_vehicle=>license_plate_type,
         brand             TYPE zcl_hh_dp_vehicle=>brand_type,
@@ -63,7 +63,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
   METHOD build_report.
     DATA: output_entry     LIKE LINE OF output_stack,
           fleet_iterator   TYPE REF TO zif_hh_dp_iterator,
-          iteration_object TYPE REF TO object.
+          iteration_object TYPE REF TO object,
+          vehicle_state    TYPE REF TO zif_hh_dp_state.
 
     fleet_iterator = zcl_hh_dp_fleet_manager=>singleton->create_iterator( ).
 
@@ -94,7 +95,10 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       output_entry-speed = output_entry-vehicle_entry->get_speed( ).
       output_entry-weight = output_entry-vehicle_entry->get_gross_weight( ).
       output_entry-description = output_entry-vehicle_entry->get_description( ).
-      output_entry-state_description = output_entry-vehicle_entry->get_current_state( ).
+
+      vehicle_state = output_entry-vehicle_entry->get_current_state( ).
+
+      output_entry-state_description = vehicle_state->get_description( ).
 
       APPEND output_entry TO me->output_stack.
     ENDWHILE.
@@ -257,7 +261,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         me->turn( zif_hh_dp_simple_navigation=>right_turn ).
       WHEN zif_hh_dp_report_screen=>resume.
         me->resume( ).
-      when zif_hh_dp_report_screen=>slow.
+      WHEN zif_hh_dp_report_screen=>slow.
         me->slow( ).
       WHEN zif_hh_dp_report_screen=>stop.
         me->stop( ).
@@ -265,13 +269,17 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD refresh.
+    DATA: vehicle_state TYPE REF TO zif_hh_dp_state.
+
     FIELD-SYMBOLS: <output_entry> LIKE LINE OF output_stack.
 
     LOOP AT me->output_stack ASSIGNING <output_entry>.
-      <output_entry>-trip_odometer = <output_entry>-vehicle_entry->get_distance_traveled( ).
       <output_entry>-heading = <output_entry>-vehicle_entry->get_heading( ).
-      <output_entry>-state_description = <output_entry>-vehicle_entry->get_current_state( ).
       <output_entry>-speed = <output_entry>-vehicle_entry->get_speed( ).
+
+      vehicle_state = <output_entry>-vehicle_entry->get_current_state( ).
+      <output_entry>-state_description = vehicle_state->get_description( ).
+      <output_entry>-trip_odometer = vehicle_state->get_distance_traveled( ).
     ENDLOOP.
     me->alv_grid->refresh( ).
   ENDMETHOD.
@@ -280,7 +288,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     DATA: selected_rows_stack TYPE salv_t_row,
           selected_rows_entry LIKE LINE OF selected_rows_stack,
           output_entry        LIKE LINE OF output_stack,
-          current_state       TYPE zcl_hh_dp_vehicle=>current_state_type.
+          current_state       TYPE ref to zif_hh_dp_state.
 
     selected_rows_stack = me->alv_grid->get_selections( )->get_selected_rows( ).
     IF selected_rows_stack IS INITIAL.
@@ -293,14 +301,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         INDEX selected_rows_entry.
 
       current_state = output_entry-vehicle_entry->get_current_state( ).
-
-      case current_state.
-        when zcl_hh_dp_vehicle=>state_cruising or
-             zcl_hh_dp_vehicle=>state_in_heavy_traffic.
-
-        when others.
-          continue.
-      endcase.
+      current_state->turn( turn ).
       output_entry-vehicle_entry->change_heading( turn ).
     ENDLOOP.
 
@@ -312,7 +313,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
   METHOD resume.
     DATA: selected_rows_stack TYPE salv_t_row,
           selected_rows_entry LIKE LINE OF selected_rows_stack,
-          output_entry        LIKE LINE OF output_stack.
+          output_entry        LIKE LINE OF output_stack,
+          current_state       TYPE REF TO zif_hh_dp_state.
 
     selected_rows_stack = me->alv_grid->get_selections( )->get_selected_rows( ).
     IF selected_rows_stack IS INITIAL.
@@ -323,7 +325,9 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     LOOP AT selected_rows_stack INTO selected_rows_entry.
       READ TABLE me->output_stack INTO output_entry
         INDEX selected_rows_entry.
-      output_entry-vehicle_entry->resume( ).
+
+      current_state = output_entry-vehicle_entry->get_current_state( ).
+      current_state->resume( ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
@@ -334,7 +338,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
   METHOD stop.
     DATA: selected_rows_stack TYPE salv_t_row,
           selected_rows_entry LIKE LINE OF selected_rows_stack,
-          output_entry        LIKE LINE OF output_stack.
+          output_entry        LIKE LINE OF output_stack,
+          current_state       TYPE REF TO zif_hh_dp_state.
 
     selected_rows_stack = me->alv_grid->get_selections( )->get_selected_rows( ).
     IF selected_rows_stack IS INITIAL.
@@ -345,7 +350,9 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     LOOP AT selected_rows_stack INTO selected_rows_entry.
       READ TABLE me->output_stack INTO output_entry
         INDEX selected_rows_entry.
-      output_entry-vehicle_entry->stop( ).
+
+      current_state = output_entry-vehicle_entry->get_current_state( ).
+      current_state->stop( ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
@@ -356,7 +363,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
   METHOD slow.
     DATA: selected_rows_stack TYPE salv_t_row,
           selected_rows_entry LIKE LINE OF selected_rows_stack,
-          output_entry        LIKE LINE OF output_stack.
+          output_entry        LIKE LINE OF output_stack,
+          current_state       TYPE REF TO zif_hh_dp_state.
 
     selected_rows_stack = me->alv_grid->get_selections( )->get_selected_rows( ).
     IF selected_rows_stack IS INITIAL.
@@ -367,7 +375,9 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     LOOP AT selected_rows_stack INTO selected_rows_entry.
       READ TABLE me->output_stack INTO output_entry
         INDEX selected_rows_entry.
-      output_entry-vehicle_entry->slow( ).
+
+      current_state = output_entry-vehicle_entry->get_current_state( ).
+      current_state->slow( ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.

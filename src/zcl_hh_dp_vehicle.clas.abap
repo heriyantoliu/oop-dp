@@ -19,14 +19,7 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       description_type(221) TYPE c,
       vehicle_type          TYPE seoclsname,
       option_count          TYPE n LENGTH 1,
-      odometer_type         TYPE p LENGTH 7 DECIMALS 3,
-      time_stamp_type       TYPE timestamp,
-      current_state_type    TYPE c LENGTH 16.
-
-    CONSTANTS:
-      state_cruising         TYPE current_state_type VALUE 'cruising',
-      state_in_heavy_traffic TYPE current_state_type VALUE 'heavy traffic',
-      state_stopped          TYPE current_state_type VALUE 'stop'.
+      time_stamp_type       TYPE timestamp.
 
     CLASS-METHODS:
       class_constructor.
@@ -53,9 +46,6 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       get_description ABSTRACT
         RETURNING
           VALUE(description) TYPE description_type,
-      get_distance_traveled
-        RETURNING
-          VALUE(distance) TYPE odometer_type,
       get_gross_weight ABSTRACT
         RETURNING
           VALUE(gross_weight) TYPE weight_type,
@@ -82,8 +72,7 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           iphone_navigation      TYPE checkbox
           no_navigation          TYPE checkbox
           vehicle_classification TYPE vehicle_type
-          time_started_moving    TYPE time_stamp_type DEFAULT 0
-          current_state          TYPE current_state_type DEFAULT space,
+          time_started_moving    TYPE time_stamp_type DEFAULT 0,
       assign_next_in_chain
         IMPORTING
           next TYPE REF TO zcl_hh_dp_vehicle,
@@ -92,13 +81,44 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           VALUE(next) TYPE REF TO zcl_hh_dp_vehicle,
       get_current_state
         RETURNING
-          VALUE(current_state) TYPE current_state_type,
+          VALUE(current_state) TYPE REF TO zif_hh_dp_state,
       set_current_state
         IMPORTING
-          current_state TYPE current_state_type,
-      resume,
-      slow,
-      stop.
+          current_state TYPE REF TO zif_hh_dp_state,
+      get_previous_state
+        RETURNING
+          VALUE(previous_state) TYPE REF TO zif_hh_dp_state,
+      set_previous_state
+        IMPORTING
+          previous_state TYPE REF TO zif_hh_dp_state,
+      get_time_started_moving
+        RETURNING
+          VALUE(time_started_moving) TYPE time_stamp_type,
+      set_time_started_moving
+        IMPORTING
+          time_started_moving TYPE time_stamp_type,
+      get_dist_traveled_before_stop
+        RETURNING
+          VALUE(distance_traveled_before_stop) TYPE zif_hh_dp_state=>odometer_type,
+      set_dist_traveled_before_stop
+        IMPORTING
+          distance_traveled_before_stop TYPE zif_hh_dp_state=>odometer_type,
+      get_previous_state_speed
+        RETURNING
+          VALUE(previous_state_speed) TYPE speed_type,
+      set_previous_state_speed
+        IMPORTING
+          VALUE(previous_state_speed) TYPE speed_type,
+      get_cruising_state
+        RETURNING
+          VALUE(cruising_state) TYPE REF TO zif_hh_dp_state,
+      get_in_heavy_traffic_state
+        RETURNING
+          VALUE(in_heavy_traffic_state) TYPE REF TO zif_hh_dp_state,
+      get_stopped_state
+        RETURNING
+          VALUE(stopped_state) TYPE REF TO zif_hh_dp_state.
+
   PROTECTED SECTION.
     DATA:
       tare_weight TYPE weight_type,
@@ -122,10 +142,13 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       navigation_type               TYPE navigator_type,
       navigation_unit               TYPE REF TO zif_hh_dp_simple_navigation,
       time_started_moving           TYPE time_stamp_type,
-      current_state                 TYPE current_state_type,
-      distance_traveled_before_stop TYPE odometer_type,
-      previous_state                TYPE current_state_type,
-      previous_state_speed          TYPE speed_type.
+      current_state                 TYPE REF TO zif_hh_dp_state,
+      distance_traveled_before_stop TYPE zif_hh_dp_state=>odometer_type,
+      previous_state                TYPE REF TO zif_hh_dp_state,
+      previous_state_speed          TYPE speed_type,
+      cruising_state                TYPE REF TO zif_hh_dp_state,
+      in_heavy_traffic_state        TYPE REF TO zif_hh_dp_state,
+      stopped_state                 TYPE REF TO zif_hh_dp_state.
 
     CLASS-METHODS:
       get_serial_number
@@ -179,7 +202,21 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     me->tare_weight = tare_weight.
     me->weight_unit = weight_unit.
     me->time_started_moving = time_started_moving.
-    me->current_state = current_state.
+
+    create object me->cruising_state
+      type (zcl_hh_dp_cruising_state=>class_id)
+      exporting
+        vehicle = me.
+    create object me->in_heavy_traffic_state
+      type (zcl_hh_dp_heavy_traffic_state=>class_id)
+      exporting
+        vehicle = me.
+    create object me->stopped_state
+      type (zcl_hh_dp_stopped_state=>class_id)
+      exporting
+        vehicle = me.
+
+    me->current_state = me->cruising_state.
 
     CASE selected.
       WHEN iphone_navigation.
@@ -225,33 +262,6 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     next = me->next.
   ENDMETHOD.
 
-  METHOD get_distance_traveled.
-    CONSTANTS:
-      seconds_in_one_hour TYPE int4 VALUE 3600.
-
-    DATA:
-      time_interval_in_seconds TYPE tzntstmpl,
-      now                      TYPE time_stamp_type.
-
-    CASE me->current_state.
-      WHEN state_cruising or state_in_heavy_traffic.
-      WHEN OTHERS.
-        distance = me->distance_traveled_before_stop.
-        RETURN.
-    ENDCASE.
-
-    GET TIME STAMP FIELD now.
-    time_interval_in_seconds = cl_abap_tstmp=>subtract(
-                                 tstmp1 = now
-                                 tstmp2 = me->time_started_moving
-                               ).
-    distance = me->speed * time_interval_in_seconds /
-               seconds_in_one_hour +
-               me->distance_traveled_before_stop.
-
-
-  ENDMETHOD.
-
   METHOD get_current_state.
     current_state = me->current_state.
   ENDMETHOD.
@@ -260,84 +270,48 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     me->current_state = current_state.
   ENDMETHOD.
 
-  METHOD resume.
-    DATA: now TYPE timestamp,
-          current_speed type speed_type,
-          new_speed type speed_type,
-          acceleration type speed_type,
-          next_state type current_state_type.
-
-    case me->current_state.
-      when state_stopped.
-        new_speed = me->previous_state_speed.
-      when state_in_heavy_traffic.
-        new_speed = me->speed * 2.
-      when others.
-        return.
-    endcase.
-
-    current_speed = me->get_speed( ).
-    acceleration = new_speed - current_speed.
-
-    me->accelerate( acceleration ).
-
-    GET TIME STAMP FIELD now.
-    me->time_started_moving = now.
-
-    case me->current_state.
-      when state_stopped.
-        next_state = me->previous_state.
-      when state_in_heavy_traffic.
-        next_state = me->state_cruising.
-    endcase.
-
-    me->previous_state = me->current_state.
-
-    me->set_current_state( next_state ).
+  METHOD get_cruising_state.
+    cruising_state = me->cruising_state.
   ENDMETHOD.
 
-  METHOD stop.
-    data: reduced_speed type speed_type.
-
-    case me->current_state.
-      when state_cruising or state_in_heavy_traffic.
-      when others.
-        return.
-    endcase.
-
-    me->distance_traveled_before_stop = me->get_distance_traveled( ).
-    me->previous_state_speed = me->get_speed( ).
-
-    reduced_speed = 0 - me->previous_state_speed.
-
-    me->accelerate( reduced_speed ).
-    me->previous_state = me->current_state.
-
-    me->set_current_state( state_stopped ).
+  METHOD get_dist_traveled_before_stop.
+    distance_traveled_before_stop = me->distance_traveled_before_stop.
   ENDMETHOD.
 
-  METHOD slow.
-    data: now type timestamp,
-          reduced_speed type speed_type.
+  METHOD get_in_heavy_traffic_state.
+    in_heavy_traffic_state = me->in_heavy_traffic_state.
+  ENDMETHOD.
 
-    case me->current_state.
-      when state_cruising.
-      when others.
-        return.
-    endcase.
+  METHOD get_previous_state.
+    previous_state = me->previous_state.
+  ENDMETHOD.
 
-    me->distance_traveled_before_stop = me->get_distance_traveled( ).
-    me->previous_state_speed = me->get_speed( ).
+  METHOD get_previous_state_speed.
+    previous_state_speed = me->previous_state_speed.
+  ENDMETHOD.
 
-    reduced_speed = 0 - me->previous_state_speed / 2.
+  METHOD get_stopped_state.
+    stopped_state = me->stopped_state.
+  ENDMETHOD.
 
-    me->accelerate( reduced_speed ).
+  METHOD get_time_started_moving.
+    time_started_moving = me->time_started_moving.
+  ENDMETHOD.
 
-    get TIME STAMP FIELD now.
-    me->time_started_moving = now.
-    me->previous_state = me->current_state.
-    me->set_current_state( state_in_heavy_traffic ).
+  METHOD set_dist_traveled_before_stop.
+    me->distance_traveled_before_stop = distance_traveled_before_stop.
+  ENDMETHOD.
 
+  METHOD set_previous_state.
+    me->previous_state = previous_state.
+  ENDMETHOD.
+
+  METHOD set_previous_state_speed.
+    me->previous_state_speed = previous_state_speed.
+  ENDMETHOD.
+
+  METHOD set_time_started_moving.
+    me->time_started_moving = time_started_moving.
   ENDMETHOD.
 
 ENDCLASS.

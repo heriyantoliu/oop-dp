@@ -12,12 +12,19 @@ CLASS zcl_hh_dp_vehicle_option DEFINITION
       get_gross_weight REDEFINITION,
       get_heading REDEFINITION,
       get_speed REDEFINITION,
-      get_distance_traveled REDEFINITION,
       get_current_state REDEFINITION,
       set_current_state REDEFINITION,
-      resume REDEFINITION,
-      slow REDEFINITION,
-      stop REDEFINITION.
+      get_previous_state REDEFINITION,
+      set_previous_state REDEFINITION,
+      get_time_started_moving REDEFINITION,
+      set_time_started_moving REDEFINITION,
+      get_dist_traveled_before_stop REDEFINITION,
+      set_dist_traveled_before_stop REDEFINITION,
+      get_previous_state_speed REDEFINITION,
+      set_previous_state_speed REDEFINITION,
+      get_cruising_state REDEFINITION,
+      get_in_heavy_traffic_state REDEFINITION,
+      get_stopped_state REDEFINITION.
 
   PROTECTED SECTION.
     DATA:
@@ -99,10 +106,6 @@ CLASS zcl_hh_dp_vehicle_option IMPLEMENTATION.
     speed = me->decorated_object->get_speed( ).
   ENDMETHOD.
 
-  METHOD get_distance_traveled.
-    distance = me->decorated_object->get_distance_traveled( ).
-  ENDMETHOD.
-
   METHOD get_current_state.
     current_state = me->decorated_object->get_current_state( ).
   ENDMETHOD.
@@ -111,16 +114,48 @@ CLASS zcl_hh_dp_vehicle_option IMPLEMENTATION.
     me->decorated_object->set_current_state( current_state ).
   ENDMETHOD.
 
-  METHOD resume.
-    me->decorated_object->resume( ).
+  METHOD get_cruising_state.
+    cruising_state = me->decorated_object->get_cruising_state( ).
   ENDMETHOD.
 
-  METHOD stop.
-    me->decorated_object->stop( ).
+  METHOD get_dist_traveled_before_stop.
+    distance_traveled_before_stop = me->decorated_object->get_dist_traveled_before_stop( ).
   ENDMETHOD.
 
-  METHOD slow.
-    me->decorated_object->slow( ).
+  METHOD get_in_heavy_traffic_state.
+    in_heavy_traffic_state = me->decorated_object->get_in_heavy_traffic_state( ).
+  ENDMETHOD.
+
+  METHOD get_previous_state.
+    previous_state = me->decorated_object->get_previous_state( ).
+  ENDMETHOD.
+
+  METHOD get_previous_state_speed.
+    previous_state_speed = me->decorated_object->get_previous_state_speed( ).
+  ENDMETHOD.
+
+  METHOD get_stopped_state.
+    stopped_state = me->decorated_object->get_stopped_state( ).
+  ENDMETHOD.
+
+  METHOD get_time_started_moving.
+    time_started_moving = me->decorated_object->get_time_started_moving( ).
+  ENDMETHOD.
+
+  METHOD set_dist_traveled_before_stop.
+    me->decorated_object->set_dist_traveled_before_stop( distance_traveled_before_stop ).
+  ENDMETHOD.
+
+  METHOD set_previous_state.
+    me->decorated_object->set_previous_state( previous_state ).
+  ENDMETHOD.
+
+  METHOD set_previous_state_speed.
+    me->decorated_object->set_previous_state_speed( previous_state_speed ).
+  ENDMETHOD.
+
+  METHOD set_time_started_moving.
+    me->decorated_object->set_time_started_moving( time_started_moving ).
   ENDMETHOD.
 
 ENDCLASS.

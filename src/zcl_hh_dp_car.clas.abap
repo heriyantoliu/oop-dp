@@ -92,7 +92,6 @@ CLASS zcl_hh_dp_car IMPLEMENTATION.
       no_navigation = no_navigation
       vehicle_classification = class_id
       time_started_moving = now
-      current_state = zcl_hh_dp_vehicle=>state_cruising
     ).
 
     me->passengers = passengers.
