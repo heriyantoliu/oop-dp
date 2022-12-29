@@ -48,7 +48,10 @@ CLASS zcl_hh_dp_report DEFINITION
       refresh,
       set_column_titles
         IMPORTING
-          alv_grid TYPE REF TO cl_salv_table.
+          alv_grid TYPE REF TO cl_salv_table,
+      turn
+        importing
+          turn type zif_hh_dp_simple_navigation=>turn_type.
 
 ENDCLASS.
 
@@ -129,9 +132,9 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     grid_events = me->alv_grid->get_event( ).
     set handler me->on_user_command for grid_events.
 
-*    DATA(lo_display) = alv_grid->get_display_settings( ).
-*
-*    lo_display->set_striped_pattern( 'X' ).
+    me->alv_grid->get_selections( )->set_selection_mode(
+      cl_salv_selections=>row_column
+    ).
 
     alv_grid->display( ).
   ENDMETHOD.
@@ -239,6 +242,10 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     CASE e_salv_function.
       WHEN zif_hh_dp_report_screen=>refresh.
         me->refresh( ).
+      when zif_hh_dp_report_screen=>turn_left.
+        me->turn( zif_hh_dp_simple_navigation=>left_turn ).
+      when zif_hh_dp_report_screen=>turn_right.
+        me->turn( zif_hh_dp_simple_navigation=>right_turn ).
     ENDCASE.
   ENDMETHOD.
 
@@ -247,8 +254,31 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
 
     LOOP AT me->output_stack ASSIGNING <output_entry>.
       <output_entry>-trip_odometer = <output_entry>-vehicle_entry->get_distance_traveled( ).
+      <output_entry>-heading = <output_entry>-vehicle_entry->get_heading( ).
     ENDLOOP.
     me->alv_grid->refresh( ).
+  ENDMETHOD.
+
+  METHOD turn.
+    data: selected_rows_stack type salv_t_row,
+          selected_rows_entry like line of selected_rows_stack,
+          output_entry like line of output_stack.
+
+    selected_rows_stack = me->alv_grid->get_selections( )->get_selected_rows( ).
+    if selected_rows_stack is initial.
+      message i398(00) with 'No rows selected'.
+      return.
+    endif.
+
+    loop at selected_rows_stack into selected_rows_entry.
+      read table me->output_stack into output_entry
+        index selected_rows_entry.
+      output_entry-vehicle_entry->change_heading( turn ).
+    endloop.
+
+    clear selected_rows_stack.
+    me->alv_grid->get_selections( )->set_selected_rows( selected_rows_stack ).
+    me->refresh( ).
   ENDMETHOD.
 
 ENDCLASS.
