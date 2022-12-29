@@ -272,6 +272,8 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
         new_speed = me->previous_state_speed.
       when state_in_heavy_traffic.
         new_speed = me->speed * 2.
+      when others.
+        return.
     endcase.
 
     current_speed = me->get_speed( ).
@@ -297,6 +299,12 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
   METHOD stop.
     data: reduced_speed type speed_type.
 
+    case me->current_state.
+      when state_cruising or state_in_heavy_traffic.
+      when others.
+        return.
+    endcase.
+
     me->distance_traveled_before_stop = me->get_distance_traveled( ).
     me->previous_state_speed = me->get_speed( ).
 
@@ -311,6 +319,12 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
   METHOD slow.
     data: now type timestamp,
           reduced_speed type speed_type.
+
+    case me->current_state.
+      when state_cruising.
+      when others.
+        return.
+    endcase.
 
     me->distance_traveled_before_stop = me->get_distance_traveled( ).
     me->previous_state_speed = me->get_speed( ).
