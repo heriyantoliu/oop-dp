@@ -1,19 +1,10 @@
 CLASS zcl_hh_dp_stopped_state DEFINITION
   PUBLIC
+  INHERITING FROM zcl_hh_dp_vehicle_state
   FINAL
   CREATE PUBLIC .
 
   PUBLIC SECTION.
-
-    INTERFACES zif_hh_dp_state .
-
-    ALIASES:
-      get_description FOR zif_hh_dp_state~get_description,
-      get_distance_traveled FOR zif_hh_dp_state~get_distance_traveled,
-      resume FOR zif_hh_dp_state~resume,
-      slow FOR zif_hh_dp_state~slow,
-      stop FOR zif_hh_dp_state~stop,
-      turn FOR zif_hh_dp_state~turn.
 
     CONSTANTS:
       class_id TYPE seoclsname VALUE 'ZCL_HH_DP_STOPPED_STATE'.
@@ -21,22 +12,20 @@ CLASS zcl_hh_dp_stopped_state DEFINITION
     METHODS:
       constructor
         IMPORTING
-          vehicle TYPE REF TO zcl_hh_dp_vehicle.
+          vehicle TYPE REF TO zcl_hh_dp_vehicle,
+      get_distance_traveled REDEFINITION,
+      resume REDEFINITION.
+
   PROTECTED SECTION.
   PRIVATE SECTION.
     CONSTANTS:
       description TYPE zif_hh_dp_state=>description_type VALUE 'stopped'.
 
-    DATA:
-      vehicle TYPE REF TO zcl_hh_dp_vehicle.
 ENDCLASS.
 
 
 
 CLASS zcl_hh_dp_stopped_state IMPLEMENTATION.
-  METHOD get_description.
-    description = me->description.
-  ENDMETHOD.
 
   METHOD get_distance_traveled.
     distance = me->vehicle->get_dist_traveled_before_stop( ).
@@ -61,16 +50,9 @@ CLASS zcl_hh_dp_stopped_state IMPLEMENTATION.
     me->vehicle->set_previous_state( me ).
   ENDMETHOD.
 
-  METHOD slow.
-  ENDMETHOD.
-
-  METHOD stop.
-  ENDMETHOD.
-
-  METHOD turn.
-  ENDMETHOD.
-
   METHOD constructor.
+    super->constructor( ).
     me->vehicle = vehicle.
+    me->descriptor = me->description.
   ENDMETHOD.
 ENDCLASS.
