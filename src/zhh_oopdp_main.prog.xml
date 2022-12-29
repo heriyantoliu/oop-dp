@@ -686,6 +686,15 @@
       <ICON_TEXT>Refresh</ICON_TEXT>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
+      <CODE>RESUME</CODE>
+      <TEXTNO>001</TEXTNO>
+      <TEXT_TYPE>S</TEXT_TYPE>
+      <TEXT_NAME>ICON_RELEASE</TEXT_NAME>
+      <ICON_ID>@5Y@</ICON_ID>
+      <FUN_TEXT>Resume</FUN_TEXT>
+      <ICON_TEXT>Resume</ICON_TEXT>
+     </RSMPE_FUNT>
+     <RSMPE_FUNT>
       <CODE>SCRH</CODE>
       <TEXTNO>001</TEXTNO>
       <TYPE>E</TYPE>
@@ -712,6 +721,15 @@
       <INFO_TEXT>Save as variant</INFO_TEXT>
       <PATH>S</PATH>
       <USAGE>A</USAGE>
+     </RSMPE_FUNT>
+     <RSMPE_FUNT>
+      <CODE>STOP</CODE>
+      <TEXTNO>001</TEXTNO>
+      <TEXT_TYPE>S</TEXT_TYPE>
+      <TEXT_NAME>ICON_BREAKPOINT</TEXT_NAME>
+      <ICON_ID>@3U@</ICON_ID>
+      <FUN_TEXT>Stop</FUN_TEXT>
+      <ICON_TEXT>Stop</ICON_TEXT>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>TURNAGAIN</CODE>
@@ -1582,6 +1600,18 @@
       <NO>21</NO>
       <PFNO>14</PFNO>
      </RSMPE_BUT>
+     <RSMPE_BUT>
+      <PFK_CODE>000002</PFK_CODE>
+      <CODE>0001</CODE>
+      <NO>22</NO>
+      <PFNO>16</PFNO>
+     </RSMPE_BUT>
+     <RSMPE_BUT>
+      <PFK_CODE>000002</PFK_CODE>
+      <CODE>0001</CODE>
+      <NO>23</NO>
+      <PFNO>17</PFNO>
+     </RSMPE_BUT>
     </BUT>
     <PFK>
      <RSMPE_PFK>
@@ -1792,6 +1822,18 @@
       <CODE>000002</CODE>
       <PFNO>15</PFNO>
       <FUNCODE>&amp;F15</FUNCODE>
+      <FUNNO>001</FUNNO>
+     </RSMPE_PFK>
+     <RSMPE_PFK>
+      <CODE>000002</CODE>
+      <PFNO>16</PFNO>
+      <FUNCODE>STOP</FUNCODE>
+      <FUNNO>001</FUNNO>
+     </RSMPE_PFK>
+     <RSMPE_PFK>
+      <CODE>000002</CODE>
+      <PFNO>17</PFNO>
+      <FUNCODE>RESUME</FUNCODE>
       <FUNNO>001</FUNNO>
      </RSMPE_PFK>
      <RSMPE_PFK>
@@ -2422,6 +2464,10 @@
      </RSMPE_STAF>
      <RSMPE_STAF>
       <STATUS>REPORT_SCREEN</STATUS>
+      <FUNCTION>RESUME</FUNCTION>
+     </RSMPE_STAF>
+     <RSMPE_STAF>
+      <STATUS>REPORT_SCREEN</STATUS>
       <FUNCTION>RW</FUNCTION>
      </RSMPE_STAF>
      <RSMPE_STAF>
@@ -2475,6 +2521,10 @@
      <RSMPE_STAF>
       <STATUS>REPORT_SCREEN</STATUS>
       <FUNCTION>SOUP</FUNCTION>
+     </RSMPE_STAF>
+     <RSMPE_STAF>
+      <STATUS>REPORT_SCREEN</STATUS>
+      <FUNCTION>STOP</FUNCTION>
      </RSMPE_STAF>
      <RSMPE_STAF>
       <STATUS>REPORT_SCREEN</STATUS>

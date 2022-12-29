@@ -20,7 +20,12 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       vehicle_type          TYPE seoclsname,
       option_count          TYPE n LENGTH 1,
       odometer_type         TYPE p LENGTH 7 DECIMALS 3,
-      time_stamp_type       TYPE timestamp.
+      time_stamp_type       TYPE timestamp,
+      current_state_type    TYPE c LENGTH 16.
+
+    CONSTANTS:
+      state_cruising TYPE current_state_type VALUE 'cruising',
+      state_stopped  TYPE current_state_type VALUE 'stop'.
 
     CLASS-METHODS:
       class_constructor.
@@ -76,13 +81,20 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           iphone_navigation      TYPE checkbox
           no_navigation          TYPE checkbox
           vehicle_classification TYPE vehicle_type
-          time_started_moving    TYPE time_stamp_type DEFAULT 0,
+          time_started_moving    TYPE time_stamp_type DEFAULT 0
+          current_state          TYPE current_state_type DEFAULT space,
       assign_next_in_chain
         IMPORTING
           next TYPE REF TO zcl_hh_dp_vehicle,
       get_next_in_chain
         RETURNING
-          VALUE(next) TYPE REF TO zcl_hh_dp_vehicle.
+          VALUE(next) TYPE REF TO zcl_hh_dp_vehicle,
+      get_current_state
+        RETURNING
+          VALUE(current_state) TYPE current_state_type,
+      set_current_state
+        IMPORTING
+          current_state TYPE current_state_type.
   PROTECTED SECTION.
     DATA:
       tare_weight TYPE weight_type,
@@ -105,7 +117,8 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       serial_number       TYPE serial_type,
       navigation_type     TYPE navigator_type,
       navigation_unit     TYPE REF TO zif_hh_dp_simple_navigation,
-      time_started_moving TYPE time_stamp_type.
+      time_started_moving TYPE time_stamp_type,
+      current_state       TYPE current_state_type.
 
     CLASS-METHODS:
       get_serial_number
@@ -159,6 +172,7 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     me->tare_weight = tare_weight.
     me->weight_unit = weight_unit.
     me->time_started_moving = time_started_moving.
+    me->current_state = current_state.
 
     CASE selected.
       WHEN iphone_navigation.
@@ -205,14 +219,14 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_distance_traveled.
-    constants:
-      seconds_in_one_hour type int4 value 3600.
+    CONSTANTS:
+      seconds_in_one_hour TYPE int4 VALUE 3600.
 
-    data:
-      time_interval_in_seconds type tzntstmpl,
-      now type time_stamp_type.
+    DATA:
+      time_interval_in_seconds TYPE tzntstmpl,
+      now                      TYPE time_stamp_type.
 
-    get time stamp field now.
+    GET TIME STAMP FIELD now.
     time_interval_in_seconds = cl_abap_tstmp=>subtract(
                                  tstmp1 = now
                                  tstmp2 = me->time_started_moving
@@ -220,6 +234,14 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     distance = me->speed * time_interval_in_seconds / seconds_in_one_hour.
 
 
+  ENDMETHOD.
+
+  METHOD get_current_state.
+    current_state = me->current_state.
+  ENDMETHOD.
+
+  METHOD set_current_state.
+    me->current_state = current_state.
   ENDMETHOD.
 
 ENDCLASS.

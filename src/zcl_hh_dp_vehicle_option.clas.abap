@@ -12,7 +12,9 @@ CLASS zcl_hh_dp_vehicle_option DEFINITION
       get_gross_weight REDEFINITION,
       get_heading REDEFINITION,
       get_speed REDEFINITION,
-      get_distance_traveled REDEFINITION.
+      get_distance_traveled REDEFINITION,
+      get_current_state REDEFINITION,
+      set_current_state REDEFINITION.
 
   PROTECTED SECTION.
     DATA:
@@ -96,6 +98,14 @@ CLASS zcl_hh_dp_vehicle_option IMPLEMENTATION.
 
   METHOD get_distance_traveled.
     distance = me->decorated_object->get_distance_traveled( ).
+  ENDMETHOD.
+
+  METHOD get_current_state.
+    current_state = me->decorated_object->get_current_state( ).
+  ENDMETHOD.
+
+  METHOD set_current_state.
+    me->decorated_object->set_current_state( current_state ).
   ENDMETHOD.
 
 ENDCLASS.

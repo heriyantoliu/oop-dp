@@ -16,22 +16,23 @@ CLASS zcl_hh_dp_report DEFINITION
   PRIVATE SECTION.
     TYPES:
       BEGIN OF output_row,
-        serial_number   TYPE zcl_hh_dp_vehicle=>serial_type,
-        trip_odometer   TYPE zcl_hh_dp_vehicle=>odometer_type,
-        vehicle_entry   TYPE REF TO zcl_hh_dp_vehicle,
-        license_plate   TYPE zcl_hh_dp_vehicle=>license_plate_type,
-        brand           TYPE zcl_hh_dp_vehicle=>brand_type,
-        model           TYPE zcl_hh_dp_vehicle=>model_type,
-        year            TYPE zcl_hh_dp_vehicle=>year_type,
-        color           TYPE zcl_hh_dp_vehicle=>color_type,
-        location        TYPE zcl_hh_dp_vehicle=>location_type,
-        heading         TYPE zif_hh_dp_simple_navigation=>heading_type,
-        speed           TYPE zcl_hh_dp_vehicle=>speed_type,
-        speed_unit      TYPE zcl_hh_dp_vehicle=>speed_unit_type,
-        weight          TYPE zcl_hh_dp_vehicle=>weight_type,
-        weight_unit     TYPE zcl_hh_dp_vehicle=>weight_unit_type,
-        description     TYPE zcl_hh_dp_vehicle=>description_type,
-        navigation_type TYPE zcl_hh_dp_vehicle=>navigator_type,
+        serial_number     TYPE zcl_hh_dp_vehicle=>serial_type,
+        state_description TYPE zcl_hh_dp_vehicle=>current_state_type,
+        trip_odometer     TYPE zcl_hh_dp_vehicle=>odometer_type,
+        vehicle_entry     TYPE REF TO zcl_hh_dp_vehicle,
+        license_plate     TYPE zcl_hh_dp_vehicle=>license_plate_type,
+        brand             TYPE zcl_hh_dp_vehicle=>brand_type,
+        model             TYPE zcl_hh_dp_vehicle=>model_type,
+        year              TYPE zcl_hh_dp_vehicle=>year_type,
+        color             TYPE zcl_hh_dp_vehicle=>color_type,
+        location          TYPE zcl_hh_dp_vehicle=>location_type,
+        heading           TYPE zif_hh_dp_simple_navigation=>heading_type,
+        speed             TYPE zcl_hh_dp_vehicle=>speed_type,
+        speed_unit        TYPE zcl_hh_dp_vehicle=>speed_unit_type,
+        weight            TYPE zcl_hh_dp_vehicle=>weight_type,
+        weight_unit       TYPE zcl_hh_dp_vehicle=>weight_unit_type,
+        description       TYPE zcl_hh_dp_vehicle=>description_type,
+        navigation_type   TYPE zcl_hh_dp_vehicle=>navigator_type,
       END   OF output_row,
       output_list TYPE STANDARD TABLE OF output_row.
 
@@ -49,9 +50,11 @@ CLASS zcl_hh_dp_report DEFINITION
       set_column_titles
         IMPORTING
           alv_grid TYPE REF TO cl_salv_table,
+      resume,
+      stop,
       turn
-        importing
-          turn type zif_hh_dp_simple_navigation=>turn_type.
+        IMPORTING
+          turn TYPE zif_hh_dp_simple_navigation=>turn_type.
 
 ENDCLASS.
 
@@ -90,6 +93,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       output_entry-speed = output_entry-vehicle_entry->get_speed( ).
       output_entry-weight = output_entry-vehicle_entry->get_gross_weight( ).
       output_entry-description = output_entry-vehicle_entry->get_description( ).
+      output_entry-state_description = output_entry-vehicle_entry->get_current_state( ).
 
       APPEND output_entry TO me->output_stack.
     ENDWHILE.
@@ -102,7 +106,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
 
   METHOD present_report.
 
-    constants: lc_repid type sy-repid value 'ZHH_OOPDP_MAIN'.
+    CONSTANTS: lc_repid TYPE sy-repid VALUE 'ZHH_OOPDP_MAIN'.
 
     DATA: grid_events TYPE REF TO cl_salv_events_table.
 
@@ -130,7 +134,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     ).
 
     grid_events = me->alv_grid->get_event( ).
-    set handler me->on_user_command for grid_events.
+    SET HANDLER me->on_user_command FOR grid_events.
 
     me->alv_grid->get_selections( )->set_selection_mode(
       cl_salv_selections=>row_column
@@ -142,37 +146,39 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
   METHOD set_column_titles.
 
     CONSTANTS:
-      column_name_serial_number    TYPE lvc_fname VALUE 'SERIAL_NUMBER',
-      column_title_serial_number   TYPE string VALUE 'Serial Number',
-      column_name_trip_odometer    TYPE lvc_fname VALUE 'TRIP_ODOMETER',
-      column_title_trip_odometer   TYPE string VALUE 'Trip Odometer',
-      column_name_license_plate    TYPE lvc_fname VALUE 'LICENSE_PLATE',
-      column_title_license_plate   TYPE string    VALUE `License plate`,
-      column_name_brand            TYPE lvc_fname VALUE 'BRAND',
-      column_title_brand           TYPE string    VALUE `Brand`,
-      column_name_model            TYPE lvc_fname VALUE 'MODEL',
-      column_title_model           TYPE string    VALUE `Model`,
-      column_name_year             TYPE lvc_fname VALUE 'YEAR',
-      column_title_year            TYPE string    VALUE `Year`,
-      column_name_color            TYPE lvc_fname VALUE 'COLOR',
-      column_title_color           TYPE string    VALUE `Color`,
-      column_name_location         TYPE lvc_fname VALUE 'LOCATION',
-      column_title_location        TYPE string    VALUE `Location`,
-      column_name_heading          TYPE lvc_fname VALUE 'HEADING',
-      column_title_heading         TYPE string    VALUE `Heading`,
-      column_name_speed            TYPE lvc_fname VALUE 'SPEED',
-      column_title_speed           TYPE string    VALUE `Speed`,
-      column_name_speed_unit       TYPE lvc_fname VALUE 'SPEED_UNIT',
-      column_title_speed_unit      TYPE string    VALUE `SUoM`,
-      column_name_weight           TYPE lvc_fname VALUE 'WEIGHT',
-      column_title_weight          TYPE string VALUE 'Weight',
-      column_name_weight_unit      TYPE lvc_fname VALUE 'WEIGHT_UNIT',
-      column_title_weight_unit     TYPE string VALUE 'WUoM',
-      column_name_description      TYPE lvc_fname VALUE 'DESCRIPTION',
-      column_title_description     TYPE string VALUE 'Descriptor',
-      column_name_navigation_type  TYPE lvc_fname VALUE 'NAVIGATION_TYPE',
-      column_title_navigation_type TYPE string VALUE 'Navigation Type',
-      minimum_column_width         TYPE int4      VALUE 08.
+      column_name_serial_number      TYPE lvc_fname VALUE 'SERIAL_NUMBER',
+      column_title_serial_number     TYPE string VALUE 'Serial Number',
+      column_name_state_description  TYPE lvc_fname VALUE 'STATE_DESCRIPTION',
+      column_title_state_description TYPE string VALUE 'Status',
+      column_name_trip_odometer      TYPE lvc_fname VALUE 'TRIP_ODOMETER',
+      column_title_trip_odometer     TYPE string VALUE 'Trip Odometer',
+      column_name_license_plate      TYPE lvc_fname VALUE 'LICENSE_PLATE',
+      column_title_license_plate     TYPE string    VALUE `License plate`,
+      column_name_brand              TYPE lvc_fname VALUE 'BRAND',
+      column_title_brand             TYPE string    VALUE `Brand`,
+      column_name_model              TYPE lvc_fname VALUE 'MODEL',
+      column_title_model             TYPE string    VALUE `Model`,
+      column_name_year               TYPE lvc_fname VALUE 'YEAR',
+      column_title_year              TYPE string    VALUE `Year`,
+      column_name_color              TYPE lvc_fname VALUE 'COLOR',
+      column_title_color             TYPE string    VALUE `Color`,
+      column_name_location           TYPE lvc_fname VALUE 'LOCATION',
+      column_title_location          TYPE string    VALUE `Location`,
+      column_name_heading            TYPE lvc_fname VALUE 'HEADING',
+      column_title_heading           TYPE string    VALUE `Heading`,
+      column_name_speed              TYPE lvc_fname VALUE 'SPEED',
+      column_title_speed             TYPE string    VALUE `Speed`,
+      column_name_speed_unit         TYPE lvc_fname VALUE 'SPEED_UNIT',
+      column_title_speed_unit        TYPE string    VALUE `SUoM`,
+      column_name_weight             TYPE lvc_fname VALUE 'WEIGHT',
+      column_title_weight            TYPE string VALUE 'Weight',
+      column_name_weight_unit        TYPE lvc_fname VALUE 'WEIGHT_UNIT',
+      column_title_weight_unit       TYPE string VALUE 'WUoM',
+      column_name_description        TYPE lvc_fname VALUE 'DESCRIPTION',
+      column_title_description       TYPE string VALUE 'Descriptor',
+      column_name_navigation_type    TYPE lvc_fname VALUE 'NAVIGATION_TYPE',
+      column_title_navigation_type   TYPE string VALUE 'Navigation Type',
+      minimum_column_width           TYPE int4      VALUE 08.
 
     DATA: grid_column_width       TYPE lvc_outlen,
           grid_column_title_short TYPE scrtext_s.
@@ -191,6 +197,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       CASE grid_column_entry-columnname.
         WHEN column_name_serial_number.
           grid_column_title_short = column_title_serial_number.
+        WHEN column_name_state_description.
+          grid_column_title_short = column_title_state_description.
         WHEN column_name_trip_odometer.
           grid_column_title_short = column_title_trip_odometer.
         WHEN column_name_license_plate.
@@ -242,10 +250,14 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     CASE e_salv_function.
       WHEN zif_hh_dp_report_screen=>refresh.
         me->refresh( ).
-      when zif_hh_dp_report_screen=>turn_left.
+      WHEN zif_hh_dp_report_screen=>turn_left.
         me->turn( zif_hh_dp_simple_navigation=>left_turn ).
-      when zif_hh_dp_report_screen=>turn_right.
+      WHEN zif_hh_dp_report_screen=>turn_right.
         me->turn( zif_hh_dp_simple_navigation=>right_turn ).
+      WHEN zif_hh_dp_report_screen=>resume.
+        me->resume( ).
+      WHEN zif_hh_dp_report_screen=>stop.
+        me->stop( ).
     ENDCASE.
   ENDMETHOD.
 
@@ -255,28 +267,73 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     LOOP AT me->output_stack ASSIGNING <output_entry>.
       <output_entry>-trip_odometer = <output_entry>-vehicle_entry->get_distance_traveled( ).
       <output_entry>-heading = <output_entry>-vehicle_entry->get_heading( ).
+      <output_entry>-state_description = <output_entry>-vehicle_entry->get_current_state( ).
     ENDLOOP.
     me->alv_grid->refresh( ).
   ENDMETHOD.
 
   METHOD turn.
-    data: selected_rows_stack type salv_t_row,
-          selected_rows_entry like line of selected_rows_stack,
-          output_entry like line of output_stack.
+    DATA: selected_rows_stack TYPE salv_t_row,
+          selected_rows_entry LIKE LINE OF selected_rows_stack,
+          output_entry        LIKE LINE OF output_stack.
 
     selected_rows_stack = me->alv_grid->get_selections( )->get_selected_rows( ).
-    if selected_rows_stack is initial.
-      message i398(00) with 'No rows selected'.
-      return.
-    endif.
+    IF selected_rows_stack IS INITIAL.
+      MESSAGE i398(00) WITH 'No rows selected'.
+      RETURN.
+    ENDIF.
 
-    loop at selected_rows_stack into selected_rows_entry.
-      read table me->output_stack into output_entry
-        index selected_rows_entry.
+    LOOP AT selected_rows_stack INTO selected_rows_entry.
+      READ TABLE me->output_stack INTO output_entry
+        INDEX selected_rows_entry.
       output_entry-vehicle_entry->change_heading( turn ).
-    endloop.
+    ENDLOOP.
 
-    clear selected_rows_stack.
+    CLEAR selected_rows_stack.
+    me->alv_grid->get_selections( )->set_selected_rows( selected_rows_stack ).
+    me->refresh( ).
+  ENDMETHOD.
+
+  METHOD resume.
+    DATA: selected_rows_stack TYPE salv_t_row,
+          selected_rows_entry LIKE LINE OF selected_rows_stack,
+          output_entry        LIKE LINE OF output_stack.
+
+    selected_rows_stack = me->alv_grid->get_selections( )->get_selected_rows( ).
+    IF selected_rows_stack IS INITIAL.
+      MESSAGE i398(00) WITH 'No rows selected'.
+      RETURN.
+    ENDIF.
+
+    LOOP AT selected_rows_stack INTO selected_rows_entry.
+      READ TABLE me->output_stack INTO output_entry
+        INDEX selected_rows_entry.
+      output_entry-vehicle_entry->set_current_state( zcl_hh_dp_vehicle=>state_cruising ).
+    ENDLOOP.
+
+    CLEAR selected_rows_stack.
+    me->alv_grid->get_selections( )->set_selected_rows( selected_rows_stack ).
+    me->refresh( ).
+  ENDMETHOD.
+
+  METHOD stop.
+    DATA: selected_rows_stack TYPE salv_t_row,
+          selected_rows_entry LIKE LINE OF selected_rows_stack,
+          output_entry        LIKE LINE OF output_stack.
+
+    selected_rows_stack = me->alv_grid->get_selections( )->get_selected_rows( ).
+    IF selected_rows_stack IS INITIAL.
+      MESSAGE i398(00) WITH 'No rows selected'.
+      RETURN.
+    ENDIF.
+
+    LOOP AT selected_rows_stack INTO selected_rows_entry.
+      READ TABLE me->output_stack INTO output_entry
+        INDEX selected_rows_entry.
+      output_entry-vehicle_entry->set_current_state( zcl_hh_dp_vehicle=>state_stopped ).
+    ENDLOOP.
+
+    CLEAR selected_rows_stack.
     me->alv_grid->get_selections( )->set_selected_rows( selected_rows_stack ).
     me->refresh( ).
   ENDMETHOD.
