@@ -254,13 +254,6 @@ CLASS zcl_hh_dp_fleet_manager IMPLEMENTATION.
     vehicle_memento_entry-vehicle = vehicle.
     vehicle_memento_entry-vehicle_memento = vehicle->create_memento( ).
 
-    bogus_state = zcl_hh_dp_being_towed_state=>get_state_object( ).
-
-    create object vehicle_memento_entry-vehicle_memento
-      exporting
-        speed = bogus_speed
-        state = bogus_state.
-
     insert vehicle_memento_entry
       into vehicle_memento_stack
       index 1.

@@ -1,9 +1,17 @@
 CLASS zcl_hh_dp_vehicle_memento DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PRIVATE
+  GLOBAL FRIENDS zcl_hh_dp_vehicle .
 
   PUBLIC SECTION.
+
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+    data:
+      speed type zcl_hh_dp_vehicle=>speed_type,
+      state type ref to zif_hh_dp_state.
+
     methods:
       constructor
         importing
@@ -15,11 +23,6 @@ CLASS zcl_hh_dp_vehicle_memento DEFINITION
       get_state
         returning
           value(state) type ref to zif_hh_dp_state.
-  PROTECTED SECTION.
-  PRIVATE SECTION.
-    data:
-      speed type zcl_hh_dp_vehicle=>speed_type,
-      state type ref to zif_hh_dp_state.
 ENDCLASS.
 
 
