@@ -2,15 +2,17 @@ CLASS zcl_hh_dp_cruising_state DEFINITION
   PUBLIC
   INHERITING FROM zcl_hh_dp_vehicle_state
   FINAL
-  CREATE PUBLIC .
+  CREATE PRIVATE.
 
   PUBLIC SECTION.
 
-    CONSTANTS:
-      class_id TYPE seoclsname VALUE 'ZCL_HH_DP_CRUISING_STATE'.
+    class-methods:
+      class_constructor,
+      get_state_object
+        returning
+          value(state_object) type ref to zif_hh_dp_state.
 
     METHODS:
-      constructor,
       get_distance_traveled REDEFINITION,
       slow REDEFINITION,
       stop REDEFINITION,
@@ -26,9 +28,13 @@ CLASS zcl_hh_dp_cruising_state DEFINITION
     CONSTANTS:
       description TYPE zif_hh_dp_state=>description_type VALUE 'cruising'.
 
+    class-data:
+      singleton type ref to zcl_hh_dp_cruising_state.
+
+    methods:
+      constructor.
+
 ENDCLASS.
-
-
 
 CLASS zcl_hh_dp_cruising_state IMPLEMENTATION.
 
@@ -134,6 +140,14 @@ CLASS zcl_hh_dp_cruising_state IMPLEMENTATION.
       vehicle      = vehicle
       acceleration = change_in_speed
     ).
+  ENDMETHOD.
+
+  METHOD class_constructor.
+    create object zcl_hh_dp_cruising_state=>singleton.
+  ENDMETHOD.
+
+  METHOD get_state_object.
+    state_object = zcl_hh_dp_cruising_state=>singleton.
   ENDMETHOD.
 
 ENDCLASS.

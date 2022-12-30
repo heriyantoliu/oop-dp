@@ -2,14 +2,16 @@ CLASS zcl_hh_dp_police_escort_state DEFINITION
   PUBLIC
   INHERITING FROM zcl_hh_dp_vehicle_state
   FINAL
-  CREATE PUBLIC .
+  CREATE PRIVATE .
 
   PUBLIC SECTION.
-    constants:
-      class_id type seoclsname value 'ZCL_HH_DP_POLICE_ESCORT_STATE'.
+    CLASS-METHODS:
+      class_constructor,
+      get_state_object
+        RETURNING
+          VALUE(state_object) TYPE REF TO zif_hh_dp_state.
 
-    methods:
-      constructor,
+    METHODS:
       get_distance_traveled REDEFINITION,
       resume REDEFINITION,
       stop REDEFINITION,
@@ -21,15 +23,21 @@ CLASS zcl_hh_dp_police_escort_state DEFINITION
 
   PROTECTED SECTION.
   PRIVATE SECTION.
-    constants:
-      description type zif_hh_dp_state=>description_type value 'police escort'.
+    CONSTANTS:
+      description TYPE zif_hh_dp_state=>description_type VALUE 'police escort'.
+
+    CLASS-DATA:
+      singleton TYPE REF TO zcl_hh_dp_police_escort_state.
+
+    METHODS:
+      constructor.
 ENDCLASS.
 
 
 
 CLASS zcl_hh_dp_police_escort_state IMPLEMENTATION.
   METHOD accelerate_01.
-    constants: change_in_speed type int4 value '1'.
+    CONSTANTS: change_in_speed TYPE int4 VALUE '1'.
 
     me->accelerate(
       vehicle      = vehicle
@@ -38,7 +46,7 @@ CLASS zcl_hh_dp_police_escort_state IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD accelerate_05.
-    constants: change_in_speed type int4 value '5'.
+    CONSTANTS: change_in_speed TYPE int4 VALUE '5'.
 
     me->accelerate(
       vehicle      = vehicle
@@ -54,7 +62,7 @@ CLASS zcl_hh_dp_police_escort_state IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD decelerate_01.
-    constants: change_in_speed type int4 value '-1'.
+    CONSTANTS: change_in_speed TYPE int4 VALUE '-1'.
 
     me->accelerate(
       vehicle      = vehicle
@@ -63,7 +71,7 @@ CLASS zcl_hh_dp_police_escort_state IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD decelerate_05.
-    constants: change_in_speed type int4 value '-5'.
+    CONSTANTS: change_in_speed TYPE int4 VALUE '-5'.
 
     me->accelerate(
       vehicle      = vehicle
@@ -76,11 +84,11 @@ CLASS zcl_hh_dp_police_escort_state IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD resume.
-    data: now type timestamp,
-          current_speed type zcl_hh_dp_vehicle=>speed_type,
-          decreased_speed type zcl_hh_dp_vehicle=>speed_type,
-          distance_traveled_before_stop type zif_hh_dp_state=>odometer_type,
-          next_state type ref to zif_hh_dp_state.
+    DATA: now                           TYPE timestamp,
+          current_speed                 TYPE zcl_hh_dp_vehicle=>speed_type,
+          decreased_speed               TYPE zcl_hh_dp_vehicle=>speed_type,
+          distance_traveled_before_stop TYPE zif_hh_dp_state=>odometer_type,
+          next_state                    TYPE REF TO zif_hh_dp_state.
 
     distance_traveled_before_stop = me->get_distance_traveled( vehicle ).
     vehicle->set_dist_traveled_before_stop( distance_traveled_before_stop ).
@@ -89,10 +97,10 @@ CLASS zcl_hh_dp_police_escort_state IMPLEMENTATION.
     vehicle->set_previous_state_speed( current_speed ).
 
     decreased_speed = current_speed / zcl_hh_dp_vehicle_state=>speed_change_factor.
-    subtract current_speed from decreased_speed.
+    SUBTRACT current_speed FROM decreased_speed.
     vehicle->accelerate( decreased_speed ).
 
-    get TIME STAMP FIELD now.
+    GET TIME STAMP FIELD now.
     vehicle->set_time_started_moving( now ).
     vehicle->set_previous_state( me ).
 
@@ -106,6 +114,14 @@ CLASS zcl_hh_dp_police_escort_state IMPLEMENTATION.
 
   METHOD turn.
     vehicle->change_heading( turn ).
+  ENDMETHOD.
+
+  METHOD class_constructor.
+    CREATE OBJECT zcl_hh_dp_police_escort_state=>singleton.
+  ENDMETHOD.
+
+  METHOD get_state_object.
+    state_object = zcl_hh_dp_police_escort_state=>singleton.
   ENDMETHOD.
 
 ENDCLASS.

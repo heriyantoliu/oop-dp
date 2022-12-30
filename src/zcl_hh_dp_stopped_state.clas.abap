@@ -2,15 +2,17 @@ CLASS zcl_hh_dp_stopped_state DEFINITION
   PUBLIC
   INHERITING FROM zcl_hh_dp_vehicle_state
   FINAL
-  CREATE PUBLIC .
+  CREATE PRIVATE .
 
   PUBLIC SECTION.
 
-    CONSTANTS:
-      class_id TYPE seoclsname VALUE 'ZCL_HH_DP_STOPPED_STATE'.
+    CLASS-METHODS:
+      class_constructor,
+      get_state_object
+        RETURNING
+          VALUE(state_object) TYPE REF TO zif_hh_dp_state.
 
     METHODS:
-      constructor,
       make_available REDEFINITION,
       place_out_of_service REDEFINITION,
       resume REDEFINITION.
@@ -20,6 +22,12 @@ CLASS zcl_hh_dp_stopped_state DEFINITION
     CONSTANTS:
       description TYPE zif_hh_dp_state=>description_type VALUE 'stopped'.
 
+    CLASS-DATA:
+      singleton TYPE REF TO zcl_hh_dp_stopped_state.
+
+    METHODS:
+      constructor.
+
 ENDCLASS.
 
 
@@ -27,17 +35,17 @@ ENDCLASS.
 CLASS zcl_hh_dp_stopped_state IMPLEMENTATION.
 
   METHOD resume.
-    data: now type timestamp,
-          previous_state_speed type zcl_hh_dp_vehicle=>speed_type,
-          previous_state type ref to zif_hh_dp_state.
+    DATA: now                  TYPE timestamp,
+          previous_state_speed TYPE zcl_hh_dp_vehicle=>speed_type,
+          previous_state       TYPE REF TO zif_hh_dp_state.
 
     previous_state_speed = vehicle->get_previous_state_speed( ).
     vehicle->accelerate( previous_state_speed ).
 
-    clear previous_state_speed.
+    CLEAR previous_state_speed.
     vehicle->set_previous_state_speed( previous_state_speed ).
 
-    get time stamp field now.
+    GET TIME STAMP FIELD now.
 
     vehicle->set_time_started_moving( now ).
     previous_state = vehicle->get_previous_state( ).
@@ -51,7 +59,7 @@ CLASS zcl_hh_dp_stopped_state IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD place_out_of_service.
-    data: next_state type ref to zif_hh_dp_state.
+    DATA: next_state TYPE REF TO zif_hh_dp_state.
 
     vehicle->set_previous_state( me ).
     next_state = vehicle->get_out_of_service_state( ).
@@ -59,11 +67,19 @@ CLASS zcl_hh_dp_stopped_state IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD make_available.
-    data: next_state type ref to zif_hh_dp_state.
+    DATA: next_state TYPE REF TO zif_hh_dp_state.
 
     vehicle->set_previous_state( me ).
     next_state = vehicle->get_available_state( ).
     vehicle->set_current_state( next_state ).
+  ENDMETHOD.
+
+  METHOD class_constructor.
+    CREATE OBJECT zcl_hh_dp_stopped_state=>singleton.
+  ENDMETHOD.
+
+  METHOD get_state_object.
+    state_object = zcl_hh_dp_stopped_state=>singleton.
   ENDMETHOD.
 
 ENDCLASS.

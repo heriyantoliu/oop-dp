@@ -2,15 +2,18 @@ CLASS zcl_hh_dp_heavy_traffic_state DEFINITION
   PUBLIC
   INHERITING FROM zcl_hh_dp_vehicle_state
   FINAL
-  CREATE PUBLIC .
+  CREATE PRIVATE .
 
   PUBLIC SECTION.
 
-    CONSTANTS:
-      class_id TYPE seoclsname VALUE 'ZCL_HH_DP_HEAVY_TRAFFIC_STATE'.
+    CLASS-METHODS:
+      class_constructor,
+      get_state_object
+        RETURNING
+          VALUE(state_object) TYPE REF TO zif_hh_dp_state.
 
     METHODS:
-      constructor,
+
       get_distance_traveled REDEFINITION,
       resume REDEFINITION,
       stop REDEFINITION,
@@ -25,6 +28,11 @@ CLASS zcl_hh_dp_heavy_traffic_state DEFINITION
     CONSTANTS:
       description TYPE zif_hh_dp_state=>description_type VALUE 'in heavy traffic'.
 
+    CLASS-DATA:
+      singleton TYPE REF TO zcl_hh_dp_heavy_traffic_state.
+
+    METHODS:
+      constructor.
 ENDCLASS.
 
 
@@ -80,7 +88,7 @@ CLASS zcl_hh_dp_heavy_traffic_state IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD accelerate_05.
-    constants: change_in_speed type int4 value '5'.
+    CONSTANTS: change_in_speed TYPE int4 VALUE '5'.
 
     me->accelerate(
       vehicle      = vehicle
@@ -89,7 +97,7 @@ CLASS zcl_hh_dp_heavy_traffic_state IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD decelerate_01.
-        constants: change_in_speed type int4 value '-1'.
+    CONSTANTS: change_in_speed TYPE int4 VALUE '-1'.
 
     me->accelerate(
       vehicle      = vehicle
@@ -98,12 +106,20 @@ CLASS zcl_hh_dp_heavy_traffic_state IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD decelerate_05.
-        constants: change_in_speed type int4 value '-5'.
+    CONSTANTS: change_in_speed TYPE int4 VALUE '-5'.
 
     me->accelerate(
       vehicle      = vehicle
       acceleration = change_in_speed
     ).
+  ENDMETHOD.
+
+  METHOD class_constructor.
+    CREATE OBJECT zcl_hh_dp_heavy_traffic_state=>singleton.
+  ENDMETHOD.
+
+  METHOD get_state_object.
+    state_object = zcl_hh_dp_heavy_traffic_state=>singleton.
   ENDMETHOD.
 
 ENDCLASS.
