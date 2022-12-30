@@ -13,6 +13,11 @@ INTERFACE zif_hh_dp_report_screen
       make_available type syucomm value 'MAKE_AVAIL',
       repair type syucomm value 'REPAIR',
       start type syucomm value 'START',
-      tow type syucomm value 'TOW'.
+      tow type syucomm value 'TOW',
+      assign_police_escort type syucomm value 'ESCORT',
+      decelerate_05 type syucomm value 'DECEL05',
+      decelerate_01 type syucomm value 'DECEL01',
+      accelerate_01 type syucomm value 'ACCEL01',
+      accelerate_05 type syucomm value 'ACCEL05'.
 
 ENDINTERFACE.

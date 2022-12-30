@@ -22,5 +22,10 @@ INTERFACE zif_hh_dp_state
       make_available,
       repair,
       start,
-      tow.
+      tow,
+      assign_police_escort,
+      decelerate_05,
+      decelerate_01,
+      accelerate_01,
+      accelerate_05.
 ENDINTERFACE.

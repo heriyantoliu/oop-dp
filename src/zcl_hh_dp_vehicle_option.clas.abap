@@ -28,7 +28,8 @@ CLASS zcl_hh_dp_vehicle_option DEFINITION
       get_out_of_service_state REDEFINITION,
       get_available_state REDEFINITION,
       get_being_towed_state REDEFINITION,
-      get_in_shop_state REDEFINITION.
+      get_in_shop_state REDEFINITION,
+      get_police_escort_state REDEFINITION.
 
   PROTECTED SECTION.
     DATA:
@@ -176,6 +177,10 @@ CLASS zcl_hh_dp_vehicle_option IMPLEMENTATION.
 
   METHOD get_in_shop_state.
     in_shop_state = me->decorated_object->get_in_shop_state( ).
+  ENDMETHOD.
+
+  METHOD get_police_escort_state.
+    escort_state = me->decorated_object->get_police_escort_state( ).
   ENDMETHOD.
 
 ENDCLASS.

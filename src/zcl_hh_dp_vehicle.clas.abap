@@ -129,7 +129,10 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           VALUE(being_towed_state) TYPE REF TO zif_hh_dp_state,
       get_in_shop_state
         RETURNING
-          VALUE(in_shop_state) TYPE REF TO zif_hh_dp_state.
+          VALUE(in_shop_state) TYPE REF TO zif_hh_dp_state,
+      get_police_escort_state
+        RETURNING
+          VALUE(police_escort_state) TYPE REF TO zif_hh_dp_state.
 
   PROTECTED SECTION.
     DATA:
@@ -164,7 +167,8 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       out_of_service_state          TYPE REF TO zif_hh_dp_state,
       available_state               TYPE REF TO zif_hh_dp_state,
       being_towed_state             TYPE REF TO zif_hh_dp_state,
-      in_shop_state                 TYPE REF TO zif_hh_dp_state.
+      in_shop_state                 TYPE REF TO zif_hh_dp_state,
+      police_escort_state           TYPE REF TO zif_hh_dp_state.
 
     CLASS-METHODS:
       get_serial_number
@@ -250,6 +254,11 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     CREATE OBJECT me->in_shop_state
       TYPE (zcl_hh_dp_in_shop_state=>class_id)
       EXPORTING
+        vehicle = me.
+
+    create object me->police_escort_state
+      type (zcl_hh_dp_police_escort_state=>class_id)
+      exporting
         vehicle = me.
 
     me->current_state = me->cruising_state.
@@ -364,6 +373,10 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
 
   METHOD get_in_shop_state.
     in_shop_state = me->in_shop_state.
+  ENDMETHOD.
+
+  METHOD get_police_escort_state.
+    police_escort_state = me->police_escort_state.
   ENDMETHOD.
 
 ENDCLASS.

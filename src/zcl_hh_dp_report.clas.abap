@@ -61,7 +61,12 @@ CLASS zcl_hh_dp_report DEFINITION
       make_available,
       repair,
       start,
-      tow.
+      tow,
+      assign_police_escort,
+      decelerate_05,
+      decelerate_01,
+      accelerate_01,
+      accelerate_05.
 
 ENDCLASS.
 
@@ -283,6 +288,16 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         me->start( ).
       WHEN zif_hh_dp_report_screen=>tow.
         me->tow( ).
+      when zif_hh_dp_report_screen=>assign_police_escort.
+        me->assign_police_escort( ).
+      when zif_hh_dp_report_screen=>decelerate_05.
+        me->decelerate_05( ).
+      when zif_hh_dp_report_screen=>decelerate_01.
+        me->decelerate_01( ).
+      when zif_hh_dp_report_screen=>accelerate_05.
+        me->accelerate_05( ).
+      when zif_hh_dp_report_screen=>accelerate_01.
+        me->accelerate_01( ).
     ENDCASE.
   ENDMETHOD.
 
@@ -547,6 +562,131 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
 
       current_state = output_entry-vehicle_entry->get_current_state( ).
       current_state->tow( ).
+    ENDLOOP.
+
+    CLEAR selected_rows_stack.
+    me->alv_grid->get_selections( )->set_selected_rows( selected_rows_stack ).
+    me->refresh( ).
+  ENDMETHOD.
+
+  METHOD accelerate_01.
+    DATA: selected_rows_stack TYPE salv_t_row,
+          selected_rows_entry LIKE LINE OF selected_rows_stack,
+          output_entry        LIKE LINE OF output_stack,
+          current_state       TYPE REF TO zif_hh_dp_state.
+
+    selected_rows_stack = me->alv_grid->get_selections( )->get_selected_rows( ).
+    IF selected_rows_stack IS INITIAL.
+      MESSAGE i398(00) WITH 'No rows selected'.
+      RETURN.
+    ENDIF.
+
+    LOOP AT selected_rows_stack INTO selected_rows_entry.
+      READ TABLE me->output_stack INTO output_entry
+        INDEX selected_rows_entry.
+
+      current_state = output_entry-vehicle_entry->get_current_state( ).
+      current_state->accelerate_01( ).
+    ENDLOOP.
+
+    CLEAR selected_rows_stack.
+    me->alv_grid->get_selections( )->set_selected_rows( selected_rows_stack ).
+    me->refresh( ).
+  ENDMETHOD.
+
+  METHOD accelerate_05.
+    DATA: selected_rows_stack TYPE salv_t_row,
+          selected_rows_entry LIKE LINE OF selected_rows_stack,
+          output_entry        LIKE LINE OF output_stack,
+          current_state       TYPE REF TO zif_hh_dp_state.
+
+    selected_rows_stack = me->alv_grid->get_selections( )->get_selected_rows( ).
+    IF selected_rows_stack IS INITIAL.
+      MESSAGE i398(00) WITH 'No rows selected'.
+      RETURN.
+    ENDIF.
+
+    LOOP AT selected_rows_stack INTO selected_rows_entry.
+      READ TABLE me->output_stack INTO output_entry
+        INDEX selected_rows_entry.
+
+      current_state = output_entry-vehicle_entry->get_current_state( ).
+      current_state->accelerate_05( ).
+    ENDLOOP.
+
+    CLEAR selected_rows_stack.
+    me->alv_grid->get_selections( )->set_selected_rows( selected_rows_stack ).
+    me->refresh( ).
+  ENDMETHOD.
+
+  METHOD assign_police_escort.
+    DATA: selected_rows_stack TYPE salv_t_row,
+          selected_rows_entry LIKE LINE OF selected_rows_stack,
+          output_entry        LIKE LINE OF output_stack,
+          current_state       TYPE REF TO zif_hh_dp_state.
+
+    selected_rows_stack = me->alv_grid->get_selections( )->get_selected_rows( ).
+    IF selected_rows_stack IS INITIAL.
+      MESSAGE i398(00) WITH 'No rows selected'.
+      RETURN.
+    ENDIF.
+
+    LOOP AT selected_rows_stack INTO selected_rows_entry.
+      READ TABLE me->output_stack INTO output_entry
+        INDEX selected_rows_entry.
+
+      current_state = output_entry-vehicle_entry->get_current_state( ).
+      current_state->assign_police_escort( ).
+    ENDLOOP.
+
+    CLEAR selected_rows_stack.
+    me->alv_grid->get_selections( )->set_selected_rows( selected_rows_stack ).
+    me->refresh( ).
+  ENDMETHOD.
+
+  METHOD decelerate_01.
+    DATA: selected_rows_stack TYPE salv_t_row,
+          selected_rows_entry LIKE LINE OF selected_rows_stack,
+          output_entry        LIKE LINE OF output_stack,
+          current_state       TYPE REF TO zif_hh_dp_state.
+
+    selected_rows_stack = me->alv_grid->get_selections( )->get_selected_rows( ).
+    IF selected_rows_stack IS INITIAL.
+      MESSAGE i398(00) WITH 'No rows selected'.
+      RETURN.
+    ENDIF.
+
+    LOOP AT selected_rows_stack INTO selected_rows_entry.
+      READ TABLE me->output_stack INTO output_entry
+        INDEX selected_rows_entry.
+
+      current_state = output_entry-vehicle_entry->get_current_state( ).
+      current_state->decelerate_01( ).
+    ENDLOOP.
+
+    CLEAR selected_rows_stack.
+    me->alv_grid->get_selections( )->set_selected_rows( selected_rows_stack ).
+    me->refresh( ).
+  ENDMETHOD.
+
+  METHOD decelerate_05.
+    DATA: selected_rows_stack TYPE salv_t_row,
+          selected_rows_entry LIKE LINE OF selected_rows_stack,
+          output_entry        LIKE LINE OF output_stack,
+          current_state       TYPE REF TO zif_hh_dp_state.
+
+    selected_rows_stack = me->alv_grid->get_selections( )->get_selected_rows( ).
+    IF selected_rows_stack IS INITIAL.
+      MESSAGE i398(00) WITH 'No rows selected'.
+      RETURN.
+    ENDIF.
+
+    LOOP AT selected_rows_stack INTO selected_rows_entry.
+      READ TABLE me->output_stack INTO output_entry
+        INDEX selected_rows_entry.
+
+      current_state = output_entry-vehicle_entry->get_current_state( ).
+      current_state->decelerate_05( ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.

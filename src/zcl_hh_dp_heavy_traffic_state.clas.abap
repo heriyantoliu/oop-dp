@@ -16,7 +16,11 @@ CLASS zcl_hh_dp_heavy_traffic_state DEFINITION
       get_distance_traveled REDEFINITION,
       resume REDEFINITION,
       stop REDEFINITION,
-      turn REDEFINITION.
+      turn REDEFINITION,
+      decelerate_05 REDEFINITION,
+      decelerate_01 REDEFINITION,
+      accelerate_01 REDEFINITION,
+      accelerate_05 REDEFINITION.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -68,4 +72,29 @@ CLASS zcl_hh_dp_heavy_traffic_state IMPLEMENTATION.
     me->vehicle = vehicle.
     me->descriptor = me->description.
   ENDMETHOD.
+
+  METHOD accelerate_01.
+    constants: change_in_speed type int4 value '1'.
+
+    me->accelerate( change_in_speed ).
+  ENDMETHOD.
+
+  METHOD accelerate_05.
+    constants: change_in_speed type int4 value '5'.
+
+    me->accelerate( change_in_speed ).
+  ENDMETHOD.
+
+  METHOD decelerate_01.
+    constants: change_in_speed type int4 value '-1'.
+
+    me->accelerate( change_in_speed ).
+  ENDMETHOD.
+
+  METHOD decelerate_05.
+    constants: change_in_speed type int4 value '-5'.
+
+    me->accelerate( change_in_speed ).
+  ENDMETHOD.
+
 ENDCLASS.
