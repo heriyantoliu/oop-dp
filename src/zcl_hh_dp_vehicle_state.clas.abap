@@ -23,7 +23,8 @@ CLASS zcl_hh_dp_vehicle_state DEFINITION
       decelerate_01 FOR zif_hh_dp_state~decelerate_01,
       accelerate_01 FOR zif_hh_dp_state~accelerate_01,
       accelerate_05 FOR zif_hh_dp_state~accelerate_05,
-      impose_high_winds_restriction for zif_hh_dp_state~impose_high_winds_restriction.
+      impose_high_winds_restriction for zif_hh_dp_state~impose_high_winds_restriction,
+      impose_ice_restriction for zif_hh_dp_state~impose_ice_restriction.
 
     CLASS-METHODS:
       get_state_objects_count
@@ -58,7 +59,14 @@ CLASS zcl_hh_dp_vehicle_state DEFINITION
           vehicle type ref to zcl_hh_dp_vehicle,
       apply_high_winds_restriction
         importing
-          vehicle type ref to zcl_hh_dp_vehicle.
+          vehicle type ref to zcl_hh_dp_vehicle,
+      apply_ice_restriction
+        importing
+          vehicle type ref to zcl_hh_dp_vehicle,
+      apply_speed_restriction
+        importing
+          vehicle type ref to zcl_hh_dp_vehicle
+          maximum_speed type zcl_hh_dp_vehicle=>speed_type.
 
   PRIVATE SECTION.
     CONSTANTS:
@@ -256,15 +264,49 @@ CLASS zcl_hh_dp_vehicle_state IMPLEMENTATION.
       return.
     endif.
 
+    me->apply_speed_restriction(
+      vehicle = vehicle
+      maximum_speed = maximum_speed_for_high_winds
+    ).
+  ENDMETHOD.
+
+  METHOD impose_high_winds_restriction.
+
+  ENDMETHOD.
+
+  METHOD apply_ice_restriction.
+    constants: car_maximum_speed_for_ice type zcl_hh_dp_vehicle=>speed_type value 15,
+               truck_maximum_speed_for_ice type zcl_hh_dp_vehicle=>speed_type value 10.
+
+    data: description type zcl_hh_dp_vehicle=>description_type,
+          maximum_speed type zcl_hh_dp_vehicle=>speed_type.
+
+    description = vehicle->get_description( ).
+    if description cs zcl_hh_dp_truck=>descriptor.
+      maximum_speed = truck_maximum_speed_for_ice.
+    else.
+      maximum_speed = car_maximum_speed_for_ice.
+    endif.
+
+    me->apply_speed_restriction(
+      vehicle = vehicle
+      maximum_speed = maximum_speed
+    ).
+  ENDMETHOD.
+  METHOD apply_speed_restriction.
+    data: acceleration type zcl_hh_dp_vehicle=>speed_type,
+          current_speed type zcl_hh_dp_vehicle=>speed_type.
+
     current_speed = vehicle->get_speed( ).
-    acceleration = maximum_speed_for_high_winds - current_speed.
+
+    acceleration = maximum_speed - current_speed.
 
     if acceleration lt 0.
       vehicle->accelerate( acceleration ).
     endif.
   ENDMETHOD.
 
-  METHOD impose_high_winds_restriction.
+  METHOD zif_hh_dp_state~impose_ice_restriction.
 
   ENDMETHOD.
 

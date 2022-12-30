@@ -68,7 +68,8 @@ CLASS zcl_hh_dp_report DEFINITION
       accelerate_01,
       accelerate_05,
       show_state_objects_count,
-      impose_high_winds_restriction.
+      impose_high_winds_restriction,
+      impose_ice_restriction.
 
 ENDCLASS.
 
@@ -304,6 +305,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         me->show_state_objects_count( ).
       when zif_hh_dp_report_screen=>impose_high_winds_restriction.
         me->impose_high_winds_restriction( ).
+      when zif_hh_dp_report_screen=>impose_ice_restriction.
+        me->impose_ice_restriction( ).
     ENDCASE.
   ENDMETHOD.
 
@@ -724,6 +727,22 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
       current_state = output_entry-vehicle_entry->get_current_state( ).
       current_state->impose_high_winds_restriction( output_entry-vehicle_entry ).
     endloop.
+
+    me->refresh( ).
+  ENDMETHOD.
+
+  METHOD impose_ice_restriction.
+    data: output_entry like line of output_stack,
+          current_state type ref to zif_hh_dp_state.
+
+    loop at me->output_stack
+      into output_entry.
+
+      current_state = output_entry-vehicle_entry->get_current_state( ).
+      current_state->impose_ice_restriction( output_entry-vehicle_entry ).
+    endloop.
+
+    me->refresh( ).
   ENDMETHOD.
 
 ENDCLASS.

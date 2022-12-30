@@ -20,7 +20,8 @@ CLASS zcl_hh_dp_police_escort_state DEFINITION
       decelerate_01 REDEFINITION,
       accelerate_01 REDEFINITION,
       accelerate_05 REDEFINITION,
-      impose_high_winds_restriction REDEFINITION.
+      impose_high_winds_restriction REDEFINITION,
+      impose_ice_restriction REDEFINITION.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -118,6 +119,10 @@ CLASS zcl_hh_dp_police_escort_state IMPLEMENTATION.
 
   METHOD impose_high_winds_restriction.
     me->apply_high_winds_restriction( vehicle ).
+  ENDMETHOD.
+
+  METHOD impose_ice_restriction.
+    me->apply_ice_restriction( vehicle ).
   ENDMETHOD.
 
 ENDCLASS.

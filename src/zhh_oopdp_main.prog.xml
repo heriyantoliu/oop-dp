@@ -14,7 +14,7 @@
    <CUA>
     <ADM>
      <ACTCODE>000002</ACTCODE>
-     <MENCODE>000013</MENCODE>
+     <MENCODE>000014</MENCODE>
      <PFKCODE>000002</PFKCODE>
     </ADM>
     <STA>
@@ -473,6 +473,7 @@
       <ICON_ID>@AU@</ICON_ID>
       <FUN_TEXT>+01</FUN_TEXT>
       <ICON_TEXT>+01</ICON_TEXT>
+      <PATH>+</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>ACCEL05</CODE>
@@ -482,6 +483,7 @@
       <ICON_ID>@AU@</ICON_ID>
       <FUN_TEXT>+05</FUN_TEXT>
       <ICON_TEXT>+05</ICON_TEXT>
+      <PATH>5</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>ALLS</CODE>
@@ -507,6 +509,7 @@
       <ICON_ID>@AU@</ICON_ID>
       <FUN_TEXT>-01</FUN_TEXT>
       <ICON_TEXT>-01</ICON_TEXT>
+      <PATH>1</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>DECEL05</CODE>
@@ -516,6 +519,7 @@
       <ICON_ID>@AU@</ICON_ID>
       <FUN_TEXT>-05</FUN_TEXT>
       <ICON_TEXT>-05</ICON_TEXT>
+      <PATH>0</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>DELA</CODE>
@@ -590,6 +594,7 @@
       <ICON_ID>@1V@</ICON_ID>
       <FUN_TEXT>Assign Police Escort</FUN_TEXT>
       <ICON_TEXT>Assign Police Escort</ICON_TEXT>
+      <PATH>I</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>FC01</CODE>
@@ -657,6 +662,17 @@
       <ICON_ID>@JM@</ICON_ID>
       <FUN_TEXT>High winds</FUN_TEXT>
       <ICON_TEXT>High winds</ICON_TEXT>
+      <PATH>H</PATH>
+     </RSMPE_FUNT>
+     <RSMPE_FUNT>
+      <CODE>ISR_ICE</CODE>
+      <TEXTNO>001</TEXTNO>
+      <TEXT_TYPE>S</TEXT_TYPE>
+      <TEXT_NAME>ICON_ACTIVITY</TEXT_NAME>
+      <ICON_ID>@9Y@</ICON_ID>
+      <FUN_TEXT>Ice</FUN_TEXT>
+      <ICON_TEXT>Ice</ICON_TEXT>
+      <PATH>I</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>LVUV</CODE>
@@ -673,6 +689,7 @@
       <ICON_ID>@12@</ICON_ID>
       <FUN_TEXT>Maintain</FUN_TEXT>
       <ICON_TEXT>Maintain</ICON_TEXT>
+      <PATH>M</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>MAKE_AVAIL</CODE>
@@ -682,6 +699,7 @@
       <ICON_ID>@3C@</ICON_ID>
       <FUN_TEXT>Make Available</FUN_TEXT>
       <ICON_TEXT>Make Available</ICON_TEXT>
+      <PATH>A</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>MYFUNCTION</CODE>
@@ -738,6 +756,7 @@
       <ICON_ID>@F1@</ICON_ID>
       <FUN_TEXT>Place Out of Service</FUN_TEXT>
       <ICON_TEXT>Out of Service</ICON_TEXT>
+      <PATH>A</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>PRIN</CODE>
@@ -765,6 +784,7 @@
       <ICON_ID>@42@</ICON_ID>
       <FUN_TEXT>Refresh</FUN_TEXT>
       <ICON_TEXT>Refresh</ICON_TEXT>
+      <PATH>F</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>REPAIR</CODE>
@@ -774,6 +794,7 @@
       <ICON_ID>@45@</ICON_ID>
       <FUN_TEXT>Repair</FUN_TEXT>
       <ICON_TEXT>Repair</ICON_TEXT>
+      <PATH>R</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>RESUME</CODE>
@@ -783,6 +804,7 @@
       <ICON_ID>@5Y@</ICON_ID>
       <FUN_TEXT>Resume</FUN_TEXT>
       <ICON_TEXT>Resume</ICON_TEXT>
+      <PATH>M</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>SCRH</CODE>
@@ -802,6 +824,7 @@
       <ICON_ID>@SN@</ICON_ID>
       <FUN_TEXT>Show State Objects Count</FUN_TEXT>
       <ICON_TEXT>Show State Objects Count</ICON_TEXT>
+      <PATH>H</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>SJOB</CODE>
@@ -818,6 +841,7 @@
       <ICON_ID>@ED@</ICON_ID>
       <FUN_TEXT>Slow</FUN_TEXT>
       <ICON_TEXT>Slow</ICON_TEXT>
+      <PATH>L</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>SPOS</CODE>
@@ -838,6 +862,7 @@
       <ICON_ID>@3V@</ICON_ID>
       <FUN_TEXT>Start</FUN_TEXT>
       <ICON_TEXT>Start</ICON_TEXT>
+      <PATH>S</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>STOP</CODE>
@@ -847,6 +872,7 @@
       <ICON_ID>@3U@</ICON_ID>
       <FUN_TEXT>Stop</FUN_TEXT>
       <ICON_TEXT>Stop</ICON_TEXT>
+      <PATH>O</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>TOW</CODE>
@@ -874,6 +900,7 @@
       <ICON_ID>@9S@</ICON_ID>
       <FUN_TEXT>Turn Left</FUN_TEXT>
       <ICON_TEXT>Turn Left</ICON_TEXT>
+      <PATH>T</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>TURNRIGHT</CODE>
@@ -883,6 +910,7 @@
       <ICON_ID>@9T@</ICON_ID>
       <FUN_TEXT>Turn Right</FUN_TEXT>
       <ICON_TEXT>Turn Right</ICON_TEXT>
+      <PATH>U</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>UNDOTURN</CODE>
@@ -1088,41 +1116,90 @@
       <CODE>000005</CODE>
       <NO>01</NO>
       <REF_TYPE>F</REF_TYPE>
-      <REF_CODE>&amp;RNT_PREV</REF_CODE>
+      <REF_CODE>REFRESH</REF_CODE>
       <REF_NO>001</REF_NO>
      </RSMPE_MEN>
      <RSMPE_MEN>
       <CODE>000005</CODE>
       <NO>02</NO>
       <REF_TYPE>F</REF_TYPE>
-      <REF_CODE>&amp;RNT</REF_CODE>
+      <REF_CODE>TURNLEFT</REF_CODE>
       <REF_NO>001</REF_NO>
      </RSMPE_MEN>
      <RSMPE_MEN>
       <CODE>000005</CODE>
       <NO>03</NO>
-      <REF_TYPE>S</REF_TYPE>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>TURNRIGHT</REF_CODE>
+      <REF_NO>001</REF_NO>
      </RSMPE_MEN>
      <RSMPE_MEN>
       <CODE>000005</CODE>
       <NO>04</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>STOP</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000005</CODE>
+      <NO>05</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>RESUME</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000005</CODE>
+      <NO>06</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>SLOW</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000005</CODE>
+      <NO>07</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>PLACE_OOS</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000005</CODE>
+      <NO>08</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>&amp;RNT_PREV</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000005</CODE>
+      <NO>09</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>&amp;RNT</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000005</CODE>
+      <NO>10</NO>
+      <REF_TYPE>S</REF_TYPE>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000005</CODE>
+      <NO>11</NO>
       <REF_TYPE>M</REF_TYPE>
       <REF_CODE>000006</REF_CODE>
      </RSMPE_MEN>
      <RSMPE_MEN>
       <CODE>000005</CODE>
-      <NO>05</NO>
+      <NO>12</NO>
       <REF_TYPE>M</REF_TYPE>
       <REF_CODE>000007</REF_CODE>
      </RSMPE_MEN>
      <RSMPE_MEN>
       <CODE>000005</CODE>
-      <NO>06</NO>
+      <NO>13</NO>
       <REF_TYPE>S</REF_TYPE>
      </RSMPE_MEN>
      <RSMPE_MEN>
       <CODE>000005</CODE>
-      <NO>07</NO>
+      <NO>14</NO>
       <REF_TYPE>F</REF_TYPE>
       <REF_CODE>&amp;F15</REF_CODE>
       <REF_NO>001</REF_NO>
@@ -1295,6 +1372,82 @@
       <CODE>000010</CODE>
       <NO>01</NO>
       <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>REPAIR</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000010</CODE>
+      <NO>02</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>MAINTAIN</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000010</CODE>
+      <NO>03</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>MAKE_AVAIL</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000010</CODE>
+      <NO>04</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>START</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000010</CODE>
+      <NO>05</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>DECEL05</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000010</CODE>
+      <NO>06</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>DECEL01</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000010</CODE>
+      <NO>07</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>ACCEL01</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000010</CODE>
+      <NO>08</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>ACCEL05</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000010</CODE>
+      <NO>09</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>ESCORT</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000010</CODE>
+      <NO>10</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>SHOW_SOC</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000010</CODE>
+      <NO>11</NO>
+      <REF_TYPE>M</REF_TYPE>
+      <REF_CODE>000014</REF_CODE>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000010</CODE>
+      <NO>12</NO>
+      <REF_TYPE>F</REF_TYPE>
       <REF_CODE>BACK</REF_CODE>
       <REF_NO>001</REF_NO>
      </RSMPE_MEN>
@@ -1379,6 +1532,20 @@
       <NO>04</NO>
       <REF_TYPE>F</REF_TYPE>
       <REF_CODE>&amp;CDF</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000014</CODE>
+      <NO>01</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>ISR_HIWIND</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000014</CODE>
+      <NO>02</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>ISR_ICE</REF_CODE>
       <REF_NO>001</REF_NO>
      </RSMPE_MEN>
     </MEN>
@@ -1470,6 +1637,12 @@
       <TEXT_TYPE>S</TEXT_TYPE>
       <TEXT>Columns</TEXT>
       <PATH>C</PATH>
+     </RSMPE_MNLT>
+     <RSMPE_MNLT>
+      <CODE>000014</CODE>
+      <TEXT_TYPE>S</TEXT_TYPE>
+      <TEXT>Restrict speed</TEXT>
+      <PATH>E</PATH>
      </RSMPE_MNLT>
     </MTX>
     <ACT>
@@ -2079,7 +2252,7 @@
      <RSMPE_PFK>
       <CODE>000002</CODE>
       <PFNO>24</PFNO>
-      <FUNCODE>&amp;VCRYSTAL</FUNCODE>
+      <FUNCODE>ISR_ICE</FUNCODE>
       <FUNNO>001</FUNNO>
      </RSMPE_PFK>
      <RSMPE_PFK>
@@ -2645,6 +2818,10 @@
      <RSMPE_STAF>
       <STATUS>REPORT_SCREEN</STATUS>
       <FUNCTION>ISR_HIWIND</FUNCTION>
+     </RSMPE_STAF>
+     <RSMPE_STAF>
+      <STATUS>REPORT_SCREEN</STATUS>
+      <FUNCTION>ISR_ICE</FUNCTION>
      </RSMPE_STAF>
      <RSMPE_STAF>
       <STATUS>REPORT_SCREEN</STATUS>
