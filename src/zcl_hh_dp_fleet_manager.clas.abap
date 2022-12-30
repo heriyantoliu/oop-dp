@@ -246,10 +246,20 @@ CLASS zcl_hh_dp_fleet_manager IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD set_vehicle_memento.
-    data: vehicle_memento_entry like line of vehicle_memento_stack.
+    constants: bogus_speed type zcl_hh_dp_vehicle=>speed_type value 999.
+
+    data: vehicle_memento_entry like line of vehicle_memento_stack,
+          bogus_state type ref to zif_hh_dp_state.
 
     vehicle_memento_entry-vehicle = vehicle.
     vehicle_memento_entry-vehicle_memento = vehicle->create_memento( ).
+
+    bogus_state = zcl_hh_dp_being_towed_state=>get_state_object( ).
+
+    create object vehicle_memento_entry-vehicle_memento
+      exporting
+        speed = bogus_speed
+        state = bogus_state.
 
     insert vehicle_memento_entry
       into vehicle_memento_stack
