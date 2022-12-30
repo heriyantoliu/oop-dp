@@ -315,7 +315,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
 
       vehicle_state = <output_entry>-vehicle_entry->get_current_state( ).
       <output_entry>-state_description = vehicle_state->get_description( ).
-      <output_entry>-trip_odometer = vehicle_state->get_distance_traveled( ).
+      <output_entry>-trip_odometer = vehicle_state->get_distance_traveled( <output_entry>-vehicle_entry ).
     ENDLOOP.
     me->alv_grid->refresh( ).
   ENDMETHOD.
@@ -337,7 +337,11 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         INDEX selected_rows_entry.
 
       current_state = output_entry-vehicle_entry->get_current_state( ).
-      current_state->turn( turn ).
+      current_state->turn(
+          vehicle = output_entry-vehicle_entry
+          turn    = turn
+      ).
+
       output_entry-vehicle_entry->change_heading( turn ).
     ENDLOOP.
 
@@ -363,7 +367,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         INDEX selected_rows_entry.
 
       current_state = output_entry-vehicle_entry->get_current_state( ).
-      current_state->resume( ).
+      current_state->resume( output_entry-vehicle_entry ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
@@ -388,7 +392,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         INDEX selected_rows_entry.
 
       current_state = output_entry-vehicle_entry->get_current_state( ).
-      current_state->stop( ).
+      current_state->stop( output_entry-vehicle_entry ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
@@ -413,7 +417,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         INDEX selected_rows_entry.
 
       current_state = output_entry-vehicle_entry->get_current_state( ).
-      current_state->slow( ).
+      current_state->slow( output_entry-vehicle_entry ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
@@ -439,7 +443,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         INDEX selected_rows_entry.
 
       current_state = output_entry-vehicle_entry->get_current_state( ).
-      current_state->place_out_of_service( ).
+      current_state->place_out_of_service( output_entry-vehicle_entry ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
@@ -464,7 +468,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         INDEX selected_rows_entry.
 
       current_state = output_entry-vehicle_entry->get_current_state( ).
-      current_state->maintain( ).
+      current_state->maintain( output_entry-vehicle_entry ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
@@ -489,7 +493,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         INDEX selected_rows_entry.
 
       current_state = output_entry-vehicle_entry->get_current_state( ).
-      current_state->make_available( ).
+      current_state->make_available( output_entry-vehicle_entry ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
@@ -514,7 +518,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         INDEX selected_rows_entry.
 
       current_state = output_entry-vehicle_entry->get_current_state( ).
-      current_state->repair( ).
+      current_state->repair( output_entry-vehicle_entry ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
@@ -539,7 +543,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         INDEX selected_rows_entry.
 
       current_state = output_entry-vehicle_entry->get_current_state( ).
-      current_state->start( ).
+      current_state->start( output_entry-vehicle_entry ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
@@ -564,7 +568,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         INDEX selected_rows_entry.
 
       current_state = output_entry-vehicle_entry->get_current_state( ).
-      current_state->tow( ).
+      current_state->tow( output_entry-vehicle_entry ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
@@ -589,7 +593,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         INDEX selected_rows_entry.
 
       current_state = output_entry-vehicle_entry->get_current_state( ).
-      current_state->accelerate_01( ).
+      current_state->accelerate_01( output_entry-vehicle_entry ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
@@ -614,7 +618,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         INDEX selected_rows_entry.
 
       current_state = output_entry-vehicle_entry->get_current_state( ).
-      current_state->accelerate_05( ).
+      current_state->accelerate_05( output_entry-vehicle_entry ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
@@ -639,7 +643,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         INDEX selected_rows_entry.
 
       current_state = output_entry-vehicle_entry->get_current_state( ).
-      current_state->assign_police_escort( ).
+      current_state->assign_police_escort( output_entry-vehicle_entry ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
@@ -664,7 +668,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         INDEX selected_rows_entry.
 
       current_state = output_entry-vehicle_entry->get_current_state( ).
-      current_state->decelerate_01( ).
+      current_state->decelerate_01( output_entry-vehicle_entry ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
@@ -689,7 +693,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         INDEX selected_rows_entry.
 
       current_state = output_entry-vehicle_entry->get_current_state( ).
-      current_state->decelerate_05( ).
+      current_state->decelerate_05( output_entry-vehicle_entry ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.

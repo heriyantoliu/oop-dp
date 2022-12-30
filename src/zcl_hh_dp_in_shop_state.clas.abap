@@ -9,9 +9,7 @@ CLASS zcl_hh_dp_in_shop_state DEFINITION
       class_id type seoclsname value 'ZCL_HH_DP_IN_SHOP_STATE'.
 
     methods:
-      constructor
-        importing
-          vehicle type ref to zcl_hh_dp_vehicle,
+      constructor,
       make_available REDEFINITION.
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -25,7 +23,6 @@ CLASS zcl_hh_dp_in_shop_state IMPLEMENTATION.
   METHOD constructor.
 
     super->constructor( ).
-    me->vehicle = vehicle.
     me->descriptor = me->description.
 
   ENDMETHOD.
@@ -33,9 +30,9 @@ CLASS zcl_hh_dp_in_shop_state IMPLEMENTATION.
   METHOD make_available.
     data: next_state type ref to zif_hh_dp_state.
 
-    me->vehicle->set_previous_state( me ).
-    next_state = me->vehicle->get_available_state( ).
-    me->vehicle->set_current_state( next_state ).
+    vehicle->set_previous_state( me ).
+    next_state = vehicle->get_available_state( ).
+    vehicle->set_current_state( next_state ).
   ENDMETHOD.
 
 ENDCLASS.

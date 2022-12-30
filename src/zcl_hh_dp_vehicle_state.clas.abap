@@ -37,16 +37,20 @@ CLASS zcl_hh_dp_vehicle_state DEFINITION
       speed_change_factor TYPE p DECIMALS 2 VALUE '1.3'.
 
     DATA:
-      vehicle    TYPE REF TO zcl_hh_dp_vehicle,
       descriptor TYPE zif_hh_dp_state=>description_type.
 
     METHODS:
       calculated_distance_traveled
+        importing
+          vehicle type ref to zcl_hh_dp_vehicle
         RETURNING
           VALUE(distance) TYPE zif_hh_dp_state=>odometer_type,
-      halt,
+      halt
+        importing
+          vehicle type ref to zcl_hh_dp_vehicle,
       accelerate
         IMPORTING
+          vehicle type ref to zcl_hh_dp_vehicle
           acceleration TYPE zcl_hh_dp_vehicle=>speed_type.
 
   PRIVATE SECTION.
@@ -76,11 +80,11 @@ CLASS zcl_hh_dp_vehicle_state IMPLEMENTATION.
           speed                         TYPE zcl_hh_dp_vehicle=>time_stamp_type,
           distance_traveled_before_stop TYPE zif_hh_dp_state=>odometer_type.
 
-    time_started_moving = me->vehicle->get_time_started_moving( ).
+    time_started_moving = vehicle->get_time_started_moving( ).
     GET TIME STAMP FIELD now.
-    speed = me->vehicle->get_speed( ).
+    speed = vehicle->get_speed( ).
 
-    distance_traveled_before_stop = me->vehicle->get_dist_traveled_before_stop( ).
+    distance_traveled_before_stop = vehicle->get_dist_traveled_before_stop( ).
 
     time_interval_in_seconds = cl_abap_tstmp=>subtract(
                                  tstmp1 = now
@@ -96,7 +100,7 @@ CLASS zcl_hh_dp_vehicle_state IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_distance_traveled.
-    distance = me->vehicle->get_dist_traveled_before_stop( ).
+    distance = vehicle->get_dist_traveled_before_stop( ).
   ENDMETHOD.
 
   METHOD halt.
@@ -105,18 +109,18 @@ CLASS zcl_hh_dp_vehicle_state IMPLEMENTATION.
           distance_traveled_before_stop TYPE zif_hh_dp_state=>odometer_type,
           next_state                    TYPE REF TO zif_hh_dp_state.
 
-    distance_traveled_before_stop = me->get_distance_traveled( ).
-    me->vehicle->set_dist_traveled_before_stop( distance_traveled_before_stop ).
+    distance_traveled_before_stop = me->get_distance_traveled( vehicle ).
+    vehicle->set_dist_traveled_before_stop( distance_traveled_before_stop ).
 
-    current_speed = me->vehicle->get_speed( ).
-    me->vehicle->set_previous_state_speed( current_speed ).
+    current_speed = vehicle->get_speed( ).
+    vehicle->set_previous_state_speed( current_speed ).
 
     reduced_speed = 0 - current_speed.
-    me->vehicle->accelerate( reduced_speed ).
+    vehicle->accelerate( reduced_speed ).
 
-    me->vehicle->set_previous_state( me ).
-    next_state = me->vehicle->get_stopped_state( ).
-    me->vehicle->set_current_state( next_state ).
+    vehicle->set_previous_state( me ).
+    next_state = vehicle->get_stopped_state( ).
+    vehicle->set_current_state( next_state ).
   ENDMETHOD.
 
   METHOD accelerate.
@@ -126,13 +130,13 @@ CLASS zcl_hh_dp_vehicle_state IMPLEMENTATION.
           change_in_speed               TYPE zcl_hh_dp_vehicle=>speed_type,
           distance_traveled_before_stop TYPE zif_hh_dp_state=>odometer_type.
 
-    distance_traveled_before_stop = me->get_distance_traveled( ).
-    me->vehicle->set_dist_traveled_before_stop( distance_traveled_before_stop ).
+    distance_traveled_before_stop = me->get_distance_traveled( vehicle ).
+    vehicle->set_dist_traveled_before_stop( distance_traveled_before_stop ).
 
     GET TIME STAMP FIELD now.
-    me->vehicle->set_time_started_moving( now ).
+    vehicle->set_time_started_moving( now ).
 
-    current_speed = me->vehicle->get_speed( ).
+    current_speed = vehicle->get_speed( ).
 
     change_in_speed = acceleration.
     IF acceleration LT 0.
@@ -142,7 +146,7 @@ CLASS zcl_hh_dp_vehicle_state IMPLEMENTATION.
       ENDIF.
     ENDIF.
 
-    me->vehicle->accelerate( change_in_speed ).
+    vehicle->accelerate( change_in_speed ).
   ENDMETHOD.
 
   METHOD resume.

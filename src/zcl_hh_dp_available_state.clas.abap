@@ -9,9 +9,7 @@ CLASS zcl_hh_dp_available_state DEFINITION
       class_id type seoclsname value 'ZCL_HH_DP_AVAILABLE_STATE'.
 
     methods:
-      constructor
-        importing
-          vehicle type ref to zcl_hh_dp_vehicle,
+      constructor,
       start REDEFINITION.
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -25,7 +23,6 @@ CLASS zcl_hh_dp_available_state IMPLEMENTATION.
   METHOD constructor.
 
     super->constructor( ).
-    me->vehicle = vehicle.
     me->descriptor = me->description.
 
   ENDMETHOD.
@@ -36,15 +33,15 @@ CLASS zcl_hh_dp_available_state IMPLEMENTATION.
     data: next_state type ref to zif_hh_dp_state,
           now type timestamp.
 
-    me->vehicle->set_dist_traveled_before_stop( 0 ).
+    vehicle->set_dist_traveled_before_stop( 0 ).
 
     get TIME STAMP FIELD now.
-    me->vehicle->set_time_started_moving( now ).
-    me->vehicle->accelerate( default_start_cruising_speed ).
-    me->vehicle->set_previous_state( me ).
+    vehicle->set_time_started_moving( now ).
+    vehicle->accelerate( default_start_cruising_speed ).
+    vehicle->set_previous_state( me ).
 
-    next_state = me->vehicle->get_cruising_state( ).
-    me->vehicle->set_current_state( next_state ).
+    next_state = vehicle->get_cruising_state( ).
+    vehicle->set_current_state( next_state ).
 
   ENDMETHOD.
 
