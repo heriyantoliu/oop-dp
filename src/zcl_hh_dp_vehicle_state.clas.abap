@@ -115,12 +115,9 @@ CLASS zcl_hh_dp_vehicle_state IMPLEMENTATION.
     vehicle->set_dist_traveled_before_stop( distance_traveled_before_stop ).
 
     current_speed = vehicle->get_speed( ).
-    vehicle->set_previous_state_speed( current_speed ).
-
     reduced_speed = 0 - current_speed.
     vehicle->accelerate( reduced_speed ).
 
-    vehicle->set_previous_state( me ).
     next_state = zcl_hh_dp_stopped_state=>get_state_object( ).
     vehicle->set_current_state( next_state ).
   ENDMETHOD.

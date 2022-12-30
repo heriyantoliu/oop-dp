@@ -55,7 +55,6 @@ CLASS zcl_hh_dp_cruising_state IMPLEMENTATION.
     vehicle->set_dist_traveled_before_stop( distance_traveled_before_stop ).
 
     current_speed = vehicle->get_speed( ).
-    vehicle->set_previous_state_speed( current_speed ).
 
     reduced_speed = 0 - current_speed / 2.
 
@@ -63,7 +62,6 @@ CLASS zcl_hh_dp_cruising_state IMPLEMENTATION.
 
     get time stamp field now.
     vehicle->set_time_started_moving( now ).
-    vehicle->set_previous_state( me ).
 
     next_state = zcl_hh_dp_heavy_traffic_state=>get_state_object( ).
     vehicle->set_current_state( next_state ).
@@ -114,7 +112,6 @@ CLASS zcl_hh_dp_cruising_state IMPLEMENTATION.
     vehicle->set_dist_traveled_before_stop( distance_traveled_before_stop ).
 
     current_speed = vehicle->get_speed( ).
-    vehicle->set_previous_state_speed( current_speed ).
 
     increased_speed = current_speed * zcl_hh_dp_vehicle_state=>speed_change_factor.
     subtract current_speed from increased_speed.
@@ -122,7 +119,6 @@ CLASS zcl_hh_dp_cruising_state IMPLEMENTATION.
 
     get TIME STAMP FIELD now.
     vehicle->set_time_started_moving( now ).
-    vehicle->set_previous_state( me ).
     next_state = zcl_hh_dp_police_escort_state=>get_state_object( ).
     vehicle->set_current_state( next_state ).
 

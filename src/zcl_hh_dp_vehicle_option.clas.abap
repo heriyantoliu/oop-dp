@@ -14,14 +14,10 @@ CLASS zcl_hh_dp_vehicle_option DEFINITION
       get_speed REDEFINITION,
       get_current_state REDEFINITION,
       set_current_state REDEFINITION,
-      get_previous_state REDEFINITION,
-      set_previous_state REDEFINITION,
       get_time_started_moving REDEFINITION,
       set_time_started_moving REDEFINITION,
       get_dist_traveled_before_stop REDEFINITION,
       set_dist_traveled_before_stop REDEFINITION,
-      get_previous_state_speed REDEFINITION,
-      set_previous_state_speed REDEFINITION,
       create_memento REDEFINITION,
       reset_using_memento REDEFINITION.
 
@@ -117,28 +113,12 @@ CLASS zcl_hh_dp_vehicle_option IMPLEMENTATION.
     distance_traveled_before_stop = me->decorated_object->get_dist_traveled_before_stop( ).
   ENDMETHOD.
 
-  METHOD get_previous_state.
-    previous_state = me->decorated_object->get_previous_state( ).
-  ENDMETHOD.
-
-  METHOD get_previous_state_speed.
-    previous_state_speed = me->decorated_object->get_previous_state_speed( ).
-  ENDMETHOD.
-
   METHOD get_time_started_moving.
     time_started_moving = me->decorated_object->get_time_started_moving( ).
   ENDMETHOD.
 
   METHOD set_dist_traveled_before_stop.
     me->decorated_object->set_dist_traveled_before_stop( distance_traveled_before_stop ).
-  ENDMETHOD.
-
-  METHOD set_previous_state.
-    me->decorated_object->set_previous_state( previous_state ).
-  ENDMETHOD.
-
-  METHOD set_previous_state_speed.
-    me->decorated_object->set_previous_state_speed( previous_state_speed ).
   ENDMETHOD.
 
   METHOD set_time_started_moving.

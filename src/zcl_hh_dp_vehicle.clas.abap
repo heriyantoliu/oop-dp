@@ -85,12 +85,6 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       set_current_state
         IMPORTING
           current_state TYPE REF TO zif_hh_dp_state,
-      get_previous_state
-        RETURNING
-          VALUE(previous_state) TYPE REF TO zif_hh_dp_state,
-      set_previous_state
-        IMPORTING
-          previous_state TYPE REF TO zif_hh_dp_state,
       get_time_started_moving
         RETURNING
           VALUE(time_started_moving) TYPE time_stamp_type,
@@ -103,12 +97,6 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       set_dist_traveled_before_stop
         IMPORTING
           distance_traveled_before_stop TYPE zif_hh_dp_state=>odometer_type,
-      get_previous_state_speed
-        RETURNING
-          VALUE(previous_state_speed) TYPE speed_type,
-      set_previous_state_speed
-        IMPORTING
-          VALUE(previous_state_speed) TYPE speed_type,
       create_memento
         returning
           value(memento) type ref to zcl_hh_dp_vehicle_memento,
@@ -140,10 +128,7 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       navigation_unit               TYPE REF TO zif_hh_dp_simple_navigation,
       time_started_moving           TYPE time_stamp_type,
       current_state                 TYPE REF TO zif_hh_dp_state,
-      distance_traveled_before_stop TYPE zif_hh_dp_state=>odometer_type,
-      previous_state                TYPE REF TO zif_hh_dp_state,
-      previous_state_speed          TYPE speed_type.
-
+      distance_traveled_before_stop TYPE zif_hh_dp_state=>odometer_type.
 
     CLASS-METHODS:
       get_serial_number
@@ -256,28 +241,12 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     distance_traveled_before_stop = me->distance_traveled_before_stop.
   ENDMETHOD.
 
-  METHOD get_previous_state.
-    previous_state = me->previous_state.
-  ENDMETHOD.
-
-  METHOD get_previous_state_speed.
-    previous_state_speed = me->previous_state_speed.
-  ENDMETHOD.
-
   METHOD get_time_started_moving.
     time_started_moving = me->time_started_moving.
   ENDMETHOD.
 
   METHOD set_dist_traveled_before_stop.
     me->distance_traveled_before_stop = distance_traveled_before_stop.
-  ENDMETHOD.
-
-  METHOD set_previous_state.
-    me->previous_state = previous_state.
-  ENDMETHOD.
-
-  METHOD set_previous_state_speed.
-    me->previous_state_speed = previous_state_speed.
   ENDMETHOD.
 
   METHOD set_time_started_moving.
