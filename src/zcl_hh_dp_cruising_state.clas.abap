@@ -49,6 +49,8 @@ CLASS zcl_hh_dp_cruising_state IMPLEMENTATION.
           distance_traveled_before_stop TYPE zif_hh_dp_state=>odometer_type,
           next_state                    TYPE REF TO zif_hh_dp_state.
 
+    zcl_hh_dp_fleet_manager=>singleton->set_vehicle_memento( vehicle ).
+
     distance_traveled_before_stop = me->get_distance_traveled( vehicle ).
     vehicle->set_dist_traveled_before_stop( distance_traveled_before_stop ).
 
@@ -105,6 +107,8 @@ CLASS zcl_hh_dp_cruising_state IMPLEMENTATION.
           increased_speed type zcl_hh_dp_vehicle=>speed_type,
           distance_traveled_before_stop type zif_hh_dp_state=>odometer_type,
           next_state type ref to zif_hh_dp_state.
+
+    zcl_hh_dp_fleet_manager=>singleton->set_vehicle_memento( vehicle ).
 
     distance_traveled_before_stop = me->get_distance_traveled( vehicle ).
     vehicle->set_dist_traveled_before_stop( distance_traveled_before_stop ).

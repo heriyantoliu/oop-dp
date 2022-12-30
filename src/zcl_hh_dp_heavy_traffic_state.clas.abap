@@ -48,21 +48,18 @@ CLASS zcl_hh_dp_heavy_traffic_state IMPLEMENTATION.
           current_speed                 TYPE zcl_hh_dp_vehicle=>speed_type,
           reduced_speed                 TYPE zcl_hh_dp_vehicle=>speed_type,
           distance_traveled_before_stop TYPE zif_hh_dp_state=>odometer_type,
-          next_state                    TYPE REF TO zif_hh_dp_state.
+          vehicle_memento               TYPE REF TO zcl_hh_dp_vehicle_memento.
+
+*    zcl_hh_dp_fleet_manager=>singleton->set_vehicle_memento( vehicle ).
 
     distance_traveled_before_stop = me->get_distance_traveled( vehicle ).
     vehicle->set_dist_traveled_before_stop( distance_traveled_before_stop ).
 
-    current_speed = vehicle->get_speed( ).
-    vehicle->set_previous_state_speed( current_speed ).
-    vehicle->accelerate( current_speed ).
-
     GET TIME STAMP FIELD now.
     vehicle->set_time_started_moving( now ).
-    vehicle->set_previous_state( me ).
 
-    next_state = zcl_hh_dp_cruising_state=>get_state_object( ).
-    vehicle->set_current_state( next_state ).
+    vehicle_memento = zcl_hh_dp_fleet_manager=>singleton->get_vehicle_memento( vehicle ).
+    vehicle->reset_using_memento( vehicle_memento ).
   ENDMETHOD.
 
   METHOD stop.

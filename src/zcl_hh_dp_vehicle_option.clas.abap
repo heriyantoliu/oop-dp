@@ -21,7 +21,9 @@ CLASS zcl_hh_dp_vehicle_option DEFINITION
       get_dist_traveled_before_stop REDEFINITION,
       set_dist_traveled_before_stop REDEFINITION,
       get_previous_state_speed REDEFINITION,
-      set_previous_state_speed REDEFINITION.
+      set_previous_state_speed REDEFINITION,
+      create_memento REDEFINITION,
+      reset_using_memento REDEFINITION.
 
   PROTECTED SECTION.
     DATA:
@@ -141,6 +143,14 @@ CLASS zcl_hh_dp_vehicle_option IMPLEMENTATION.
 
   METHOD set_time_started_moving.
     me->decorated_object->set_time_started_moving( time_started_moving ).
+  ENDMETHOD.
+
+  METHOD create_memento.
+    memento = me->decorated_object->create_memento( ).
+  ENDMETHOD.
+
+  METHOD reset_using_memento.
+    me->decorated_object->reset_using_memento( memento ).
   ENDMETHOD.
 
 ENDCLASS.

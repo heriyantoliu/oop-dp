@@ -80,13 +80,29 @@ CLASS zcl_hh_dp_fleet_manager DEFINITION
           has_option_cg     TYPE zcl_hh_dp_vehicle=>option_count
           has_option_ls     TYPE zcl_hh_dp_vehicle=>option_count,
       repeat_last_turn,
-      reverse_last_turn.
+      reverse_last_turn,
+      get_vehicle_memento
+        importing
+          vehicle type ref to zcl_hh_dp_vehicle
+        returning
+          value(vehicle_memento) type ref to zcl_hh_dp_vehicle_memento,
+      set_vehicle_memento
+        importing
+          vehicle type ref to zcl_hh_dp_vehicle.
+
 
   PROTECTED SECTION.
   PRIVATE SECTION.
+    types: begin of vehicle_memento_row,
+             vehicle type ref to zcl_hh_dp_vehicle,
+             vehicle_memento type ref to zcl_hh_dp_vehicle_memento,
+           end of vehicle_memento_row,
+           vehicle_memento_list type STANDARD TABLE OF vehicle_memento_row.
     data:
       first_vehicle_in_chain type ref to zcl_hh_dp_vehicle,
-      vehicle_last_turn_command type ref to zif_hh_dp_command.
+      vehicle_last_turn_command type ref to zif_hh_dp_command,
+      vehicle_memento_stack type vehicle_memento_list.
+
     methods:
       constructor.
 ENDCLASS.
@@ -213,6 +229,35 @@ CLASS zcl_hh_dp_fleet_manager IMPLEMENTATION.
 
   METHOD constructor.
     create object zcl_hh_dp_fleet_manager=>singleton->vehicle_last_turn_command type zcl_hh_dp_null_command.
+  ENDMETHOD.
+
+  METHOD get_vehicle_memento.
+    data: vehicle_memento_entry like line of vehicle_memento_stack.
+
+    read table me->vehicle_memento_stack
+      into vehicle_memento_entry
+      with key vehicle = vehicle.
+
+    vehicle_memento = vehicle_memento_entry-vehicle_memento.
+  ENDMETHOD.
+
+  METHOD set_vehicle_memento.
+    data: vehicle_memento_entry like line of vehicle_memento_stack.
+
+    vehicle_memento_entry-vehicle = vehicle.
+    vehicle_memento_entry-vehicle_memento = vehicle->create_memento( ).
+
+    read table me->vehicle_memento_stack
+      with key vehicle = vehicle
+      transporting no fields.
+    if sy-subrc eq 0.
+      modify vehicle_memento_stack
+        from vehicle_memento_entry
+        index sy-tabix
+        transporting vehicle_memento.
+    else.
+      append vehicle_memento_entry to vehicle_memento_stack.
+    endif.
   ENDMETHOD.
 
 ENDCLASS.

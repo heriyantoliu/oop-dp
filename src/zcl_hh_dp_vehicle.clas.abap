@@ -108,7 +108,13 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           VALUE(previous_state_speed) TYPE speed_type,
       set_previous_state_speed
         IMPORTING
-          VALUE(previous_state_speed) TYPE speed_type.
+          VALUE(previous_state_speed) TYPE speed_type,
+      create_memento
+        returning
+          value(memento) type ref to zcl_hh_dp_vehicle_memento,
+      reset_using_memento
+        importing
+          memento type ref to zcl_hh_dp_vehicle_memento.
 
   PROTECTED SECTION.
     DATA:
@@ -276,6 +282,18 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
 
   METHOD set_time_started_moving.
     me->time_started_moving = time_started_moving.
+  ENDMETHOD.
+
+  METHOD create_memento.
+    create object memento
+      exporting
+        speed = me->speed
+        state = me->current_state.
+  ENDMETHOD.
+
+  METHOD reset_using_memento.
+    me->speed = memento->get_speed( ).
+    me->current_state = memento->get_state( ).
   ENDMETHOD.
 
 ENDCLASS.

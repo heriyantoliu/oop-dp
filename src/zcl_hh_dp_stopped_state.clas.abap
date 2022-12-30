@@ -35,22 +35,14 @@ ENDCLASS.
 CLASS zcl_hh_dp_stopped_state IMPLEMENTATION.
 
   METHOD resume.
-    DATA: now                  TYPE timestamp,
-          previous_state_speed TYPE zcl_hh_dp_vehicle=>speed_type,
-          previous_state       TYPE REF TO zif_hh_dp_state.
-
-    previous_state_speed = vehicle->get_previous_state_speed( ).
-    vehicle->accelerate( previous_state_speed ).
-
-    CLEAR previous_state_speed.
-    vehicle->set_previous_state_speed( previous_state_speed ).
-
+    DATA: now             TYPE timestamp,
+          vehicle_memento TYPE REF TO zcl_hh_dp_vehicle_memento.
     GET TIME STAMP FIELD now.
 
     vehicle->set_time_started_moving( now ).
-    previous_state = vehicle->get_previous_state( ).
-    vehicle->set_current_state( previous_state ).
-    vehicle->set_previous_state( me ).
+
+    vehicle_memento = zcl_hh_dp_fleet_manager=>singleton->get_vehicle_memento( vehicle ).
+    vehicle->reset_using_memento( vehicle_memento ).
   ENDMETHOD.
 
   METHOD constructor.
