@@ -5,7 +5,8 @@ CLASS zcl_hh_dp_truck DEFINITION
 
   PUBLIC SECTION.
     CONSTANTS:
-      class_id TYPE seoclsname VALUE 'ZCL_HH_DP_TRUCK'.
+      class_id TYPE seoclsname VALUE 'ZCL_HH_DP_TRUCK',
+      descriptor type string value 'Truck'.
 
     EVENTS: weight_exceeds_2_axle_limit.
 
@@ -61,8 +62,6 @@ CLASS zcl_hh_dp_truck DEFINITION
       get_gross_weight REDEFINITION.
   PROTECTED SECTION.
   PRIVATE SECTION.
-    CONSTANTS:
-      descriptor TYPE string VALUE 'Truck'.
 
     CLASS-DATA:
       weight_limit_for_2_axles  TYPE zcl_hh_dp_vehicle=>weight_type,

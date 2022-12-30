@@ -249,13 +249,12 @@ CLASS zcl_hh_dp_vehicle_state IMPLEMENTATION.
 
     data: acceleration type zcl_hh_dp_vehicle=>speed_type,
           current_speed type zcl_hh_dp_vehicle=>speed_type,
-          truck type ref to zcl_hh_dp_truck.
+          description type zcl_hh_dp_vehicle=>description_type.
 
-    try.
-      truck ?= vehicle.
-    catch cx_sy_move_cast_error.
+    description = vehicle->get_description( ).
+    if description ns zcl_hh_dp_truck=>descriptor.
       return.
-    endtry.
+    endif.
 
     current_speed = vehicle->get_speed( ).
     acceleration = maximum_speed_for_high_winds - current_speed.
