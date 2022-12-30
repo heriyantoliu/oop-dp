@@ -62,7 +62,7 @@ CLASS zcl_hh_dp_stopped_state IMPLEMENTATION.
     DATA: next_state TYPE REF TO zif_hh_dp_state.
 
     vehicle->set_previous_state( me ).
-    next_state = vehicle->get_out_of_service_state( ).
+    next_state = zcl_hh_dp_out_of_service_state=>get_state_object( ).
     vehicle->set_current_state( next_state ).
   ENDMETHOD.
 
@@ -70,7 +70,7 @@ CLASS zcl_hh_dp_stopped_state IMPLEMENTATION.
     DATA: next_state TYPE REF TO zif_hh_dp_state.
 
     vehicle->set_previous_state( me ).
-    next_state = vehicle->get_available_state( ).
+    next_state = zcl_hh_dp_available_state=>get_state_object( ).
     vehicle->set_current_state( next_state ).
   ENDMETHOD.
 

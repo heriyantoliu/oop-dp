@@ -39,7 +39,7 @@ CLASS zcl_hh_dp_being_towed_state IMPLEMENTATION.
     DATA: next_state TYPE REF TO zif_hh_dp_state.
 
     vehicle->set_previous_state( me ).
-    next_state = vehicle->get_in_shop_state( ).
+    next_state = zcl_hh_dp_in_shop_state=>get_state_object( ).
     vehicle->set_current_state( next_state ).
   ENDMETHOD.
 

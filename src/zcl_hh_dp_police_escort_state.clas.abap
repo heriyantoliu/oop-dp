@@ -104,7 +104,7 @@ CLASS zcl_hh_dp_police_escort_state IMPLEMENTATION.
     vehicle->set_time_started_moving( now ).
     vehicle->set_previous_state( me ).
 
-    next_state = vehicle->get_cruising_state( ).
+    next_state = zcl_hh_dp_cruising_state=>get_state_object( ).
     vehicle->set_current_state( next_state ).
   ENDMETHOD.
 

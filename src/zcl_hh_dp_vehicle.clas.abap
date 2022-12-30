@@ -108,31 +108,7 @@ CLASS zcl_hh_dp_vehicle DEFINITION
           VALUE(previous_state_speed) TYPE speed_type,
       set_previous_state_speed
         IMPORTING
-          VALUE(previous_state_speed) TYPE speed_type,
-      get_cruising_state
-        RETURNING
-          VALUE(cruising_state) TYPE REF TO zif_hh_dp_state,
-      get_in_heavy_traffic_state
-        RETURNING
-          VALUE(in_heavy_traffic_state) TYPE REF TO zif_hh_dp_state,
-      get_stopped_state
-        RETURNING
-          VALUE(stopped_state) TYPE REF TO zif_hh_dp_state,
-      get_out_of_service_state
-        RETURNING
-          VALUE(out_of_service_state) TYPE REF TO zif_hh_dp_state,
-      get_available_state
-        RETURNING
-          VALUE(available_state) TYPE REF TO zif_hh_dp_state,
-      get_being_towed_state
-        RETURNING
-          VALUE(being_towed_state) TYPE REF TO zif_hh_dp_state,
-      get_in_shop_state
-        RETURNING
-          VALUE(in_shop_state) TYPE REF TO zif_hh_dp_state,
-      get_police_escort_state
-        RETURNING
-          VALUE(police_escort_state) TYPE REF TO zif_hh_dp_state.
+          VALUE(previous_state_speed) TYPE speed_type.
 
   PROTECTED SECTION.
     DATA:
@@ -160,15 +136,8 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       current_state                 TYPE REF TO zif_hh_dp_state,
       distance_traveled_before_stop TYPE zif_hh_dp_state=>odometer_type,
       previous_state                TYPE REF TO zif_hh_dp_state,
-      previous_state_speed          TYPE speed_type,
-      cruising_state                TYPE REF TO zif_hh_dp_state,
-      in_heavy_traffic_state        TYPE REF TO zif_hh_dp_state,
-      stopped_state                 TYPE REF TO zif_hh_dp_state,
-      out_of_service_state          TYPE REF TO zif_hh_dp_state,
-      available_state               TYPE REF TO zif_hh_dp_state,
-      being_towed_state             TYPE REF TO zif_hh_dp_state,
-      in_shop_state                 TYPE REF TO zif_hh_dp_state,
-      police_escort_state           TYPE REF TO zif_hh_dp_state.
+      previous_state_speed          TYPE speed_type.
+
 
     CLASS-METHODS:
       get_serial_number
@@ -223,7 +192,7 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     me->weight_unit = weight_unit.
     me->time_started_moving = time_started_moving.
 
-    me->current_state = me->get_cruising_state( ).
+    me->current_state = zcl_hh_dp_cruising_state=>get_state_object( ).
 
     CASE selected.
       WHEN iphone_navigation.
@@ -307,62 +276,6 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
 
   METHOD set_time_started_moving.
     me->time_started_moving = time_started_moving.
-  ENDMETHOD.
-
-  METHOD get_cruising_state.
-    if me->cruising_state is not bound.
-      me->cruising_state = zcl_hh_dp_cruising_state=>get_state_object( ).
-    endif.
-    cruising_state = me->cruising_state.
-  ENDMETHOD.
-  METHOD get_in_heavy_traffic_state.
-    if me->in_heavy_traffic_state is not bound.
-      me->in_heavy_traffic_state = zcl_hh_dp_heavy_traffic_state=>get_state_object( ).
-    endif.
-    in_heavy_traffic_state = me->in_heavy_traffic_state.
-  ENDMETHOD.
-
-  METHOD get_stopped_state.
-    if me->stopped_state is not bound.
-      me->stopped_state = zcl_hh_dp_stopped_state=>get_state_object( ).
-    endif.
-    stopped_state = me->stopped_state.
-  ENDMETHOD.
-
-  METHOD get_out_of_service_state.
-    if me->out_of_service_state is not bound.
-      me->out_of_service_state = zcl_hh_dp_out_of_service_state=>get_state_object( ).
-    endif.
-    out_of_service_state = me->out_of_service_state.
-  ENDMETHOD.
-
-  METHOD get_available_state.
-    if me->available_state is not bound.
-      me->available_state = zcl_hh_dp_available_state=>get_state_object( ).
-    endif.
-    available_state = me->available_state.
-  ENDMETHOD.
-
-  METHOD get_being_towed_state.
-    if me->being_towed_state is not bound.
-      me->being_towed_state = zcl_hh_dp_being_towed_state=>get_state_object( ).
-    endif.
-    being_towed_state = me->being_towed_state.
-  ENDMETHOD.
-
-  METHOD get_in_shop_state.
-    if me->in_shop_state is not bound.
-      me->in_shop_state = zcl_hh_dp_in_shop_state=>get_state_object( ).
-    endif.
-    in_shop_state = me->in_shop_state.
-  ENDMETHOD.
-
-  METHOD get_police_escort_state.
-    if me->police_escort_state is not bound.
-      me->police_escort_state = zcl_hh_dp_police_escort_state=>get_state_object( ).
-
-    endif.
-    police_escort_state = me->police_escort_state.
   ENDMETHOD.
 
 ENDCLASS.

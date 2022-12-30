@@ -119,7 +119,7 @@ CLASS zcl_hh_dp_vehicle_state IMPLEMENTATION.
     vehicle->accelerate( reduced_speed ).
 
     vehicle->set_previous_state( me ).
-    next_state = vehicle->get_stopped_state( ).
+    next_state = zcl_hh_dp_stopped_state=>get_state_object( ).
     vehicle->set_current_state( next_state ).
   ENDMETHOD.
 

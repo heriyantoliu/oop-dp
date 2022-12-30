@@ -48,7 +48,7 @@ CLASS zcl_hh_dp_available_state IMPLEMENTATION.
     vehicle->accelerate( default_start_cruising_speed ).
     vehicle->set_previous_state( me ).
 
-    next_state = vehicle->get_cruising_state( ).
+    next_state = zcl_hh_dp_cruising_state=>get_state_object( ).
     vehicle->set_current_state( next_state ).
 
   ENDMETHOD.

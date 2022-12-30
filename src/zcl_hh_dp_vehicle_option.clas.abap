@@ -21,15 +21,7 @@ CLASS zcl_hh_dp_vehicle_option DEFINITION
       get_dist_traveled_before_stop REDEFINITION,
       set_dist_traveled_before_stop REDEFINITION,
       get_previous_state_speed REDEFINITION,
-      set_previous_state_speed REDEFINITION,
-      get_cruising_state REDEFINITION,
-      get_in_heavy_traffic_state REDEFINITION,
-      get_stopped_state REDEFINITION,
-      get_out_of_service_state REDEFINITION,
-      get_available_state REDEFINITION,
-      get_being_towed_state REDEFINITION,
-      get_in_shop_state REDEFINITION,
-      get_police_escort_state REDEFINITION.
+      set_previous_state_speed REDEFINITION.
 
   PROTECTED SECTION.
     DATA:
@@ -119,16 +111,8 @@ CLASS zcl_hh_dp_vehicle_option IMPLEMENTATION.
     me->decorated_object->set_current_state( current_state ).
   ENDMETHOD.
 
-  METHOD get_cruising_state.
-    cruising_state = me->decorated_object->get_cruising_state( ).
-  ENDMETHOD.
-
   METHOD get_dist_traveled_before_stop.
     distance_traveled_before_stop = me->decorated_object->get_dist_traveled_before_stop( ).
-  ENDMETHOD.
-
-  METHOD get_in_heavy_traffic_state.
-    in_heavy_traffic_state = me->decorated_object->get_in_heavy_traffic_state( ).
   ENDMETHOD.
 
   METHOD get_previous_state.
@@ -137,10 +121,6 @@ CLASS zcl_hh_dp_vehicle_option IMPLEMENTATION.
 
   METHOD get_previous_state_speed.
     previous_state_speed = me->decorated_object->get_previous_state_speed( ).
-  ENDMETHOD.
-
-  METHOD get_stopped_state.
-    stopped_state = me->decorated_object->get_stopped_state( ).
   ENDMETHOD.
 
   METHOD get_time_started_moving.
@@ -161,26 +141,6 @@ CLASS zcl_hh_dp_vehicle_option IMPLEMENTATION.
 
   METHOD set_time_started_moving.
     me->decorated_object->set_time_started_moving( time_started_moving ).
-  ENDMETHOD.
-
-  METHOD get_out_of_service_state.
-    out_of_service_state = me->decorated_object->get_out_of_service_state( ).
-  ENDMETHOD.
-
-  METHOD get_available_state.
-    available_state = me->decorated_object->get_available_state( ).
-  ENDMETHOD.
-
-  METHOD get_being_towed_state.
-    being_towed_state = me->decorated_object->get_being_towed_state( ).
-  ENDMETHOD.
-
-  METHOD get_in_shop_state.
-    in_shop_state = me->decorated_object->get_in_shop_state( ).
-  ENDMETHOD.
-
-  METHOD get_police_escort_state.
-    escort_state = me->decorated_object->get_police_escort_state( ).
   ENDMETHOD.
 
 ENDCLASS.
