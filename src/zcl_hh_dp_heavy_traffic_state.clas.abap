@@ -18,6 +18,7 @@ CLASS zcl_hh_dp_heavy_traffic_state DEFINITION
       resume REDEFINITION,
       stop REDEFINITION,
       turn REDEFINITION,
+      assign_police_escort REDEFINITION,
       decelerate_05 REDEFINITION,
       decelerate_01 REDEFINITION,
       accelerate_01 REDEFINITION,
@@ -117,6 +118,10 @@ CLASS zcl_hh_dp_heavy_traffic_state IMPLEMENTATION.
 
   METHOD get_state_object.
     state_object = zcl_hh_dp_heavy_traffic_state=>singleton.
+  ENDMETHOD.
+
+  METHOD assign_police_escort.
+    me->engage_police_escort( vehicle ).
   ENDMETHOD.
 
 ENDCLASS.

@@ -100,28 +100,7 @@ CLASS zcl_hh_dp_cruising_state IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD assign_police_escort.
-    data: now type timestamp,
-          current_speed type zcl_hh_dp_vehicle=>speed_type,
-          increased_speed type zcl_hh_dp_vehicle=>speed_type,
-          distance_traveled_before_stop type zif_hh_dp_state=>odometer_type,
-          next_state type ref to zif_hh_dp_state.
-
-    zcl_hh_dp_fleet_manager=>singleton->set_vehicle_memento( vehicle ).
-
-    distance_traveled_before_stop = me->get_distance_traveled( vehicle ).
-    vehicle->set_dist_traveled_before_stop( distance_traveled_before_stop ).
-
-    current_speed = vehicle->get_speed( ).
-
-    increased_speed = current_speed * zcl_hh_dp_vehicle_state=>speed_change_factor.
-    subtract current_speed from increased_speed.
-    vehicle->accelerate( increased_speed ).
-
-    get TIME STAMP FIELD now.
-    vehicle->set_time_started_moving( now ).
-    next_state = zcl_hh_dp_police_escort_state=>get_state_object( ).
-    vehicle->set_current_state( next_state ).
-
+    me->engage_police_escort( vehicle ).
   ENDMETHOD.
 
   METHOD decelerate_01.
