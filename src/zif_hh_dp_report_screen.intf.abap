@@ -19,6 +19,7 @@ INTERFACE zif_hh_dp_report_screen
       decelerate_01 type syucomm value 'DECEL01',
       accelerate_01 type syucomm value 'ACCEL01',
       accelerate_05 type syucomm value 'ACCEL05',
-      show_state_objects_count type syucomm value 'SHOW_SOC'.
+      show_state_objects_count type syucomm value 'SHOW_SOC',
+      impose_high_winds_restriction type syucomm value 'ISR_HIWIND'.
 
 ENDINTERFACE.

@@ -22,7 +22,8 @@ CLASS zcl_hh_dp_heavy_traffic_state DEFINITION
       decelerate_05 REDEFINITION,
       decelerate_01 REDEFINITION,
       accelerate_01 REDEFINITION,
-      accelerate_05 REDEFINITION.
+      accelerate_05 REDEFINITION,
+      impose_high_winds_restriction REDEFINITION.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -122,6 +123,10 @@ CLASS zcl_hh_dp_heavy_traffic_state IMPLEMENTATION.
 
   METHOD assign_police_escort.
     me->engage_police_escort( vehicle ).
+  ENDMETHOD.
+
+  METHOD impose_high_winds_restriction.
+    me->apply_high_winds_restriction( vehicle ).
   ENDMETHOD.
 
 ENDCLASS.

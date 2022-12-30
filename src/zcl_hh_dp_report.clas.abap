@@ -67,7 +67,8 @@ CLASS zcl_hh_dp_report DEFINITION
       decelerate_01,
       accelerate_01,
       accelerate_05,
-      show_state_objects_count.
+      show_state_objects_count,
+      impose_high_winds_restriction.
 
 ENDCLASS.
 
@@ -301,6 +302,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         me->accelerate_01( ).
       when zif_hh_dp_report_screen=>show_state_objects_count.
         me->show_state_objects_count( ).
+      when zif_hh_dp_report_screen=>impose_high_winds_restriction.
+        me->impose_high_winds_restriction( ).
     ENDCASE.
   ENDMETHOD.
 
@@ -709,6 +712,18 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     message i398(00) with 'Number of state objects:'
                           state_objects_count
                           space space.
+  ENDMETHOD.
+
+  METHOD impose_high_winds_restriction.
+    data: output_entry like line of output_stack,
+          current_state type ref to zif_hh_dp_state.
+
+    loop at me->output_stack
+      into output_entry.
+
+      current_state = output_entry-vehicle_entry->get_current_state( ).
+      current_state->impose_high_winds_restriction( output_entry-vehicle_entry ).
+    endloop.
   ENDMETHOD.
 
 ENDCLASS.

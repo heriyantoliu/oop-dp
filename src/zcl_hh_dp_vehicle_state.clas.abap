@@ -22,7 +22,8 @@ CLASS zcl_hh_dp_vehicle_state DEFINITION
       decelerate_05 FOR zif_hh_dp_state~decelerate_05,
       decelerate_01 FOR zif_hh_dp_state~decelerate_01,
       accelerate_01 FOR zif_hh_dp_state~accelerate_01,
-      accelerate_05 FOR zif_hh_dp_state~accelerate_05.
+      accelerate_05 FOR zif_hh_dp_state~accelerate_05,
+      impose_high_winds_restriction for zif_hh_dp_state~impose_high_winds_restriction.
 
     CLASS-METHODS:
       get_state_objects_count
@@ -53,6 +54,9 @@ CLASS zcl_hh_dp_vehicle_state DEFINITION
           vehicle type ref to zcl_hh_dp_vehicle
           acceleration TYPE zcl_hh_dp_vehicle=>speed_type,
       engage_police_escort
+        importing
+          vehicle type ref to zcl_hh_dp_vehicle,
+      apply_high_winds_restriction
         importing
           vehicle type ref to zcl_hh_dp_vehicle.
 
@@ -238,6 +242,24 @@ CLASS zcl_hh_dp_vehicle_state IMPLEMENTATION.
 
     next_state = zcl_hh_dp_police_escort_state=>get_state_object( ).
     vehicle->set_current_state( next_state ).
+  ENDMETHOD.
+
+  METHOD apply_high_winds_restriction.
+    constants: maximum_speed_for_high_winds type zcl_hh_dp_vehicle=>speed_type value 35.
+
+    data: acceleration type zcl_hh_dp_vehicle=>speed_type,
+          current_speed type zcl_hh_dp_vehicle=>speed_type.
+
+    current_speed = vehicle->get_speed( ).
+    acceleration = maximum_speed_for_high_winds - current_speed.
+
+    if acceleration lt 0.
+      vehicle->accelerate( acceleration ).
+    endif.
+  ENDMETHOD.
+
+  METHOD impose_high_winds_restriction.
+
   ENDMETHOD.
 
 ENDCLASS.
