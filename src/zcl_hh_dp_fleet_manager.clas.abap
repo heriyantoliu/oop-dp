@@ -88,8 +88,10 @@ CLASS zcl_hh_dp_fleet_manager DEFINITION
           value(vehicle_memento) type ref to zcl_hh_dp_vehicle_memento,
       set_vehicle_memento
         importing
+          vehicle type ref to zcl_hh_dp_vehicle,
+      discard_vehicle_mementos
+        importing
           vehicle type ref to zcl_hh_dp_vehicle.
-
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -237,7 +239,9 @@ CLASS zcl_hh_dp_fleet_manager IMPLEMENTATION.
     read table me->vehicle_memento_stack
       into vehicle_memento_entry
       with key vehicle = vehicle.
-
+    if sy-subrc eq 0.
+      delete me->vehicle_memento_stack index sy-tabix.
+    endif.
     vehicle_memento = vehicle_memento_entry-vehicle_memento.
   ENDMETHOD.
 
@@ -247,17 +251,15 @@ CLASS zcl_hh_dp_fleet_manager IMPLEMENTATION.
     vehicle_memento_entry-vehicle = vehicle.
     vehicle_memento_entry-vehicle_memento = vehicle->create_memento( ).
 
-    read table me->vehicle_memento_stack
-      with key vehicle = vehicle
-      transporting no fields.
-    if sy-subrc eq 0.
-      modify vehicle_memento_stack
-        from vehicle_memento_entry
-        index sy-tabix
-        transporting vehicle_memento.
-    else.
-      append vehicle_memento_entry to vehicle_memento_stack.
-    endif.
+    insert vehicle_memento_entry
+      into vehicle_memento_stack
+      index 1.
+
+  ENDMETHOD.
+
+  METHOD discard_vehicle_mementos.
+    delete me->vehicle_memento_stack
+      where vehicle eq vehicle.
   ENDMETHOD.
 
 ENDCLASS.

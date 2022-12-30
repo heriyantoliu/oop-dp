@@ -51,6 +51,8 @@ CLASS zcl_hh_dp_available_state IMPLEMENTATION.
     next_state = zcl_hh_dp_cruising_state=>get_state_object( ).
     vehicle->set_current_state( next_state ).
 
+    zcl_hh_dp_fleet_manager=>singleton->discard_vehicle_mementos( vehicle ).
+
   ENDMETHOD.
 
   METHOD class_constructor.
