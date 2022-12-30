@@ -48,11 +48,44 @@ CLASS zcl_hh_dp_sun_glare_mitigator IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD visit_truck.
-    data: current_state type ref to zif_hh_dp_state.
+    data: current_state type ref to zif_hh_dp_state,
+          this_truck_serial_number type zcl_hh_dp_vehicle=>serial_type,
+          vehicle_entry_serial_number type zcl_hh_dp_vehicle=>serial_type,
+          vehicle_entry type ref to zcl_hh_dp_vehicle,
+          fleet_iterator type ref to zif_hh_dp_iterator,
+          iteration_object type ref to object.
 
     if me->is_heading_into_sun( vehicle ) eq abap_false.
       return.
     endif.
+
+    vehicle->get_characteristics(
+      importing
+        serial_number = this_truck_serial_number
+    ).
+
+    fleet_iterator = zcl_hh_dp_fleet_manager=>singleton->create_iterator( ).
+
+    while fleet_iterator->has_next( ) eq zif_hh_dp_iterator=>true.
+      iteration_object = fleet_iterator->get_next( ).
+      try.
+        vehicle_entry ?= iteration_object.
+      catch cx_sy_move_cast_error.
+        continue.
+      endtry.
+
+      vehicle_entry->get_characteristics(
+        importing
+          serial_number = vehicle_entry_serial_number
+      ).
+
+      if vehicle_entry_serial_number eq this_truck_serial_number.
+        current_state = vehicle_entry->get_current_state( ).
+        current_state->stop( vehicle ).
+        exit.
+      endif.
+
+    endwhile.
 
     current_state = vehicle->get_current_state( ).
     current_state->stop( vehicle ).
