@@ -66,7 +66,8 @@ CLASS zcl_hh_dp_report DEFINITION
       decelerate_05,
       decelerate_01,
       accelerate_01,
-      accelerate_05.
+      accelerate_05,
+      show_state_objects_count.
 
 ENDCLASS.
 
@@ -298,6 +299,8 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         me->accelerate_05( ).
       when zif_hh_dp_report_screen=>accelerate_01.
         me->accelerate_01( ).
+      when zif_hh_dp_report_screen=>show_state_objects_count.
+        me->show_state_objects_count( ).
     ENDCASE.
   ENDMETHOD.
 
@@ -692,6 +695,16 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
     CLEAR selected_rows_stack.
     me->alv_grid->get_selections( )->set_selected_rows( selected_rows_stack ).
     me->refresh( ).
+  ENDMETHOD.
+
+  METHOD show_state_objects_count.
+    data: state_objects_count type int4.
+
+    state_objects_count = zcl_hh_dp_vehicle_state=>get_state_objects_count( ).
+
+    message i398(00) with 'Number of state objects:'
+                          state_objects_count
+                          space space.
   ENDMETHOD.
 
 ENDCLASS.

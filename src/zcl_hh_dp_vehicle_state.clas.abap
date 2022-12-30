@@ -8,7 +8,7 @@ CLASS zcl_hh_dp_vehicle_state DEFINITION
     ALIASES:
       get_description FOR zif_hh_dp_state~get_description,
       get_distance_traveled FOR zif_hh_dp_state~get_distance_traveled,
-      place_out_of_service for zif_hh_dp_state~place_out_of_service,
+      place_out_of_service FOR zif_hh_dp_state~place_out_of_service,
       resume FOR zif_hh_dp_state~resume,
       slow FOR zif_hh_dp_state~slow,
       stop FOR zif_hh_dp_state~stop,
@@ -18,15 +18,23 @@ CLASS zcl_hh_dp_vehicle_state DEFINITION
       repair FOR zif_hh_dp_state~repair,
       start FOR zif_hh_dp_state~start,
       tow FOR zif_hh_dp_state~tow,
-      assign_police_escort for zif_hh_dp_state~assign_police_escort,
-      decelerate_05 for zif_hh_dp_state~decelerate_05,
-      decelerate_01 for zif_hh_dp_state~decelerate_01,
-      accelerate_01 for zif_hh_dp_state~accelerate_01,
-      accelerate_05 for zif_hh_dp_state~accelerate_05.
+      assign_police_escort FOR zif_hh_dp_state~assign_police_escort,
+      decelerate_05 FOR zif_hh_dp_state~decelerate_05,
+      decelerate_01 FOR zif_hh_dp_state~decelerate_01,
+      accelerate_01 FOR zif_hh_dp_state~accelerate_01,
+      accelerate_05 FOR zif_hh_dp_state~accelerate_05.
+
+    CLASS-METHODS:
+      get_state_objects_count
+        RETURNING
+          VALUE(state_objects_count) TYPE int4.
+
+    METHODS:
+      constructor.
 
   PROTECTED SECTION.
-    constants:
-      speed_change_factor type p decimals 2 value '1.3'.
+    CONSTANTS:
+      speed_change_factor TYPE p DECIMALS 2 VALUE '1.3'.
 
     DATA:
       vehicle    TYPE REF TO zcl_hh_dp_vehicle,
@@ -38,18 +46,26 @@ CLASS zcl_hh_dp_vehicle_state DEFINITION
           VALUE(distance) TYPE zif_hh_dp_state=>odometer_type,
       halt,
       accelerate
-        importing
-          acceleration type zcl_hh_dp_vehicle=>speed_type.
+        IMPORTING
+          acceleration TYPE zcl_hh_dp_vehicle=>speed_type.
 
   PRIVATE SECTION.
     CONSTANTS:
       description TYPE zif_hh_dp_state=>description_type VALUE space.
+
+    CLASS-DATA:
+      state_objects_count TYPE int4.
 
 ENDCLASS.
 
 
 
 CLASS zcl_hh_dp_vehicle_state IMPLEMENTATION.
+
+  METHOD constructor.
+    add 1 to state_objects_count.
+  ENDMETHOD.
+
   METHOD calculated_distance_traveled.
     CONSTANTS:
       seconds_in_one_hour TYPE int4 VALUE 3600.
@@ -84,10 +100,10 @@ CLASS zcl_hh_dp_vehicle_state IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD halt.
-    data: current_speed type zcl_hh_dp_vehicle=>speed_type,
-          reduced_speed type zcl_hh_dp_vehicle=>speed_type,
-          distance_traveled_before_stop type zif_hh_dp_state=>odometer_type,
-          next_state type ref to zif_hh_dp_state.
+    DATA: current_speed                 TYPE zcl_hh_dp_vehicle=>speed_type,
+          reduced_speed                 TYPE zcl_hh_dp_vehicle=>speed_type,
+          distance_traveled_before_stop TYPE zif_hh_dp_state=>odometer_type,
+          next_state                    TYPE REF TO zif_hh_dp_state.
 
     distance_traveled_before_stop = me->get_distance_traveled( ).
     me->vehicle->set_dist_traveled_before_stop( distance_traveled_before_stop ).
@@ -104,27 +120,27 @@ CLASS zcl_hh_dp_vehicle_state IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD accelerate.
-    data: now type timestamp,
-          current_speed type zcl_hh_dp_vehicle=>speed_type,
-          new_speed type zcl_hh_dp_vehicle=>speed_type,
-          change_in_speed type zcl_hh_dp_vehicle=>speed_type,
-          distance_traveled_before_stop type zif_hh_dp_state=>odometer_type.
+    DATA: now                           TYPE timestamp,
+          current_speed                 TYPE zcl_hh_dp_vehicle=>speed_type,
+          new_speed                     TYPE zcl_hh_dp_vehicle=>speed_type,
+          change_in_speed               TYPE zcl_hh_dp_vehicle=>speed_type,
+          distance_traveled_before_stop TYPE zif_hh_dp_state=>odometer_type.
 
     distance_traveled_before_stop = me->get_distance_traveled( ).
     me->vehicle->set_dist_traveled_before_stop( distance_traveled_before_stop ).
 
-    get TIME STAMP FIELD now.
+    GET TIME STAMP FIELD now.
     me->vehicle->set_time_started_moving( now ).
 
     current_speed = me->vehicle->get_speed( ).
 
     change_in_speed = acceleration.
-    if acceleration lt 0.
+    IF acceleration LT 0.
       new_speed = current_speed + change_in_speed - 1.
-      if new_speed le 1.
+      IF new_speed LE 1.
         change_in_speed = 1 - current_speed.
-      endif.
-    endif.
+      ENDIF.
+    ENDIF.
 
     me->vehicle->accelerate( change_in_speed ).
   ENDMETHOD.
@@ -145,9 +161,9 @@ CLASS zcl_hh_dp_vehicle_state IMPLEMENTATION.
 
   ENDMETHOD.
 
-  method place_out_of_service.
+  METHOD place_out_of_service.
 
-  endmethod.
+  ENDMETHOD.
 
   METHOD maintain.
 
@@ -187,6 +203,10 @@ CLASS zcl_hh_dp_vehicle_state IMPLEMENTATION.
 
   METHOD decelerate_05.
 
+  ENDMETHOD.
+
+  METHOD get_state_objects_count.
+    state_objects_count = zcl_hh_dp_vehicle_state=>state_objects_count.
   ENDMETHOD.
 
 ENDCLASS.
