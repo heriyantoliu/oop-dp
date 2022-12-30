@@ -22,6 +22,8 @@ INTERFACE zif_hh_dp_report_screen
       show_state_objects_count type syucomm value 'SHOW_SOC',
       impose_high_winds_restriction type syucomm value 'ISR_HIWIND',
       impose_ice_restriction type syucomm value 'ISR_ICE',
-      impose_fog_restriction type syucomm value 'ISR_FOG'.
+      impose_fog_restriction type syucomm value 'ISR_FOG',
+      expose_to_dawn_sun_glare type syucomm value 'ESG_DAWN',
+      expose_to_dusk_sun_glare type syucomm value 'ESG_DUSK'.
 
 ENDINTERFACE.

@@ -40,19 +40,19 @@ CLASS zcl_hh_dp_gps IMPLEMENTATION.
 
     case turn.
       when zif_hh_dp_simple_navigation=>left_turn.
-        subtract degrees_90 from bearing.
+        subtract degrees_90 from me->bearing.
       when zif_hh_dp_simple_navigation=>right_turn.
-        add degrees_90 to bearing.
+        add degrees_90 to me->bearing.
       when zif_hh_dp_simple_navigation=>u_turn.
-        add degrees_180 to bearing.
+        add degrees_180 to me->bearing.
     endcase.
 
-    if bearing lt 0.
-      add degrees_360 to bearing.
+    if me->bearing lt 0.
+      add degrees_360 to me->bearing.
     endif.
 
-    if bearing ge degrees_360.
-      subtract degrees_360 from bearing.
+    if me->bearing ge degrees_360.
+      subtract degrees_360 from me->bearing.
     endif.
   ENDMETHOD.
 

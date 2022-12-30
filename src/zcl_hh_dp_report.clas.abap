@@ -70,7 +70,9 @@ CLASS zcl_hh_dp_report DEFINITION
       show_state_objects_count,
       impose_high_winds_restriction,
       impose_ice_restriction,
-      impose_fog_restriction.
+      impose_fog_restriction,
+      expose_to_dawn_sun_glare,
+      expose_to_dusk_sun_glare.
 
 ENDCLASS.
 
@@ -310,6 +312,10 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
         me->impose_ice_restriction( ).
       when zif_hh_dp_report_screen=>impose_fog_restriction.
         me->impose_fog_restriction( ).
+      when zif_hh_dp_report_screen=>expose_to_dawn_sun_glare.
+        me->expose_to_dawn_sun_glare( ).
+      when zif_hh_dp_report_screen=>expose_to_dusk_sun_glare.
+        me->expose_to_dusk_sun_glare( ).
     ENDCASE.
   ENDMETHOD.
 
@@ -351,7 +357,7 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
           turn    = turn
       ).
 
-      output_entry-vehicle_entry->change_heading( turn ).
+*      output_entry-vehicle_entry->change_heading( turn ).
     ENDLOOP.
 
     CLEAR selected_rows_stack.
@@ -756,6 +762,44 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
 
     create object visitor
       type zcl_hh_dp_fog_restriction.
+
+    loop at me->output_stack
+      into output_entry.
+      output_entry-vehicle_entry->accept( visitor ).
+    endloop.
+
+    me->refresh( ).
+  ENDMETHOD.
+
+  METHOD expose_to_dawn_sun_glare.
+    constants: eastbound type zif_hh_dp_simple_navigation=>heading_type value 'E'.
+
+    data: output_entry like line of output_stack,
+          visitor type ref to zif_hh_dp_visitor.
+
+    create object visitor
+      type zcl_hh_dp_sun_glare_mitigator
+      exporting
+        affected_heading = eastbound.
+
+    loop at me->output_stack
+      into output_entry.
+      output_entry-vehicle_entry->accept( visitor ).
+    endloop.
+
+    me->refresh( ).
+  ENDMETHOD.
+
+  METHOD expose_to_dusk_sun_glare.
+    constants: westbound type zif_hh_dp_simple_navigation=>heading_type value 'W'.
+
+    data: output_entry like line of output_stack,
+          visitor type ref to zif_hh_dp_visitor.
+
+    create object visitor
+      type zcl_hh_dp_sun_glare_mitigator
+      exporting
+        affected_heading = westbound.
 
     loop at me->output_stack
       into output_entry.

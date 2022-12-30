@@ -14,7 +14,7 @@
    <CUA>
     <ADM>
      <ACTCODE>000002</ACTCODE>
-     <MENCODE>000014</MENCODE>
+     <MENCODE>000015</MENCODE>
      <PFKCODE>000002</PFKCODE>
     </ADM>
     <STA>
@@ -595,6 +595,26 @@
       <FUN_TEXT>Assign Police Escort</FUN_TEXT>
       <ICON_TEXT>Assign Police Escort</ICON_TEXT>
       <PATH>I</PATH>
+     </RSMPE_FUNT>
+     <RSMPE_FUNT>
+      <CODE>ESG_DAWN</CODE>
+      <TEXTNO>001</TEXTNO>
+      <TEXT_TYPE>S</TEXT_TYPE>
+      <TEXT_NAME>ICON_OVERVIEW</TEXT_NAME>
+      <ICON_ID>@3Q@</ICON_ID>
+      <FUN_TEXT>Dawn</FUN_TEXT>
+      <ICON_TEXT>Dawn</ICON_TEXT>
+      <PATH>D</PATH>
+     </RSMPE_FUNT>
+     <RSMPE_FUNT>
+      <CODE>ESG_DUSK</CODE>
+      <TEXTNO>001</TEXTNO>
+      <TEXT_TYPE>S</TEXT_TYPE>
+      <TEXT_NAME>ICON_OVERVIEW</TEXT_NAME>
+      <ICON_ID>@3Q@</ICON_ID>
+      <FUN_TEXT>Dusk</FUN_TEXT>
+      <ICON_TEXT>Dusk</ICON_TEXT>
+      <PATH>U</PATH>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>FC01</CODE>
@@ -1457,6 +1477,12 @@
      <RSMPE_MEN>
       <CODE>000010</CODE>
       <NO>12</NO>
+      <REF_TYPE>M</REF_TYPE>
+      <REF_CODE>000015</REF_CODE>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000010</CODE>
+      <NO>13</NO>
       <REF_TYPE>F</REF_TYPE>
       <REF_CODE>BACK</REF_CODE>
       <REF_NO>001</REF_NO>
@@ -1565,6 +1591,20 @@
       <REF_CODE>ISR_FOG</REF_CODE>
       <REF_NO>001</REF_NO>
      </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000015</CODE>
+      <NO>01</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>ESG_DAWN</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
+     <RSMPE_MEN>
+      <CODE>000015</CODE>
+      <NO>02</NO>
+      <REF_TYPE>F</REF_TYPE>
+      <REF_CODE>ESG_DUSK</REF_CODE>
+      <REF_NO>001</REF_NO>
+     </RSMPE_MEN>
     </MEN>
     <MTX>
      <RSMPE_MNLT>
@@ -1660,6 +1700,12 @@
       <TEXT_TYPE>S</TEXT_TYPE>
       <TEXT>Restrict speed</TEXT>
       <PATH>E</PATH>
+     </RSMPE_MNLT>
+     <RSMPE_MNLT>
+      <CODE>000015</CODE>
+      <TEXT_TYPE>S</TEXT_TYPE>
+      <TEXT>Expose to sun glare</TEXT>
+      <PATH>X</PATH>
      </RSMPE_MNLT>
     </MTX>
     <ACT>
@@ -2250,8 +2296,14 @@
      </RSMPE_PFK>
      <RSMPE_PFK>
       <CODE>000002</CODE>
+      <PFNO>20</PFNO>
+      <FUNCODE>ESG_DAWN</FUNCODE>
+      <FUNNO>001</FUNNO>
+     </RSMPE_PFK>
+     <RSMPE_PFK>
+      <CODE>000002</CODE>
       <PFNO>21</PFNO>
-      <FUNCODE>&amp;XXL</FUNCODE>
+      <FUNCODE>ESG_DUSK</FUNCODE>
       <FUNNO>001</FUNNO>
      </RSMPE_PFK>
      <RSMPE_PFK>
@@ -2799,6 +2851,14 @@
      <RSMPE_STAF>
       <STATUS>REPORT_SCREEN</STATUS>
       <FUNCTION>ESCORT</FUNCTION>
+     </RSMPE_STAF>
+     <RSMPE_STAF>
+      <STATUS>REPORT_SCREEN</STATUS>
+      <FUNCTION>ESG_DAWN</FUNCTION>
+     </RSMPE_STAF>
+     <RSMPE_STAF>
+      <STATUS>REPORT_SCREEN</STATUS>
+      <FUNCTION>ESG_DUSK</FUNCTION>
      </RSMPE_STAF>
      <RSMPE_STAF>
       <STATUS>REPORT_SCREEN</STATUS>
