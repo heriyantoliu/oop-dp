@@ -21,6 +21,12 @@ CLASS zcl_hh_dp_vehicle DEFINITION
       option_count          TYPE n LENGTH 1,
       time_stamp_type       TYPE timestamp.
 
+    interfaces:
+      zif_hh_dp_visitable ALL METHODS ABSTRACT.
+
+    aliases:
+      accept for zif_hh_dp_visitable~accept.
+
     CLASS-METHODS:
       class_constructor.
 

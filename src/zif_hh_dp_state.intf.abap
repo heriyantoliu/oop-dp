@@ -58,11 +58,5 @@ INTERFACE zif_hh_dp_state
           vehicle type ref to zcl_hh_dp_vehicle,
       accelerate_05
         importing
-          vehicle type ref to zcl_hh_dp_vehicle,
-      impose_high_winds_restriction
-        importing
-          vehicle type ref to zcl_hh_dp_vehicle,
-      impose_ice_restriction
-        importing
           vehicle type ref to zcl_hh_dp_vehicle.
 ENDINTERFACE.

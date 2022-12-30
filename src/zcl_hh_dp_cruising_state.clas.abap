@@ -21,9 +21,7 @@ CLASS zcl_hh_dp_cruising_state DEFINITION
       decelerate_05 REDEFINITION,
       decelerate_01 REDEFINITION,
       accelerate_01 REDEFINITION,
-      accelerate_05 REDEFINITION,
-      impose_high_winds_restriction REDEFINITION,
-      impose_ice_restriction REDEFINITION.
+      accelerate_05 REDEFINITION.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -129,14 +127,6 @@ CLASS zcl_hh_dp_cruising_state IMPLEMENTATION.
 
   METHOD get_state_object.
     state_object = zcl_hh_dp_cruising_state=>singleton.
-  ENDMETHOD.
-
-  METHOD impose_high_winds_restriction.
-    me->apply_high_winds_restriction( vehicle ).
-  ENDMETHOD.
-
-  METHOD impose_ice_restriction.
-    me->apply_ice_restriction( vehicle ).
   ENDMETHOD.
 
 ENDCLASS.

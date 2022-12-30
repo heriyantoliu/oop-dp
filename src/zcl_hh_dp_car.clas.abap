@@ -58,7 +58,8 @@ CLASS zcl_hh_dp_car DEFINITION
           iphone_navigation TYPE checkbox
           no_navigation     TYPE checkbox,
       get_description REDEFINITION,
-      get_gross_weight REDEFINITION.
+      get_gross_weight REDEFINITION,
+      accept REDEFINITION.
   PROTECTED SECTION.
   PRIVATE SECTION.
     CONSTANTS:
@@ -203,6 +204,10 @@ CLASS zcl_hh_dp_car IMPLEMENTATION.
 
   METHOD get_description.
     description = me->descriptor.
+  ENDMETHOD.
+
+  METHOD accept.
+    visitor->visit_car( me ).
   ENDMETHOD.
 
 ENDCLASS.

@@ -19,7 +19,8 @@ CLASS zcl_hh_dp_vehicle_option DEFINITION
       get_dist_traveled_before_stop REDEFINITION,
       set_dist_traveled_before_stop REDEFINITION,
       create_memento REDEFINITION,
-      reset_using_memento REDEFINITION.
+      reset_using_memento REDEFINITION,
+      accept REDEFINITION.
 
   PROTECTED SECTION.
     DATA:
@@ -131,6 +132,10 @@ CLASS zcl_hh_dp_vehicle_option IMPLEMENTATION.
 
   METHOD reset_using_memento.
     me->decorated_object->reset_using_memento( memento ).
+  ENDMETHOD.
+
+  METHOD accept.
+    me->decorated_object->accept( visitor ).
   ENDMETHOD.
 
 ENDCLASS.

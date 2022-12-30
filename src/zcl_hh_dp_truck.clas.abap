@@ -5,8 +5,8 @@ CLASS zcl_hh_dp_truck DEFINITION
 
   PUBLIC SECTION.
     CONSTANTS:
-      class_id TYPE seoclsname VALUE 'ZCL_HH_DP_TRUCK',
-      descriptor type string value 'Truck'.
+      class_id TYPE seoclsname VALUE 'ZCL_HH_DP_TRUCK'.
+
 
     EVENTS: weight_exceeds_2_axle_limit.
 
@@ -59,9 +59,13 @@ CLASS zcl_hh_dp_truck DEFINITION
           iphone_navigation TYPE checkbox
           no_navigation     TYPE checkbox,
       get_description REDEFINITION,
-      get_gross_weight REDEFINITION.
+      get_gross_weight REDEFINITION,
+      accept REDEFINITION.
   PROTECTED SECTION.
   PRIVATE SECTION.
+
+    CONSTANTS:
+      descriptor type string value 'Truck'.
 
     CLASS-DATA:
       weight_limit_for_2_axles  TYPE zcl_hh_dp_vehicle=>weight_type,
@@ -230,6 +234,10 @@ CLASS zcl_hh_dp_truck IMPLEMENTATION.
     IF normalized_gross_weight GT me->weight_limit_for_2_axles.
       RAISE EVENT weight_exceeds_2_axle_limit.
     ENDIF.
+  ENDMETHOD.
+
+  METHOD accept.
+    visitor->visit_truck( me ).
   ENDMETHOD.
 
 ENDCLASS.

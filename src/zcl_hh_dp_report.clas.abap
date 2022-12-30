@@ -719,13 +719,14 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
 
   METHOD impose_high_winds_restriction.
     data: output_entry like line of output_stack,
-          current_state type ref to zif_hh_dp_state.
+          visitor type ref to zif_hh_dp_visitor.
+
+    create object visitor
+      type zcl_hh_dp_hi_speed_restriction.
 
     loop at me->output_stack
       into output_entry.
-
-      current_state = output_entry-vehicle_entry->get_current_state( ).
-      current_state->impose_high_winds_restriction( output_entry-vehicle_entry ).
+      output_entry-vehicle_entry->accept( visitor ).
     endloop.
 
     me->refresh( ).
@@ -733,13 +734,14 @@ CLASS zcl_hh_dp_report IMPLEMENTATION.
 
   METHOD impose_ice_restriction.
     data: output_entry like line of output_stack,
-          current_state type ref to zif_hh_dp_state.
+          visitor type ref to zif_hh_dp_visitor.
+
+    create object visitor
+      type zcl_hh_dp_ice_restriction.
 
     loop at me->output_stack
       into output_entry.
-
-      current_state = output_entry-vehicle_entry->get_current_state( ).
-      current_state->impose_ice_restriction( output_entry-vehicle_entry ).
+      output_entry-vehicle_entry->accept( visitor ).
     endloop.
 
     me->refresh( ).
