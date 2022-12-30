@@ -223,45 +223,7 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     me->weight_unit = weight_unit.
     me->time_started_moving = time_started_moving.
 
-    CREATE OBJECT me->cruising_state
-      TYPE (zcl_hh_dp_cruising_state=>class_id)
-      EXPORTING
-        vehicle = me.
-    CREATE OBJECT me->in_heavy_traffic_state
-      TYPE (zcl_hh_dp_heavy_traffic_state=>class_id)
-      EXPORTING
-        vehicle = me.
-    CREATE OBJECT me->stopped_state
-      TYPE (zcl_hh_dp_stopped_state=>class_id)
-      EXPORTING
-        vehicle = me.
-
-    CREATE OBJECT me->out_of_service_state
-      TYPE (zcl_hh_dp_out_of_service_state=>class_id)
-      EXPORTING
-        vehicle = me.
-
-    CREATE OBJECT me->available_state
-      TYPE (zcl_hh_dp_available_state=>class_id)
-      EXPORTING
-        vehicle = me.
-
-    CREATE OBJECT me->being_towed_state
-      TYPE (zcl_hh_dp_being_towed_state=>class_id)
-      EXPORTING
-        vehicle = me.
-
-    CREATE OBJECT me->in_shop_state
-      TYPE (zcl_hh_dp_in_shop_state=>class_id)
-      EXPORTING
-        vehicle = me.
-
-    create object me->police_escort_state
-      type (zcl_hh_dp_police_escort_state=>class_id)
-      exporting
-        vehicle = me.
-
-    me->current_state = me->cruising_state.
+    me->current_state = me->get_cruising_state( ).
 
     CASE selected.
       WHEN iphone_navigation.
@@ -315,16 +277,8 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     me->current_state = current_state.
   ENDMETHOD.
 
-  METHOD get_cruising_state.
-    cruising_state = me->cruising_state.
-  ENDMETHOD.
-
   METHOD get_dist_traveled_before_stop.
     distance_traveled_before_stop = me->distance_traveled_before_stop.
-  ENDMETHOD.
-
-  METHOD get_in_heavy_traffic_state.
-    in_heavy_traffic_state = me->in_heavy_traffic_state.
   ENDMETHOD.
 
   METHOD get_previous_state.
@@ -333,10 +287,6 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
 
   METHOD get_previous_state_speed.
     previous_state_speed = me->previous_state_speed.
-  ENDMETHOD.
-
-  METHOD get_stopped_state.
-    stopped_state = me->stopped_state.
   ENDMETHOD.
 
   METHOD get_time_started_moving.
@@ -359,23 +309,82 @@ CLASS zcl_hh_dp_vehicle IMPLEMENTATION.
     me->time_started_moving = time_started_moving.
   ENDMETHOD.
 
+  METHOD get_cruising_state.
+    if me->cruising_state is not bound.
+      create object me->cruising_state
+        type (zcl_hh_dp_cruising_state=>class_id)
+        exporting
+          vehicle = me.
+    endif.
+    cruising_state = me->cruising_state.
+  ENDMETHOD.
+  METHOD get_in_heavy_traffic_state.
+    if me->in_heavy_traffic_state is not bound.
+      create object me->in_heavy_traffic_state
+        type (zcl_hh_dp_heavy_traffic_state=>class_id)
+        exporting
+          vehicle = me.
+    endif.
+    in_heavy_traffic_state = me->in_heavy_traffic_state.
+  ENDMETHOD.
+
+  METHOD get_stopped_state.
+    if me->stopped_state is not bound.
+      create object me->stopped_state
+        type (zcl_hh_dp_stopped_state=>class_id)
+        exporting
+          vehicle = me.
+    endif.
+    stopped_state = me->stopped_state.
+  ENDMETHOD.
+
   METHOD get_out_of_service_state.
+    if me->out_of_service_state is not bound.
+      create object me->out_of_service_state
+        type (zcl_hh_dp_out_of_service_state=>class_id)
+        exporting
+          vehicle = me.
+    endif.
     out_of_service_state = me->out_of_service_state.
   ENDMETHOD.
 
   METHOD get_available_state.
+    if me->available_state is not bound.
+      create object me->available_state
+        type (zcl_hh_dp_available_state=>class_id)
+        exporting
+          vehicle = me.
+    endif.
     available_state = me->available_state.
   ENDMETHOD.
 
   METHOD get_being_towed_state.
+    if me->being_towed_state is not bound.
+      create object me->being_towed_state
+        type (zcl_hh_dp_being_towed_state=>class_id)
+        exporting
+          vehicle = me.
+    endif.
     being_towed_state = me->being_towed_state.
   ENDMETHOD.
 
   METHOD get_in_shop_state.
+    if me->in_shop_state is not bound.
+      create object me->in_shop_state
+        type (zcl_hh_dp_in_shop_state=>class_id)
+        exporting
+          vehicle = me.
+    endif.
     in_shop_state = me->in_shop_state.
   ENDMETHOD.
 
   METHOD get_police_escort_state.
+    if me->police_escort_state is not bound.
+      create object me->police_escort_state
+        type (zcl_hh_dp_police_escort_state=>class_id)
+        exporting
+          vehicle = me.
+    endif.
     police_escort_state = me->police_escort_state.
   ENDMETHOD.
 
